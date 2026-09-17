@@ -1,113 +1,69 @@
-import Link from "next/link";
-export default function HomePage() {
-    return (
-        <div className="space-y-12 max-w-2xl">
-            {/* Opening Gateway / Statement */}
-            <section className="space-y-4 bio-section">
-                <p className="leading-relaxed font-medium symbol-bio-1">
-                    I like to understand things from first principles and find connections
-                    between fundamental ideas across different domains.
-                </p>
-                <p className="leading-relaxed font-medium symbol-bio-2">
-                    I&apos;m a software engineer by profession, deeply interested in building
-                    reliable software systems.
-                </p>
-            </section>
+import Image from "next/image";
 
-            {/* Hairline Divider with optional symbol */}
-            <div className="relative my-8 flex items-center justify-center">
-                <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-current/15" />
-                </div>
-                <span className="relative symbol-divider bg-[var(--bg-color)] px-2 text-xs opacity-60"></span>
-            </div>
-
-            {/* Recent Meditations (Testing 2-column log & old-style numbers) */}
-            <section className="space-y-4">
-                <div className="flex items-baseline justify-between border-b border-current/10 pb-2">
-                    <h2 className="text-sm uppercase tracking-widest font-mono text-[var(--text-muted)]">
-                        Recent Notes & Meditations
-                    </h2>
-                    <Link
-                        href="/blog"
-                        className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text-color)] transition-colors symbol-pointer"
-                    >
-                        view all [essays]
-                    </Link>
-                </div>
-
-                <ul className="space-y-3 font-normal">
-                    <li className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                        <Link
-                            href="/blog"
-                            className="hover:underline underline-offset-4 decoration-current/40"
-                        >
-                            On building tools with ink and intention
-                        </Link>
-                        <span className="text-sm font-mono text-[var(--text-muted)]">2026-09-17</span>
-                    </li>
-
-                    <li className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                        <Link
-                            href="/blog"
-                            className="hover:underline underline-offset-4 decoration-current/40"
-                        >
-                            The architecture of 19th-century letterpress typography
-                        </Link>
-                        <span className="text-sm font-mono text-[var(--text-muted)]">2026-08-19</span>
-                    </li>
-
-                    <li className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                        <Link
-                            href="/blog"
-                            className="hover:underline underline-offset-4 decoration-current/40"
-                        >
-                            First principles: memory layout, cache lines, and silicon
-                        </Link>
-                        <span className="text-sm font-mono text-[var(--text-muted)]">2025-11-04</span>
-                    </li>
-                </ul>
-            </section>
-
-            {/* Six-Month Focus (Now Teaser) */}
-            <section className="space-y-3 pt-2">
-                <div className="flex items-baseline justify-between border-b border-current/10 pb-2">
-                    <h2 className="text-sm uppercase tracking-widest font-mono text-[var(--text-muted)]">
-                        Current Horizon
-                    </h2>
-                    <Link
-                        href="/now"
-                        className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text-color)] transition-colors symbol-pointer"
-                    >
-                        explore [now]
-                    </Link>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm opacity-85">
-                    <div className="p-3 border border-current/10 rounded-xs space-y-1">
-                        <span className="font-semibold block text-base">Building</span>
-                        <p className="text-[var(--text-muted)]">
-                            A minimalist intellectual notebook engine with zero third-party
-                            bloat and mathematical typography.
-                        </p>
-                    </div>
-
-                    <div className="p-3 border border-current/10 rounded-xs space-y-1">
-                        <span className="font-semibold block text-base">Reading</span>
-                        <p className="text-[var(--text-muted)]">
-                            Knuth&apos;s <em>TeX and Metafont</em>, Marcus Aurelius&apos;s{" "}
-                            <em>Meditations</em>, and modern database theory.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            {/* Typographic Specimen String for Numerals & Ligatures */}
-            <section className="pt-6 border-t border-current/10 text-xs text-[var(--text-muted)] font-mono flex flex-wrap gap-4 justify-between">
-                <span>Digits: 0123456789 (born 19-08-2003)</span>
-                <span>Ligatures: fi fl ff ffi ffl</span>
-                <span>Coordinates: 19.9975° N, 73.7898° E</span>
-            </section>
+export default function Home() {
+  return (
+    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+        <Image
+          className="dark:invert h-5 w-[100px]"
+          src="/next.svg"
+          alt="Next.js logo"
+          width={100}
+          height={20}
+          priority
+        />
+        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
+          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
+            To get started, edit the{" "}
+            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
+              page.tsx
+            </code>{" "}
+            file.
+          </h1>
+          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+            Looking for a starting point or more instructions? Head over to{" "}
+            <a
+              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+              className="font-medium text-zinc-950 dark:text-zinc-50"
+            >
+              Templates
+            </a>{" "}
+            or the{" "}
+            <a
+              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+              className="font-medium text-zinc-950 dark:text-zinc-50"
+            >
+              Learning
+            </a>{" "}
+            center.
+          </p>
         </div>
-    );
+        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+          <a
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
+            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              className="dark:invert h-[14px] w-4"
+              src="/vercel.svg"
+              alt="Vercel logomark"
+              width={16}
+              height={14}
+            />
+            Deploy Now
+          </a>
+          <a
+            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
+            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Documentation
+          </a>
+        </div>
+      </main>
+    </div>
+  );
 }
