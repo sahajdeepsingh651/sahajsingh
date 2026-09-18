@@ -42,6 +42,33 @@ export default function Home() {
                     </li>
                 </ul>
             </section>
+            <section className="space-y-4">
+                <div className="flex items-baseline justify-between border-b border-current/10 pb-2">
+                    <h2 className="text-sm uppercase tracking-widest font-mono text-[var(--text-muted)]">
+                        Recent Thoughts
+                    </h2>
+                    <Link
+                        href="/thoughts"
+                        className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text-color)] transition-colors"
+                    >
+                        view all [thoughts] →
+                    </Link>
+                </div>
+
+                <ul className="space-y-3 font-normal">
+                    <li className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                        <Link
+                            href="/thoughts/hello_world"
+                            className="hover:underline underline-offset-4 decoration-current/40"
+                        >
+                            Hello World
+                        </Link>
+                        <span className="text-sm font-mono text-[var(--text-muted)]">
+                            2025-06-26
+                        </span>
+                    </li>
+                </ul>
+            </section>
         </div>
     );
 }
