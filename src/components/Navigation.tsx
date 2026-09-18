@@ -23,8 +23,11 @@ export default function Navigation() {
                     <Link
                         key={href}
                         href={href}
-                        className={`no-underline transition-all ${isActive ? "font-medium" : "hover:underline underline-offset-4"
-                            }`}
+                        className={`no-underline transition-all ${
+                            isActive
+                                ? "font-medium text-[var(--text-color)]"
+                                : "text-[var(--text-muted)] hover:text-[var(--text-color)] hover:underline underline-offset-4"
+                        }`}
                     >
                         {isActive ? `[${label}]` : label}
                     </Link>

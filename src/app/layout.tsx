@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "sahaj deep singh",
-    description: "system explorer & programmer",
+    title: "Sahaj Singh",
+    description: "Personal digital garden and field notebook",
 };
 
 export default function RootLayout({
