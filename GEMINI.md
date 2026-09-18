@@ -26,11 +26,11 @@
 - **Base Typography:** 15px base size, 1.65 line leading, Newsreader serif (`--font-newsreader`), OpenType old-style numbers enabled (`oldstyle-nums`, `"onum" 1`).
 - **Navigation & Active State:** Brackets indicate current location (`[ Sahaj Singh ]` on `/`, `[now]` on `/now`).
 - **Unselected / Secondary Text Evaluation:**
-  - **Option 2 (Preferred for Dark Mode):**
+  - **Chosen Palette:**
     - Light mode: `--text-muted: #595147` (soft graphite charcoal on vellum).
-    - Dark mode: `--text-muted: #94a3b8` (moonlit starlight silver on cosmic `#0b0f17`).
-    - *Verdict:* User found Dark Mode in Option 2 noticeably better than Option 1 because starlight silver cleanly separates secondary elements without feeling muddy or competing with glowing ivory.
+    - Dark mode: `--text-muted: #e2e8f0` (Pale Platinum / Slate-200 on cosmic `#0b0f17`).
+    - *Verdict:* Tested live against Slate-400, Warm Chalk, and Moonlit Silver. Pale Platinum provides high contrast and crisp legibility for secondary text, dates, and navigation links without washing out glowing ivory primary text.
   - **Option 1 (Single Ink Alternative):**
     - `--text-muted: var(--text-color)` (uniform ivory `#ede8dc` / walnut `#1f140e`).
-    - *Verdict:* Kept on file as reference; Option 2 preferred.
+    - *Verdict:* Kept on file as reference.
 
