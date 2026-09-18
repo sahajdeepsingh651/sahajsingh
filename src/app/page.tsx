@@ -18,7 +18,7 @@ export default function Home() {
             <section className="space-y-4">
                 <div className="flex items-baseline justify-between border-b border-current/10 pb-2">
                     <h2 className="text-sm uppercase tracking-widest font-mono text-[var(--text-muted)]">
-                        Recent Notes & Meditations
+                        Recent Essays
                     </h2>
                     <Link
                         href="/blog"
