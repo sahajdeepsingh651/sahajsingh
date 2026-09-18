@@ -5,10 +5,12 @@ export default function Home() {
         <div className="space-y-12 max-w-2xl">
             <section className="space-y-4">
                 <p className="leading-relaxed font-medium">
+                    <span className="opacity-75 mr-2 select-none">※</span>
                     I like to understand things from first principles and find connections
                     between fundamental ideas across different domains.
                 </p>
                 <p className="leading-relaxed font-medium">
+                    <span className="opacity-75 mr-2 select-none">※</span>
                     I&apos;m a software engineer by profession, deeply interested in
                     building reliable software systems.
                 </p>
