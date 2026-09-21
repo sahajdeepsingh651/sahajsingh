@@ -134,7 +134,7 @@ export default function AboutPage() {
                             <div key={key} className="space-y-1">
                                 <dt className="font-mono text-xs font-medium text-[var(--text-color)] flex items-baseline justify-between">
                                     <span>{config.label}</span>
-                                    <span className="text-[11px] opacity-75">{config.range}</span>
+                                    <span className="text-[11px] font-mono text-[var(--text-muted)]">{config.range}</span>
                                 </dt>
                                 <dd className="text-sm text-[var(--text-muted)] pl-3 border-l border-current/15 italic font-serif leading-relaxed">
                                     &ldquo;{config.desc}&rdquo;

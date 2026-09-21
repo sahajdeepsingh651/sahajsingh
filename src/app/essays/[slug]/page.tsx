@@ -104,7 +104,7 @@ export default async function EssayPage({
                                     <span className="text-[var(--text-color)] italic font-serif">
                                         {CONFIDENCE_CONFIG[essay.confidence]?.label || essay.confidence}
                                     </span>{" "}
-                                    <span className="opacity-75 font-mono text-[11px]">
+                                    <span className="text-[var(--text-muted)] font-mono text-[11px]">
                                         ({CONFIDENCE_CONFIG[essay.confidence]?.range})
                                     </span>
                                 </Link>

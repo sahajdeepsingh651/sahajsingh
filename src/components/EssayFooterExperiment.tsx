@@ -30,7 +30,7 @@ export default function EssayFooterExperiment({
             <div className="p-3 rounded border border-current/15 bg-stone-500/5 space-y-2">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-[11px] uppercase tracking-wider font-semibold text-[var(--text-color)] flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500/80 animate-pulse" />
+                        <span className="w-2 h-2 rounded-full bg-emerald-500" />
                         Footer Experiment Mode
                     </span>
                     <span className="text-[10px] text-[var(--text-muted)]">
@@ -39,14 +39,14 @@ export default function EssayFooterExperiment({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-current/10 text-xs">
-                    <span className="text-[11px] opacity-70">Switch:</span>
+                    <span className="text-[11px] text-[var(--text-muted)]">Switch:</span>
                     <button
                         type="button"
                         onClick={() => setLayout("ledger")}
                         className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
                             layout === "ledger"
                                 ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
-                                : "hover:text-[var(--text-color)] hover:bg-current/10"
+                                : "text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
                         }`}
                     >
                         [1. Ledger]
@@ -57,7 +57,7 @@ export default function EssayFooterExperiment({
                         className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
                             layout === "scriptorium"
                                 ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
-                                : "hover:text-[var(--text-color)] hover:bg-current/10"
+                                : "text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
                         }`}
                     >
                         [2. Scriptorium]
@@ -68,7 +68,7 @@ export default function EssayFooterExperiment({
                         className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
                             layout === "sidenotes"
                                 ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
-                                : "hover:text-[var(--text-color)] hover:bg-current/10"
+                                : "text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
                         }`}
                     >
                         [3. Sidenotes]
@@ -79,7 +79,7 @@ export default function EssayFooterExperiment({
                         className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
                             layout === "minimal"
                                 ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
-                                : "hover:text-[var(--text-color)] hover:bg-current/10"
+                                : "text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
                         }`}
                     >
                         [4. Minimal]
@@ -99,7 +99,7 @@ export default function EssayFooterExperiment({
                                 </h3>
                                 <Link
                                     href="/about#revisions"
-                                    className="text-[11px] opacity-60 hover:opacity-100 hover:underline underline-offset-2"
+                                    className="text-[11px] text-[var(--text-muted)] hover:text-[var(--text-color)] hover:underline underline-offset-2"
                                 >
                                     about changelog →
                                 </Link>
@@ -110,7 +110,7 @@ export default function EssayFooterExperiment({
                                         key={i}
                                         className="flex flex-col sm:flex-row sm:items-baseline sm:gap-4"
                                     >
-                                        <time className="shrink-0 text-[var(--text-color)]/80 font-mono">
+                                        <time className="shrink-0 text-[var(--text-muted)] font-mono">
                                             {mod.date}
                                         </time>
                                         <span className="font-serif text-[13px] text-[var(--text-muted)] leading-relaxed">
@@ -160,7 +160,7 @@ export default function EssayFooterExperiment({
                                                     </span>
                                                 )}
                                                 {ref.date && (
-                                                    <span className="font-mono text-xs text-[var(--text-muted)] opacity-75">
+                                                    <span className="font-mono text-xs text-[var(--text-muted)]">
                                                         {" "}({ref.date})
                                                     </span>
                                                 )}
@@ -168,7 +168,7 @@ export default function EssayFooterExperiment({
                                             <a
                                                 href={`#cite-${ref.id}`}
                                                 title="Jump back to citation in text"
-                                                className="opacity-40 hover:opacity-100 hover:underline font-mono text-xs shrink-0"
+                                                className="text-[var(--text-muted)] hover:text-[var(--text-color)] hover:underline font-mono text-xs shrink-0"
                                             >
                                                 ↩
                                             </a>
@@ -199,7 +199,7 @@ export default function EssayFooterExperiment({
                                 <ul className="space-y-3">
                                     {modifications.map((mod, i) => (
                                         <li key={i} className="space-y-0.5">
-                                            <time className="block text-[11px] font-mono text-[var(--text-color)]/70">
+                                            <time className="block text-[11px] font-mono text-[var(--text-muted)]">
                                                 {mod.date}
                                             </time>
                                             <p className="font-serif text-[12px] text-[var(--text-muted)] leading-normal">
@@ -291,7 +291,7 @@ export default function EssayFooterExperiment({
                                     </span>
                                     <a
                                         href={`#cite-${ref.id}`}
-                                        className="text-[10px] font-mono opacity-50 hover:opacity-100 hover:underline"
+                                        className="text-[10px] font-mono text-[var(--text-muted)] hover:text-[var(--text-color)] hover:underline"
                                     >
                                         back to text ↩
                                     </a>
@@ -375,7 +375,7 @@ export default function EssayFooterExperiment({
                                 </div>
                                 <a
                                     href={`#cite-${ref.id}`}
-                                    className="opacity-40 hover:opacity-100 text-xs font-mono ml-auto shrink-0"
+                                    className="text-[var(--text-muted)] hover:text-[var(--text-color)] text-xs font-mono ml-auto shrink-0"
                                 >
                                     ↩
                                 </a>
@@ -400,7 +400,7 @@ export default function EssayFooterExperiment({
                         </a>
                         .
                     </p>
-                    <span className="text-[11px] opacity-60">
+                    <span className="text-[11px] text-[var(--text-muted)]">
                         Permanent field notebook archive
                     </span>
                 </div>
