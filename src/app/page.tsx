@@ -74,6 +74,45 @@ export default function Home() {
             <section className="space-y-4">
                 <div className="flex items-baseline justify-between border-b border-current/10 pb-2">
                     <h2 className="text-sm uppercase tracking-widest font-mono text-[var(--text-muted)]">
+                        Projects
+                    </h2>
+                    <Link
+                        href="/projects"
+                        className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text-color)] transition-colors"
+                    >
+                        view all [projects] →
+                    </Link>
+                </div>
+
+                <ul className="space-y-3 font-normal">
+                    <li className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                        <Link
+                            href="/projects"
+                            className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
+                        >
+                            Knowledge Engine &amp; Autonomous Crawler
+                        </Link>
+                        <span className="text-sm font-mono text-[var(--text-color)] shrink-0">
+                            [active build]
+                        </span>
+                    </li>
+                    <li className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                        <Link
+                            href="/projects"
+                            className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
+                        >
+                            Personal Field Notebook &amp; Digital Garden
+                        </Link>
+                        <span className="text-sm font-mono text-[var(--text-color)] shrink-0">
+                            [deployed]
+                        </span>
+                    </li>
+                </ul>
+            </section>
+
+            <section className="space-y-4">
+                <div className="flex items-baseline justify-between border-b border-current/10 pb-2">
+                    <h2 className="text-sm uppercase tracking-widest font-mono text-[var(--text-muted)]">
                         Recent Thoughts
                     </h2>
                     <Link
