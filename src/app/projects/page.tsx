@@ -1,44 +1,10 @@
 import type { Metadata } from "next";
+import { ALL_PROJECTS } from "@/lib/projects";
 
 export const metadata: Metadata = {
     title: "Projects | Sahaj Singh",
     description: "Systems, autonomous tools, and software experiments by Sahaj Singh.",
 };
-
-interface Project {
-    title: string;
-    description: string;
-    tech: string[];
-    status: string;
-    link?: string;
-}
-
-const PROJECTS: Project[] = [
-    {
-        title: "Knowledge Engine & Autonomous Crawler",
-        description:
-            "An answer to how to use AI for deep research and study rather than superficial summarization. Combines an autonomous web crawler written in Go with AST-based symbolic knowledge representations and local graph synthesis.",
-        tech: ["Go", "Distributed Systems", "Networking", "ASTs"],
-        status: "active build",
-        link: "https://github.com/sahajdeepsingh651/knowledge_engine",
-    },
-    {
-        title: "Personal Field Notebook & Digital Garden",
-        description:
-            "This atmospheric personal publishing platform. Inspired by Gwern.net, featuring estimative probability scales (Kesselman words), intellectual revision changelogs, bidirectional citations, and tactile editorial typography.",
-        tech: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
-        status: "deployed",
-        link: "https://github.com/sahajdeepsingh651/sahajsingh",
-    },
-    {
-        title: "Endurance Conditioning & Event Protocol",
-        description:
-            "Empirical training telemetry, cadence protocols, and pacing frameworks designed for preparing for an upcoming Last Man Standing continuous ultra-endurance running event.",
-        tech: ["Systems Thinking", "Empirical Metrics", "Athletics"],
-        status: "training",
-        link: "https://github.com/sahajdeepsingh651",
-    },
-];
 
 export default function ProjectsPage() {
     return (
@@ -55,7 +21,7 @@ export default function ProjectsPage() {
 
             {/* Projects List */}
             <ul className="space-y-8">
-                {PROJECTS.map((project) => (
+                {ALL_PROJECTS.map((project) => (
                     <li key={project.title} className="space-y-2">
                         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
                             {project.link ? (
@@ -85,7 +51,7 @@ export default function ProjectsPage() {
                         <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-mono text-[var(--text-muted)] pt-0.5">
                             {project.tech.map((t) => (
                                 <span key={t}>
-                                    . {t}
+                                    • {t}
                                 </span>
                             ))}
                         </div>
