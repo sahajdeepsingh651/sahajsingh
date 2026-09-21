@@ -1,29 +1,15 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getAllEssays } from "@/lib/essays";
 
 export const metadata: Metadata = {
     title: "Essays | Sahaj Singh",
     description: "Long-form inquiries into systems, foundations, and software craft.",
 };
 
-interface Essay {
-    slug: string;
-    title: string;
-    date: string;
-    description: string;
-}
-
-const ESSAYS: Essay[] = [
-    {
-        slug: "beating-the-averages",
-        title: 'My views on "Beating the Averages" by Paul Graham',
-        date: "2025-06-26",
-        description:
-            "On Lisp, homoiconicity, macros, and why expressive languages offer an asymmetric competitive advantage.",
-    },
-];
-
 export default function EssaysPage() {
+    const essays = getAllEssays();
+
     return (
         <div className="space-y-10 max-w-2xl">
             {/* Header */}
@@ -36,7 +22,7 @@ export default function EssaysPage() {
 
             {/* Essays List */}
             <ul className="space-y-6">
-                {ESSAYS.map((essay) => (
+                {essays.map((essay) => (
                     <li key={essay.slug} className="space-y-1">
                         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
                             <Link
