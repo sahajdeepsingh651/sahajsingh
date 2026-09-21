@@ -14,22 +14,26 @@ export default function Home() {
                     I&apos;m a software engineer by profession, deeply interested in
                     building reliable software systems.
                 </p>
-                <p className="text-xs font-mono text-[var(--text-muted)] pt-1">
-                    Currently based in Nashik. What I&apos;m focused on right{" "}
-                    <Link
-                        href="/now"
-                        className="underline underline-offset-4 hover:text-[var(--text-color)] transition-colors"
-                    >
-                        [now →]
-                    </Link>
-                    {" "}• More{" "}
-                    <Link
-                        href="/about"
-                        className="underline underline-offset-4 hover:text-[var(--text-color)] transition-colors"
-                    >
-                        [about me →]
-                    </Link>
-                </p>
+                <div className="space-y-1.5 pt-1 text-xs font-mono text-[var(--text-muted)]">
+                    <p>
+                        More{" "}
+                        <Link
+                            href="/about"
+                            className="underline underline-offset-4 hover:text-[var(--text-color)] transition-colors"
+                        >
+                            [about me →]
+                        </Link>
+                    </p>
+                    <p>
+                        Currently based in Nashik. What I&apos;m focused on right{" "}
+                        <Link
+                            href="/now"
+                            className="underline underline-offset-4 hover:text-[var(--text-color)] transition-colors"
+                        >
+                            [now →]
+                        </Link>
+                    </p>
+                </div>
             </section>
             <section className="space-y-4">
                 <div className="flex items-baseline justify-between border-b border-current/10 pb-2">
