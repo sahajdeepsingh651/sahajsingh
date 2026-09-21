@@ -19,10 +19,15 @@ export default function ThoughtsPage() {
                 {thoughts.map((thought) => (
                     <li
                         key={thought.slug}
-                        className="flex justify-between items-baseline"
+                        className="flex justify-between items-baseline gap-2"
                     >
-                        <Link href={`/thoughts/${thought.slug}`}>{thought.title}</Link>
-                        <span className="text-xs font-mono text-[var(--text-muted)]">
+                        <Link
+                            href={`/thoughts/${thought.slug}`}
+                            className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
+                        >
+                            {thought.title}
+                        </Link>
+                        <span className="text-xs font-mono text-[var(--text-color)] shrink-0">
                             {thought.date}
                         </span>
                     </li>

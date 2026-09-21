@@ -27,11 +27,11 @@ export default function EssaysPage() {
                         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
                             <Link
                                 href={`/essays/${essay.slug}`}
-                                className="text-[16px] hover:underline underline-offset-4 decoration-current/40"
+                                className="text-[16px] text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
                             >
                                 {essay.title}
                             </Link>
-                            <span className="text-xs font-mono text-[var(--text-muted)] shrink-0">
+                            <span className="text-xs font-mono text-[var(--text-color)] shrink-0">
                                 {essay.date}
                             </span>
                         </div>

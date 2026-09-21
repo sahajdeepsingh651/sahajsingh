@@ -1,6 +1,11 @@
 import Link from "next/link";
+import { getAllEssays } from "@/lib/essays";
+import { getAllThoughts } from "@/lib/thoughts";
 
 export default function Home() {
+    const essays = getAllEssays().slice(0, 4);
+    const thoughts = getAllThoughts().slice(0, 4);
+
     return (
         <div className="space-y-12 max-w-2xl">
             <section className="space-y-4">
@@ -21,17 +26,18 @@ export default function Home() {
                         className="underline underline-offset-4 hover:text-[var(--text-color)] transition-colors"
                     >
                         [now]
-                    </Link>
-                    {" "}and{" "}
+                    </Link>{" "}
+                    and{" "}
                     <Link
                         href="/about"
                         className="underline underline-offset-4 hover:text-[var(--text-color)] transition-colors"
                     >
                         [about]
-                    </Link>
-                    {" "}→
+                    </Link>{" "}
+                    →
                 </p>
             </section>
+
             <section className="space-y-4">
                 <div className="flex items-baseline justify-between border-b border-current/10 pb-2">
                     <h2 className="text-sm uppercase tracking-widest font-mono text-[var(--text-muted)]">
@@ -46,19 +52,25 @@ export default function Home() {
                 </div>
 
                 <ul className="space-y-3 font-normal">
-                    <li className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                        <Link
-                            href="/essays/beating-the-averages"
-                            className="hover:underline underline-offset-4 decoration-current/40"
+                    {essays.map((essay) => (
+                        <li
+                            key={essay.slug}
+                            className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1"
                         >
-                            My views on &ldquo;Beating the Averages&rdquo; by Paul Graham
-                        </Link>
-                        <span className="text-sm font-mono text-[var(--text-muted)]">
-                            2025-06-26
-                        </span>
-                    </li>
+                            <Link
+                                href={`/essays/${essay.slug}`}
+                                className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
+                            >
+                                {essay.title}
+                            </Link>
+                            <span className="text-sm font-mono text-[var(--text-color)] shrink-0">
+                                {essay.date}
+                            </span>
+                        </li>
+                    ))}
                 </ul>
             </section>
+
             <section className="space-y-4">
                 <div className="flex items-baseline justify-between border-b border-current/10 pb-2">
                     <h2 className="text-sm uppercase tracking-widest font-mono text-[var(--text-muted)]">
@@ -73,17 +85,22 @@ export default function Home() {
                 </div>
 
                 <ul className="space-y-3 font-normal">
-                    <li className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                        <Link
-                            href="/thoughts/hello_world"
-                            className="hover:underline underline-offset-4 decoration-current/40"
+                    {thoughts.map((thought) => (
+                        <li
+                            key={thought.slug}
+                            className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1"
                         >
-                            Hello World
-                        </Link>
-                        <span className="text-sm font-mono text-[var(--text-muted)]">
-                            2025-06-26
-                        </span>
-                    </li>
+                            <Link
+                                href={`/thoughts/${thought.slug}`}
+                                className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
+                            >
+                                {thought.title}
+                            </Link>
+                            <span className="text-sm font-mono text-[var(--text-color)] shrink-0">
+                                {thought.date}
+                            </span>
+                        </li>
+                    ))}
                 </ul>
             </section>
         </div>
