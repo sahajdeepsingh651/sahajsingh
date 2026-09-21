@@ -33,9 +33,13 @@ export default function EssaysPage() {
                                     {essay.title}
                                 </Link>
                                 {essay.status && (
-                                    <span className="text-[11px] font-mono text-[var(--text-muted)] border border-current/15 px-1.5 py-0.2 rounded">
-                                        {essay.status}
-                                    </span>
+                                    <Link
+                                        href="/about#status"
+                                        className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text-color)] transition-colors"
+                                        title="Learn about document status on About Site"
+                                    >
+                                        [{essay.status}]
+                                    </Link>
                                 )}
                             </div>
                             <span className="text-xs font-mono text-[var(--text-muted)] shrink-0">

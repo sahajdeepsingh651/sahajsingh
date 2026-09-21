@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllEssays, getEssayBySlug } from "@/lib/essays";
-import EpistemicBadge from "@/components/EpistemicBadge";
+import { STATUS_CONFIG, CONFIDENCE_CONFIG } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -58,16 +58,43 @@ export default async function EssayPage({
                 <h1 className="text-2xl sm:text-3xl font-normal tracking-tight leading-snug">
                     {essay.title}
                 </h1>
-                <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-4 pt-1">
-                    <div className="flex items-center gap-3 text-xs font-mono text-[var(--text-muted)]">
-                        <time>{essay.date}</time>
-                        <span>•</span>
-                        <span>essay</span>
-                    </div>
-                    <EpistemicBadge
-                        status={essay.status}
-                        confidence={essay.confidence}
-                    />
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-[var(--text-muted)] pt-1">
+                    <time>{essay.date}</time>
+                    <span>•</span>
+                    <span>essay</span>
+                    {essay.status && (
+                        <>
+                            <span>•</span>
+                            <span>
+                                status:{" "}
+                                <Link
+                                    href="/about#status"
+                                    className="text-[var(--text-color)] italic font-serif hover:underline underline-offset-4"
+                                    title="View document maturity stages on About Site"
+                                >
+                                    {STATUS_CONFIG[essay.status]?.label || essay.status}
+                                </Link>
+                            </span>
+                        </>
+                    )}
+                    {essay.confidence && (
+                        <>
+                            <span>•</span>
+                            <span>
+                                confidence:{" "}
+                                <Link
+                                    href="/about#confidence"
+                                    className="text-[var(--text-color)] italic font-serif hover:underline underline-offset-4"
+                                    title="View epistemic confidence scale on About Site"
+                                >
+                                    {CONFIDENCE_CONFIG[essay.confidence]?.label || essay.confidence}
+                                </Link>{" "}
+                                <span className="opacity-75 font-mono text-[11px]">
+                                    ({CONFIDENCE_CONFIG[essay.confidence]?.range})
+                                </span>
+                            </span>
+                        </>
+                    )}
                 </div>
             </header>
 
