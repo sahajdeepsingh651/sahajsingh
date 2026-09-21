@@ -21,19 +21,19 @@ export default function NowPage() {
             {/* Natural Journal / Desk Dispatch */}
             <article className="space-y-5 leading-relaxed font-normal">
                 <p>
-                    I&apos;m developing a knowledge engine—my answer to how AI should be used
-                    for research and study—alongside a web crawler to deepen my understanding
-                    of Go.
+                    Working on developing a knowledge engine which is my answer to how to
+                    use AI for doing research and study and developing a web crawler for
+                    understanding Go
                 </p>
 
                 <p>
-                    Currently reading <em>Computer Networking: A Top-Down Approach</em> (9th
-                    Edition) and <em>The Fabric of Reality</em>.
+                    Currently reading Computer Networking a top down approach 9th edition
+                    and fabric of reality
                 </p>
 
                 <p>
-                    I&apos;ve started running and going to the gym again, training for an
-                    upcoming Last Man Standing endurance event.
+                    have started gym and running again, training for a coming last man
+                    standing endurance event
                 </p>
             </article>
 
