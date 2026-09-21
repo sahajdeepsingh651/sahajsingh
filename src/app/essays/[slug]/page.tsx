@@ -65,32 +65,60 @@ export default async function EssayPage({
                     {essay.status && (
                         <>
                             <span>•</span>
-                            <span>
-                                status:{" "}
+                            <span className="relative group inline-block">
                                 <Link
                                     href="/about#status"
-                                    className="text-[var(--text-color)] italic font-serif hover:underline underline-offset-4"
-                                    title="View document maturity stages on About Site"
+                                    className="hover:underline underline-offset-4"
                                 >
-                                    {STATUS_CONFIG[essay.status]?.label || essay.status}
+                                    status:{" "}
+                                    <span className="text-[var(--text-color)] italic font-serif">
+                                        {STATUS_CONFIG[essay.status]?.label || essay.status}
+                                    </span>
                                 </Link>
+
+                                {/* Small hover popup */}
+                                <span className="pointer-events-none absolute left-0 top-full mt-2 z-20 w-64 p-2.5 rounded bg-[var(--bg-color)] border border-current/20 shadow-md text-left opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
+                                    <span className="block font-mono text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1">
+                                        Document Maturity
+                                    </span>
+                                    <span className="block font-serif text-[12px] text-[var(--text-color)] leading-snug">
+                                        {STATUS_CONFIG[essay.status]?.desc}
+                                    </span>
+                                    <span className="block font-mono text-[10px] text-[var(--text-muted)] pt-1 mt-1 border-t border-current/10">
+                                        Click to read status taxonomy →
+                                    </span>
+                                </span>
                             </span>
                         </>
                     )}
                     {essay.confidence && (
                         <>
                             <span>•</span>
-                            <span>
-                                confidence:{" "}
+                            <span className="relative group inline-block">
                                 <Link
                                     href="/about#confidence"
-                                    className="text-[var(--text-color)] italic font-serif hover:underline underline-offset-4"
-                                    title="View epistemic confidence scale on About Site"
+                                    className="hover:underline underline-offset-4"
                                 >
-                                    {CONFIDENCE_CONFIG[essay.confidence]?.label || essay.confidence}
-                                </Link>{" "}
-                                <span className="opacity-75 font-mono text-[11px]">
-                                    ({CONFIDENCE_CONFIG[essay.confidence]?.range})
+                                    confidence:{" "}
+                                    <span className="text-[var(--text-color)] italic font-serif">
+                                        {CONFIDENCE_CONFIG[essay.confidence]?.label || essay.confidence}
+                                    </span>{" "}
+                                    <span className="opacity-75 font-mono text-[11px]">
+                                        ({CONFIDENCE_CONFIG[essay.confidence]?.range})
+                                    </span>
+                                </Link>
+
+                                {/* Small hover popup */}
+                                <span className="pointer-events-none absolute left-0 top-full mt-2 z-20 w-72 p-2.5 rounded bg-[var(--bg-color)] border border-current/20 shadow-md text-left opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
+                                    <span className="block font-mono text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1">
+                                        Personal Belief ({CONFIDENCE_CONFIG[essay.confidence]?.range})
+                                    </span>
+                                    <span className="block font-serif text-[12px] text-[var(--text-color)] leading-snug italic">
+                                        &ldquo;{CONFIDENCE_CONFIG[essay.confidence]?.desc}&rdquo;
+                                    </span>
+                                    <span className="block font-mono text-[10px] text-[var(--text-muted)] pt-1 mt-1 border-t border-current/10">
+                                        Click to read confidence scale →
+                                    </span>
                                 </span>
                             </span>
                         </>
