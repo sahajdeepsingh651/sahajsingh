@@ -10,6 +10,19 @@ modifications:
     note: "Original essay drafted and published on Medium."
   - date: "2026-09-21"
     note: "Migrated to personal field notebook; added epistemic status, confidence, and code block formatting."
+references:
+  - id: 1
+    title: "Beating the Averages"
+    author: "Paul Graham"
+    url: "https://paulgraham.com/avg.html"
+    date: "2001"
+    note: "Original essay on Lisp, macros, and competitive startup technology."
+  - id: 2
+    title: "Recursive Functions of Symbolic Expressions and Their Computation by Machine, Part I"
+    author: "John McCarthy"
+    url: "https://dl.acm.org/doi/10.1145/367177.367199"
+    date: "1960"
+    note: "The landmark paper introducing Lisp and homoiconicity."
 ---
 
 Read his essay if you haven't: [Beating the Averages](https://paulgraham.com/avg.html)

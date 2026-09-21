@@ -25,23 +25,12 @@ export default function EssaysPage() {
                 {essays.map((essay) => (
                     <li key={essay.slug} className="space-y-1">
                         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                            <div className="flex items-baseline gap-2 flex-wrap">
-                                <Link
-                                    href={`/essays/${essay.slug}`}
-                                    className="text-[16px] hover:underline underline-offset-4 decoration-current/40"
-                                >
-                                    {essay.title}
-                                </Link>
-                                {essay.status && (
-                                    <Link
-                                        href="/about#status"
-                                        className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text-color)] transition-colors"
-                                        title="Learn about document status on About Site"
-                                    >
-                                        [{essay.status}]
-                                    </Link>
-                                )}
-                            </div>
+                            <Link
+                                href={`/essays/${essay.slug}`}
+                                className="text-[16px] hover:underline underline-offset-4 decoration-current/40"
+                            >
+                                {essay.title}
+                            </Link>
                             <span className="text-xs font-mono text-[var(--text-muted)] shrink-0">
                                 {essay.date}
                             </span>
