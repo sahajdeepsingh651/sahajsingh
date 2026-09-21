@@ -25,7 +25,7 @@ references:
     note: "The landmark paper introducing Lisp and homoiconicity."
 ---
 
-Read his essay if you haven't: [Beating the Averages](https://paulgraham.com/avg.html)
+Read his essay if you haven't: [Beating the Averages](https://paulgraham.com/avg.html)[^1]
 
 ## You Don't Beat the Average by Playing It Safe
 If you want to gain a substantial advantage over your competitors, you need to do something different. This whole point will be emphasized more by telling you guys more about the startup "Viaweb".
@@ -37,7 +37,7 @@ Viaweb was originally started by Paul Graham and Robert Morris. Trevor Blackwell
 Paul introduces the Blub paradox that explains that a normal programmer will not know what features he is missing, since he is thinking the whole software in his own programming language. He won't understand the power of macros or what features he is missing that make software more useful and elegant that can be achieved by adopting some other language.
 
 ## Why Lisp ? why go to some uncharted Land of Lisp?
-Lisp (short for LISt Processing) is one of the oldest high-level programming languages, invented by John McCarthy in 1958.
+Lisp (short for LISt Processing) is one of the oldest high-level programming languages, invented by John McCarthy in 1958[^2].
 
 ## Why to use Lisp
 

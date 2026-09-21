@@ -66,6 +66,15 @@ export function getAllEssays(): EssayMeta[] {
     return allEssays.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
+function escapeHtml(str: string): string {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 export async function getEssayBySlug(
     slug: string,
 ): Promise<EssayDetail | null> {
@@ -73,15 +82,6 @@ export async function getEssayBySlug(
     if (fs.existsSync(fullPath)) {
         const fileContents = fs.readFileSync(fullPath, "utf8");
         const { data, content } = matter(fileContents);
-
-        // Transform [^1] or [^alpha] footnote citations into clickable anchors
-        const transformedContent = content.replace(
-            /\[\^(\w+)\]/g,
-            '<sup><a href="#ref-$1" id="cite-$1" class="citation-ref text-[11px] font-mono text-[var(--text-muted)] hover:text-[var(--text-color)] underline-offset-2 hover:underline">[$1]</a></sup>'
-        );
-
-        const contentHtml = await marked.parse(transformedContent);
-        const epistemic = parseEpistemicMeta(data);
 
         const references: EssayReference[] = Array.isArray(data.references)
             ? data.references.map((ref: Record<string, unknown>, idx: number) => ({
@@ -93,6 +93,38 @@ export async function getEssayBySlug(
                   note: ref.note ? String(ref.note) : undefined,
               }))
             : [];
+
+        const refMap = new Map<string, EssayReference>();
+        references.forEach((ref) => {
+            refMap.set(String(ref.id), ref);
+        });
+
+        // Transform [^1] or [^alpha] footnote citations into clickable anchors with hover preview
+        const transformedContent = content.replace(
+            /\[\^(\w+)\]/g,
+            (match, id) => {
+                const ref = refMap.get(id);
+                if (!ref) {
+                    return `<sup><a href="#ref-${id}" id="cite-${id}" class="citation-ref text-[11px] font-mono text-[var(--text-muted)] hover:text-[var(--text-color)] underline-offset-2 hover:underline">[${id}]</a></sup>`;
+                }
+
+                const authorYear = [
+                    ref.author,
+                    ref.date ? `(${ref.date})` : null,
+                ]
+                    .filter(Boolean)
+                    .join(" ");
+
+                const noteHtml = ref.note
+                    ? `<span class="block text-[12px] font-serif italic text-[var(--text-muted)] leading-relaxed mt-1.5 pt-1.5 border-t border-current/10">${escapeHtml(ref.note)}</span>`
+                    : "";
+
+                return `<span class="citation-wrapper relative inline-block group"><sup class="select-none"><a href="#ref-${id}" id="cite-${id}" class="citation-ref text-[11px] font-mono text-[var(--text-muted)] hover:text-[var(--text-color)] underline-offset-2 hover:underline">[${id}]</a></sup><span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-30 w-72 max-w-[85vw] p-3 rounded-md bg-[var(--bg-color)] border border-current/20 shadow-xl text-left opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 normal-case not-italic font-sans"><span class="block font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-1">Reference [${id}]</span><span class="block font-serif text-[13px] font-medium text-[var(--text-color)] leading-snug">${escapeHtml(ref.title)}</span>${authorYear ? `<span class="block text-[11px] font-mono text-[var(--text-muted)] mt-0.5">${escapeHtml(authorYear)}</span>` : ""}${noteHtml}</span></span>`;
+            }
+        );
+
+        const contentHtml = await marked.parse(transformedContent);
+        const epistemic = parseEpistemicMeta(data);
 
         return {
             slug,
