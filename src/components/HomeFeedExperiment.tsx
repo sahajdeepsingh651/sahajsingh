@@ -14,6 +14,73 @@ interface HomeFeedExperimentProps {
 
 type CountChoice = number | "all";
 
+// High-fidelity sample entries for testing layout density beyond the few published items
+const SAMPLE_ESSAYS: EssayMeta[] = [
+    {
+        slug: "sample-knowledge-graphs",
+        title: "The Architecture of Autonomous Knowledge Graphs",
+        date: "2025-04-18",
+        description:
+            "Exploration of graph-based entity synthesis and automated cross-referencing in personal research environments.",
+    },
+    {
+        slug: "sample-distributed-consensus",
+        title: "On Distributed Consensus and State Machine Replication",
+        date: "2025-03-02",
+        description:
+            "Mental models for leader election, log invariants, and crash fault tolerance in distributed storage systems.",
+    },
+    {
+        slug: "sample-estimative-probability",
+        title: "Estimative Probability Scales in Technical Writing",
+        date: "2025-01-15",
+        description:
+            "Adopting calibrated epistemic vocabularies to avoid ambiguity and overconfidence in system architecture docs.",
+    },
+];
+
+const SAMPLE_PROJECTS: Project[] = [
+    {
+        title: "Distributed Raft Log Engine",
+        description:
+            "A compact Raft consensus engine written in Go with deterministic fault injection, pluggable WAL storage, and vector clock ordering.",
+        tech: ["Go", "Raft", "Distributed Systems", "Storage Engines"],
+        status: "design",
+        link: "https://github.com/sahajdeepsingh651",
+    },
+    {
+        title: "Local Symbolic Knowledge Synthesizer",
+        description:
+            "An offline-first AST parser and semantic indexer extracting entity relationship graphs directly from source files and markdown notes.",
+        tech: ["TypeScript", "ASTs", "Graph Algorithms", "SQLite"],
+        status: "prototype",
+        link: "https://github.com/sahajdeepsingh651",
+    },
+];
+
+const SAMPLE_THOUGHTS: ThoughtMeta[] = [
+    {
+        slug: "sample-latency-numbers",
+        title: "Latency Numbers Every Systems Engineer Should Memorize",
+        date: "2026-08-14",
+    },
+    {
+        slug: "sample-active-recall",
+        title: "Active Recall vs Passive Consumption in Technical Study",
+        date: "2026-07-29",
+    },
+    {
+        slug: "sample-software-reliability",
+        title: "The Epistemology of Software Reliability",
+        date: "2026-06-10",
+    },
+    {
+        slug: "sample-compilers-as-mirrors",
+        title: "Compilers as Mirrors of Thought",
+        date: "2026-05-04",
+    },
+];
+
 export default function HomeFeedExperiment({
     essays,
     projects,
@@ -24,12 +91,32 @@ export default function HomeFeedExperiment({
     const [thoughtCount, setThoughtCount] = useState<CountChoice>(3);
     const [isExpanded, setIsExpanded] = useState<boolean>(true);
 
+    // Combine published content with realistic samples to enable testing density up to 5 essays, 5 projects, and 7 thoughts
+    const allEssays = [
+        ...essays,
+        ...SAMPLE_ESSAYS.filter(
+            (s) => !essays.some((e) => e.title.toLowerCase() === s.title.toLowerCase()),
+        ),
+    ];
+    const allProjects = [
+        ...projects,
+        ...SAMPLE_PROJECTS.filter(
+            (s) => !projects.some((p) => p.title.toLowerCase() === s.title.toLowerCase()),
+        ),
+    ];
+    const allThoughts = [
+        ...thoughts,
+        ...SAMPLE_THOUGHTS.filter(
+            (s) => !thoughts.some((t) => t.title.toLowerCase() === s.title.toLowerCase()),
+        ),
+    ];
+
     const visibleEssays =
-        essayCount === "all" ? essays : essays.slice(0, essayCount);
+        essayCount === "all" ? allEssays : allEssays.slice(0, essayCount);
     const visibleProjects =
-        projectCount === "all" ? projects : projects.slice(0, projectCount);
+        projectCount === "all" ? allProjects : allProjects.slice(0, projectCount);
     const visibleThoughts =
-        thoughtCount === "all" ? thoughts : thoughts.slice(0, thoughtCount);
+        thoughtCount === "all" ? allThoughts : allThoughts.slice(0, thoughtCount);
 
     const applyPreset = (e: CountChoice, p: CountChoice, t: CountChoice) => {
         setEssayCount(e);
@@ -63,7 +150,16 @@ export default function HomeFeedExperiment({
                                     className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1"
                                 >
                                     <Link
-                                        href={`/essays/${essay.slug}`}
+                                        href={
+                                            essay.slug.startsWith("sample-")
+                                                ? "/essays"
+                                                : `/essays/${essay.slug}`
+                                        }
+                                        title={
+                                            essay.slug.startsWith("sample-")
+                                                ? "Sample entry for testing layout density"
+                                                : undefined
+                                        }
                                         className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
                                     >
                                         {essay.title}
@@ -150,7 +246,16 @@ export default function HomeFeedExperiment({
                                     className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1"
                                 >
                                     <Link
-                                        href={`/thoughts/${thought.slug}`}
+                                        href={
+                                            thought.slug.startsWith("sample-")
+                                                ? "/thoughts"
+                                                : `/thoughts/${thought.slug}`
+                                        }
+                                        title={
+                                            thought.slug.startsWith("sample-")
+                                                ? "Sample entry for testing layout density"
+                                                : undefined
+                                        }
                                         className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
                                     >
                                         {thought.title}
@@ -205,7 +310,7 @@ export default function HomeFeedExperiment({
                             <div className="flex items-center justify-between gap-1">
                                 <span className="text-[11px] text-[var(--text-muted)]">Essays:</span>
                                 <div className="flex items-center gap-1">
-                                    {([1, 2, 3, 4, "all"] as const).map((count) => (
+                                    {([1, 2, 3, 4, 5, "all"] as const).map((count) => (
                                         <button
                                             key={String(count)}
                                             type="button"
@@ -226,7 +331,7 @@ export default function HomeFeedExperiment({
                             <div className="flex items-center justify-between gap-1">
                                 <span className="text-[11px] text-[var(--text-muted)]">Projects:</span>
                                 <div className="flex items-center gap-1">
-                                    {([1, 2, 3, "all"] as const).map((count) => (
+                                    {([1, 2, 3, 4, 5, "all"] as const).map((count) => (
                                         <button
                                             key={String(count)}
                                             type="button"
@@ -247,7 +352,7 @@ export default function HomeFeedExperiment({
                             <div className="flex items-center justify-between gap-1">
                                 <span className="text-[11px] text-[var(--text-muted)]">Thoughts:</span>
                                 <div className="flex items-center gap-1">
-                                    {([1, 2, 3, 4, 5, "all"] as const).map((count) => (
+                                    {([1, 2, 3, 4, 5, 6, 7, "all"] as const).map((count) => (
                                         <button
                                             key={String(count)}
                                             type="button"
@@ -286,10 +391,10 @@ export default function HomeFeedExperiment({
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={() => applyPreset(4, 3, 4)}
+                                        onClick={() => applyPreset(4, 3, 5)}
                                         className="px-2 py-1 rounded text-[11px] text-left border border-current/10 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10 cursor-pointer"
                                     >
-                                        Dense (4·3·4)
+                                        Dense (4·3·5)
                                     </button>
                                     <button
                                         type="button"
@@ -303,9 +408,22 @@ export default function HomeFeedExperiment({
                         </div>
 
                         {/* Status Readout */}
-                        <div className="pt-1.5 border-t border-current/10 text-[10px] text-[var(--text-muted)] flex items-center justify-between">
-                            <span>Showing: {visibleEssays.length}E · {visibleProjects.length}P · {visibleThoughts.length}T</span>
-                            <span className="text-emerald-500">Live</span>
+                        <div className="pt-1.5 border-t border-current/10 text-[10px] text-[var(--text-muted)] space-y-1">
+                            <div className="flex items-center justify-between">
+                                <span>
+                                    Showing: <strong className="text-[var(--text-color)]">{visibleEssays.length}</strong>E ·{" "}
+                                    <strong className="text-[var(--text-color)]">{visibleProjects.length}</strong>P ·{" "}
+                                    <strong className="text-[var(--text-color)]">{visibleThoughts.length}</strong>T
+                                </span>
+                                <span className="text-emerald-500">Live</span>
+                            </div>
+                            {(visibleEssays.length > essays.length ||
+                                visibleProjects.length > projects.length ||
+                                visibleThoughts.length > thoughts.length) && (
+                                <p className="text-[10px] text-[var(--text-muted)] leading-tight italic">
+                                    * Sample items active to test density beyond currently published ({essays.length}E, {projects.length}P, {thoughts.length}T).
+                                </p>
+                            )}
                         </div>
                     </div>
                 )}
