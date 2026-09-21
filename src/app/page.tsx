@@ -84,28 +84,50 @@ export default function Home() {
                     </Link>
                 </div>
 
-                <ul className="space-y-3 font-normal">
-                    <li className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                        <Link
-                            href="/projects"
-                            className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
-                        >
-                            Knowledge Engine &amp; Autonomous Crawler
-                        </Link>
-                        <span className="text-sm font-mono text-[var(--text-color)] shrink-0">
-                            [active build]
-                        </span>
+                <ul className="space-y-4 font-normal">
+                    <li className="space-y-1">
+                        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                            <a
+                                href="https://github.com/sahajdeepsingh651/knowledge_engine"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40 inline-flex items-center gap-1.5"
+                            >
+                                <span>Knowledge Engine &amp; Autonomous Crawler</span>
+                                <span className="text-xs font-mono text-[var(--text-muted)]">↗</span>
+                            </a>
+                            <span className="text-sm font-mono text-[var(--text-color)] shrink-0">
+                                [active build]
+                            </span>
+                        </div>
+                        <div className="flex flex-wrap gap-x-3 text-xs font-mono text-[var(--text-muted)]">
+                            <span>. Go</span>
+                            <span>. Distributed Systems</span>
+                            <span>. Networking</span>
+                            <span>. ASTs</span>
+                        </div>
                     </li>
-                    <li className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                        <Link
-                            href="/projects"
-                            className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
-                        >
-                            Personal Field Notebook &amp; Digital Garden
-                        </Link>
-                        <span className="text-sm font-mono text-[var(--text-color)] shrink-0">
-                            [deployed]
-                        </span>
+                    <li className="space-y-1">
+                        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                            <a
+                                href="https://github.com/sahajdeepsingh651/sahajsingh"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40 inline-flex items-center gap-1.5"
+                            >
+                                <span>Personal Field Notebook &amp; Digital Garden</span>
+                                <span className="text-xs font-mono text-[var(--text-muted)]">↗</span>
+                            </a>
+                            <span className="text-sm font-mono text-[var(--text-color)] shrink-0">
+                                [deployed]
+                            </span>
+                        </div>
+                        <div className="flex flex-wrap gap-x-3 text-xs font-mono text-[var(--text-muted)]">
+                            <span>. Next.js</span>
+                            <span>. React</span>
+                            <span>. TypeScript</span>
+                            <span>. Tailwind CSS</span>
+                        </div>
                     </li>
                 </ul>
             </section>

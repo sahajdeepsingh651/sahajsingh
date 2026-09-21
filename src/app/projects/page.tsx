@@ -20,6 +20,7 @@ const PROJECTS: Project[] = [
             "An answer to how to use AI for deep research and study rather than superficial summarization. Combines an autonomous web crawler written in Go with AST-based symbolic knowledge representations and local graph synthesis.",
         tech: ["Go", "Distributed Systems", "Networking", "ASTs"],
         status: "active build",
+        link: "https://github.com/sahajdeepsingh651/knowledge_engine",
     },
     {
         title: "Personal Field Notebook & Digital Garden",
@@ -27,6 +28,7 @@ const PROJECTS: Project[] = [
             "This atmospheric personal publishing platform. Inspired by Gwern.net, featuring estimative probability scales (Kesselman words), intellectual revision changelogs, bidirectional citations, and tactile editorial typography.",
         tech: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
         status: "deployed",
+        link: "https://github.com/sahajdeepsingh651/sahajsingh",
     },
     {
         title: "Endurance Conditioning & Event Protocol",
@@ -34,6 +36,7 @@ const PROJECTS: Project[] = [
             "Empirical training telemetry, cadence protocols, and pacing frameworks designed for preparing for an upcoming Last Man Standing continuous ultra-endurance running event.",
         tech: ["Systems Thinking", "Empirical Metrics", "Athletics"],
         status: "training",
+        link: "https://github.com/sahajdeepsingh651",
     },
 ];
 
@@ -55,9 +58,23 @@ export default function ProjectsPage() {
                 {PROJECTS.map((project) => (
                     <li key={project.title} className="space-y-2">
                         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                            <h2 className="text-[16px] font-medium text-[var(--text-color)]">
-                                {project.title}
-                            </h2>
+                            {project.link ? (
+                                <a
+                                    href={project.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[16px] font-medium text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40 inline-flex items-center gap-1.5"
+                                >
+                                    <span>{project.title}</span>
+                                    <span className="text-xs font-mono text-[var(--text-muted)]">
+                                        ↗
+                                    </span>
+                                </a>
+                            ) : (
+                                <h2 className="text-[16px] font-medium text-[var(--text-color)]">
+                                    {project.title}
+                                </h2>
+                            )}
                             <span className="text-xs font-mono text-[var(--text-color)] shrink-0">
                                 [{project.status}]
                             </span>
@@ -65,13 +82,10 @@ export default function ProjectsPage() {
                         <p className="text-sm text-[var(--text-muted)] leading-relaxed">
                             {project.description}
                         </p>
-                        <div className="flex flex-wrap gap-2 pt-1">
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-mono text-[var(--text-muted)] pt-0.5">
                             {project.tech.map((t) => (
-                                <span
-                                    key={t}
-                                    className="text-[11px] font-mono text-[var(--text-muted)] border border-current/15 px-2 py-0.5 rounded-sm"
-                                >
-                                    {t}
+                                <span key={t}>
+                                    . {t}
                                 </span>
                             ))}
                         </div>
