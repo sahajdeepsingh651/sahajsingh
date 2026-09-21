@@ -32,7 +32,7 @@ export default function NowPage() {
                 </p>
 
                 <p>
-                    have started gym and running again, training for a coming last man
+                    Have started gym and running again, training for a coming last man
                     standing endurance event
                 </p>
             </article>
