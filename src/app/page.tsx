@@ -22,6 +22,13 @@ export default function Home() {
                     >
                         [now →]
                     </Link>
+                    {" "}• More{" "}
+                    <Link
+                        href="/about"
+                        className="underline underline-offset-4 hover:text-[var(--text-color)] transition-colors"
+                    >
+                        [about me →]
+                    </Link>
                 </p>
             </section>
             <section className="space-y-4">
