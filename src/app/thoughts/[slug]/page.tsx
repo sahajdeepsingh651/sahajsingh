@@ -3,9 +3,29 @@ import { getThoughtBySlug } from "@/lib/thoughts";
 import { notFound } from "next/navigation";
 import { getAllThoughts } from "@/lib/thoughts";
 
+import type { Metadata } from "next";
+
 export async function generateStaticParams() {
     const thoughts = getAllThoughts();
     return thoughts.map((t) => ({ slug: t.slug }));
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+    const { slug } = await params;
+    const thought = await getThoughtBySlug(slug);
+    if (!thought) {
+        return {
+            title: "Thought Not Found | Sahaj Singh",
+        };
+    }
+    return {
+        title: `${thought.title} | Sahaj Singh`,
+        description: "Field notebook thought entry.",
+    };
 }
 
 export default async function ThoughtPage({
@@ -32,8 +52,10 @@ export default async function ThoughtPage({
                 <h1 className="text-2xl sm:text-3xl font-normal tracking-tight leading-snug">
                     {thought.title}
                 </h1>
-                <div className="flex items-center gap-3 text-xs font-mono text-[var(--text-muted)]">
-                    <span>{thought.date}</span>
+                <div className="flex items-center gap-3 text-xs font-mono text-[var(--text-color)]">
+                    <time>{thought.date}</time>
+                    <span className="text-[var(--text-muted)]">•</span>
+                    <span className="text-[var(--text-muted)]">thought</span>
                 </div>
             </header>
             <article className="space-y-6 leading-relaxed">

@@ -18,7 +18,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Sahaj Singh",
+    title: {
+        default: "Sahaj Singh",
+        template: "%s | Sahaj Singh",
+    },
     description: "Personal digital garden and field notebook",
 };
 

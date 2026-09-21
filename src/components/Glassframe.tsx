@@ -22,11 +22,11 @@ export default function GlassFrame({
     }, []);
     return (
         <div
-            className={`relative w-full max-w-6xl mx-auto my-8 p-8 border border-neutral-900/10 dark:border-neutral-100/10 rounded-sm
-  transition-all duration-500 ${isScrolled
-                    ? "bg-[var(--bg-color)]/60 dark:bg-black/40 backdrop-blur-md"
+            className={`relative w-full max-w-6xl mx-auto my-8 p-8 border border-current/10 rounded-sm transition-all duration-500 ${
+                isScrolled
+                    ? "bg-[var(--bg-color)]/70 backdrop-blur-md"
                     : "bg-transparent backdrop-blur-none"
-                }`}
+            }`}
         >
             {children}
         </div>

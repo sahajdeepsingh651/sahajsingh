@@ -8,7 +8,7 @@ export default function SiteTitle() {
     return (
         <Link
             href="/"
-            className="group text-xl sm:text-2xl font-normal tracking-tight no-underline text-stone-900 dark:text-stone-100 inline-flex items-baseline"
+            className="group text-xl sm:text-2xl font-normal tracking-tight no-underline text-[var(--text-color)] inline-flex items-baseline"
         >
             <span
                 className={`transition-opacity duration-200 select-none ${
