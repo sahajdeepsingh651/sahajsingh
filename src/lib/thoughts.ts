@@ -3,7 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import { marked } from "marked";
 
-const thoughtsDirectory = path.join(process.cwd(), "content/thoughts");
+const thoughtsdir = path.join(process.cwd(), "content/thoughts");
 
 export interface ThoughtMeta {
     slug: string;
@@ -16,44 +16,55 @@ export interface ThoughtDetail extends ThoughtMeta {
 }
 
 export function getAllThoughts(): ThoughtMeta[] {
-    if (!fs.existsSync(thoughtsDirectory)) {
+    // 1. Guard check: folder might not exist yet
+    if (!fs.existsSync(thoughtsdir)) {
         return [];
     }
 
-    const fileNames = fs.readdirSync(thoughtsDirectory);
-    const allThoughts = fileNames
-        .filter((fileName) => fileName.endsWith(".md"))
-        .map((fileName) => {
-            const slug = fileName.replace(/\.md$/, "");
-            const fullPath = path.join(thoughtsDirectory, fileName);
-            const fileContents = fs.readFileSync(fullPath, "utf8");
-            const { data } = matter(fileContents);
+    // 2. Read all filenames in the folder
+    const filenames = fs.readdirSync(thoughtsdir);
 
-            return {
-                slug,
-                title: (data.title as string) || slug,
-                date: data.date ? String(data.date) : "",
-            };
-        });
+    // 3. Keep only markdown files
+    const filter_filenames = filenames.filter((element) =>
+        element.endsWith(".md"),
+    );
 
-    // Sort descending by date
+    // 4. Map each file to its metadata
+    const allThoughts = filter_filenames.map((filename) => {
+        const fullPath = path.join(thoughtsdir, filename);
+        const fileContents = fs.readFileSync(fullPath, "utf8");
+        const { data } = matter(fileContents);
+
+        // Turn "experiment.md" into slug "experiment"
+        const slug = filename.replace(/\.md$/, "");
+
+        return {
+            slug,
+            title: (data.title as string) || slug,
+            date: data.date ? String(data.date) : "",
+        };
+    });
+
+    // 5. Sort newest date first
     return allThoughts.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
-export async function getThoughtBySlug(slug: string): Promise<ThoughtDetail | null> {
-    const fullPath = path.join(thoughtsDirectory, `${slug}.md`);
-    if (!fs.existsSync(fullPath)) {
+export async function getThoughtBySlug(
+    slug: string,
+): Promise<ThoughtDetail | null> {
+    const fullPath = path.join(thoughtsdir, `${slug}.md`);
+    if (fs.existsSync(fullPath)) {
+        const fileContents = fs.readFileSync(fullPath, "utf8");
+        const { data, content } = matter(fileContents);
+        const contentHtml = await marked.parse(content);
+        return {
+            slug,
+            title: (data.title as string) || slug,
+            date: data.date ? String(data.date) : "",
+
+            contentHtml: contentHtml,
+        };
+    } else {
         return null;
     }
-
-    const fileContents = fs.readFileSync(fullPath, "utf8");
-    const { data, content } = matter(fileContents);
-    const contentHtml = await marked.parse(content);
-
-    return {
-        slug,
-        title: (data.title as string) || slug,
-        date: data.date ? String(data.date) : "",
-        contentHtml,
-    };
 }

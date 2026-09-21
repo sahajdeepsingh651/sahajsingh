@@ -5,6 +5,7 @@ import GlassFrame from "@/components/Glassframe";
 import ThemeToggle from "@/components/Themetoggle";
 import Navigation from "@/components/Navigation";
 import SiteTitle from "@/components/SiteTitle";
+
 const newsreader = Newsreader({
     subsets: ["latin"],
     style: ["normal", "italic"],
