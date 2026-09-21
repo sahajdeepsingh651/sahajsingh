@@ -14,27 +14,26 @@ export default function NowPage() {
                 <div className="flex items-center gap-3 text-xs font-mono text-[var(--text-muted)]">
                     <time>September 2026</time>
                     <span>•</span>
-                    <span>Bangalore, India</span>
+                    <span>Nashik, India</span>
                 </div>
             </header>
 
             {/* Natural Journal / Desk Dispatch */}
             <article className="space-y-5 leading-relaxed font-normal">
                 <p>
-                    I&apos;m currently working as a software engineer, with most of my spare
-                    cognitive energy going into understanding software systems from first principles
-                    and crafting this digital garden from scratch.
+                    I&apos;m developing a knowledge engine—my answer to how AI should be used
+                    for research and study—alongside a web crawler to deepen my understanding
+                    of Go.
                 </p>
 
                 <p>
-                    On my desk right now are a few books on systems programming, language foundations,
-                    and philosophy. I&apos;m trying to read slower, take fewer passive inputs,
-                    and write down thoughts as they form.
+                    Currently reading <em>Computer Networking: A Top-Down Approach</em> (9th
+                    Edition) and <em>The Fabric of Reality</em>.
                 </p>
 
                 <p>
-                    Outside of code, I&apos;ve been maintaining a daily meditation practice,
-                    taking long walks, and deliberately spending more quiet hours away from glowing screens.
+                    I&apos;ve started running and going to the gym again, training for an
+                    upcoming Last Man Standing endurance event.
                 </p>
             </article>
 
