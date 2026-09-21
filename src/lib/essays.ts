@@ -2,6 +2,12 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { marked } from "marked";
+import {
+    DocumentStatus,
+    EpistemicConfidence,
+    DocumentModification,
+    parseEpistemicMeta,
+} from "./metadata";
 
 const essaysDirectory = path.join(process.cwd(), "content/essays");
 
@@ -11,6 +17,9 @@ export interface EssayMeta {
     date: string;
     description: string;
     originalUrl?: string;
+    status?: DocumentStatus;
+    confidence?: EpistemicConfidence;
+    modifications?: DocumentModification[];
 }
 
 export interface EssayDetail extends EssayMeta {
@@ -31,6 +40,7 @@ export function getAllEssays(): EssayMeta[] {
         const { data } = matter(fileContents);
 
         const slug = filename.replace(/\.md$/, "");
+        const epistemic = parseEpistemicMeta(data);
 
         return {
             slug,
@@ -38,6 +48,7 @@ export function getAllEssays(): EssayMeta[] {
             date: data.date ? String(data.date) : "",
             description: (data.description as string) || "",
             originalUrl: data.originalUrl as string | undefined,
+            ...epistemic,
         };
     });
 
@@ -53,6 +64,7 @@ export async function getEssayBySlug(
         const fileContents = fs.readFileSync(fullPath, "utf8");
         const { data, content } = matter(fileContents);
         const contentHtml = await marked.parse(content);
+        const epistemic = parseEpistemicMeta(data);
 
         return {
             slug,
@@ -61,6 +73,7 @@ export async function getEssayBySlug(
             description: (data.description as string) || "",
             originalUrl: data.originalUrl as string | undefined,
             contentHtml,
+            ...epistemic,
         };
     } else {
         return null;

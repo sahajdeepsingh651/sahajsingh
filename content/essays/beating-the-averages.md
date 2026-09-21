@@ -3,6 +3,13 @@ title: 'My views on "Beating the Averages" by Paul Graham'
 date: "2025-06-26"
 description: "On Lisp, homoiconicity, macros, and why expressive languages offer an asymmetric competitive advantage."
 originalUrl: "https://medium.com/@sahajdeepsingh100/my-views-on-beating-the-averages-by-paul-graham-f6320333ef0f"
+status: finished
+confidence: highly_likely
+modifications:
+  - date: "2025-06-26"
+    note: "Original essay drafted and published on Medium."
+  - date: "2026-09-21"
+    note: "Migrated to personal field notebook; added epistemic status, confidence, and code block formatting."
 ---
 
 Read his essay if you haven't: [Beating the Averages](https://paulgraham.com/avg.html)
