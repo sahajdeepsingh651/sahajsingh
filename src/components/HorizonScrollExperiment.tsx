@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname } from "next/navigation";
 
-export type HorizonMode = "3d" | "mist" | "rise" | "off";
-export type HorizonIntensity = "subtle" | "pronounced";
+export type HorizonMode = "ocean" | "3d" | "mist" | "rise" | "off";
+export type HorizonDepth = 140 | 180 | 220;
 
 interface HorizonScrollExperimentProps {
     children: React.ReactNode;
@@ -13,186 +13,224 @@ interface HorizonScrollExperimentProps {
 export default function HorizonScrollExperiment({
     children,
 }: HorizonScrollExperimentProps) {
-    const [mode, setMode] = useState<HorizonMode>("3d");
-    const [intensity, setIntensity] = useState<HorizonIntensity>("subtle");
-    const [isExpanded, setIsExpanded] = useState<boolean>(true);
+    const [mode, setMode] = useState<HorizonMode>("ocean");
+    const [depth, setDepth] = useState<HorizonDepth>(180);
+    const [isMaskEnabled, setIsMaskEnabled] = useState<boolean>(true);
+    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const [submergedCount, setSubmergedCount] = useState<number>(0);
+
     const containerRef = useRef<HTMLDivElement>(null);
+    const rafRef = useRef<number | null>(null);
     const pathname = usePathname();
 
     // Restore saved preference on mount
     useEffect(() => {
-        const savedMode = (localStorage.getItem("horizon_mode") as HorizonMode) || "3d";
-        const savedIntensity = (localStorage.getItem("horizon_intensity") as HorizonIntensity) || "subtle";
-        setMode(savedMode);
-        setIntensity(savedIntensity);
+        try {
+            const savedMode = (localStorage.getItem("horizon_mode") as HorizonMode) || "ocean";
+            const savedDepth = Number(localStorage.getItem("horizon_depth")) as HorizonDepth || 180;
+            const savedMask = localStorage.getItem("horizon_mask");
+            setMode(savedMode);
+            if ([140, 180, 220].includes(savedDepth)) setDepth(savedDepth);
+            if (savedMask !== null) setIsMaskEnabled(savedMask === "true");
+        } catch {
+            // Ignore localStorage errors in private mode
+        }
     }, []);
 
     // Save preferences
     useEffect(() => {
-        localStorage.setItem("horizon_mode", mode);
-        localStorage.setItem("horizon_intensity", intensity);
-    }, [mode, intensity]);
+        try {
+            localStorage.setItem("horizon_mode", mode);
+            localStorage.setItem("horizon_depth", depth.toString());
+            localStorage.setItem("horizon_mask", isMaskEnabled.toString());
+        } catch {
+            // Ignore localStorage errors
+        }
+    }, [mode, depth, isMaskEnabled]);
 
-    // Attach scroll horizon observer to sections and elements
-    useEffect(() => {
-        if (mode === "off" || !containerRef.current) return;
+    // Active scroll evaluation: tracks elements crossing the ocean waves threshold
+    const updateElementStates = useCallback(() => {
+        if (!containerRef.current || mode === "off") {
+            setSubmergedCount(0);
+            return;
+        }
 
-        const container = containerRef.current;
-        // Observe top-level semantic sections, articles, and list items
-        const targets = container.querySelectorAll<HTMLElement>(
-            "section, article > div, article > p, article > h2, ul.space-y-6 > li, header.pb-6"
+        const horizonThreshold = window.innerHeight - depth;
+        const targets = containerRef.current.querySelectorAll<HTMLElement>(
+            "section, article, ul.space-y-3 > li, ul.space-y-4 > li, ul.space-y-6 > li, .horizon-item"
         );
 
-        if (!targets.length) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    const target = entry.target as HTMLElement;
-                    if (entry.isIntersecting) {
-                        target.setAttribute("data-horizon-state", "visible");
-                    } else if (entry.boundingClientRect.top > 0) {
-                        // Element is below the viewport threshold (beyond horizon)
-                        target.setAttribute("data-horizon-state", "hidden");
-                    }
-                });
-            },
-            {
-                rootMargin: "0px 0px -40px 0px",
-                threshold: [0, 0.1],
-            }
-        );
+        let submerged = 0;
 
         targets.forEach((el) => {
             const rect = el.getBoundingClientRect();
-            // If already on screen on initial load, show it; otherwise mark beyond horizon
-            if (rect.top < window.innerHeight - 40) {
-                el.setAttribute("data-horizon-state", "visible");
-            } else {
+            // If top is beyond the horizon threshold, mark it submerged behind waves
+            if (rect.top > horizonThreshold) {
                 el.setAttribute("data-horizon-state", "hidden");
+                submerged++;
+            } else {
+                el.setAttribute("data-horizon-state", "visible");
             }
-            observer.observe(el);
         });
 
-        return () => {
-            observer.disconnect();
-            targets.forEach((el) => {
-                el.removeAttribute("data-horizon-state");
-            });
-        };
-    }, [mode, intensity, pathname]);
+        setSubmergedCount(submerged);
+    }, [mode, depth]);
 
-    // Dynamic variable styling based on intensity
-    const tilt = intensity === "pronounced" ? "26deg" : "16deg";
-    const yShift = intensity === "pronounced" ? "65px" : "38px";
-    const blurAmount = intensity === "pronounced" ? "3px" : "1.5px";
-    const scaleFactor = intensity === "pronounced" ? "0.94" : "0.97";
+    // Scroll and resize listener
+    useEffect(() => {
+        if (mode === "off") {
+            if (containerRef.current) {
+                const targets = containerRef.current.querySelectorAll<HTMLElement>("[data-horizon-state]");
+                targets.forEach((el) => el.removeAttribute("data-horizon-state"));
+            }
+            setSubmergedCount(0);
+            return;
+        }
+
+        const handleScrollOrResize = () => {
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+            rafRef.current = requestAnimationFrame(updateElementStates);
+        };
+
+        // Initial measurement
+        handleScrollOrResize();
+
+        window.addEventListener("scroll", handleScrollOrResize, { passive: true });
+        window.addEventListener("resize", handleScrollOrResize, { passive: true });
+
+        return () => {
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+            window.removeEventListener("scroll", handleScrollOrResize);
+            window.removeEventListener("resize", handleScrollOrResize);
+        };
+    }, [mode, depth, pathname, updateElementStates]);
 
     return (
         <>
-            {/* Scoped CSS for the Horizon Perspective and Atmosphere */}
+            {/* Scoped CSS for the Horizon Perspective, Emergence, and Viewport Masking */}
             <style jsx global>{`
-                .horizon-container[data-horizon-mode="3d"] {
-                    perspective: 1100px;
-                    perspective-origin: center 40%;
+                /* Viewport Mask: ensures thoughts and content dissolve behind the ocean waves */
+                .horizon-container[data-mask="true"] {
+                    -webkit-mask-image: linear-gradient(
+                        to bottom,
+                        black 0%,
+                        black calc(100vh - ${depth}px),
+                        rgba(0, 0, 0, 0.4) calc(100vh - ${Math.round(depth * 0.6)}px),
+                        transparent calc(100vh - ${Math.round(depth * 0.2)}px)
+                    );
+                    mask-image: linear-gradient(
+                        to bottom,
+                        black 0%,
+                        black calc(100vh - ${depth}px),
+                        rgba(0, 0, 0, 0.4) calc(100vh - ${Math.round(depth * 0.6)}px),
+                        transparent calc(100vh - ${Math.round(depth * 0.2)}px)
+                    );
                 }
 
+                /* Mode: Ocean Horizon (Pure clean emergence from behind waves) */
+                .horizon-container[data-horizon-mode="ocean"] [data-horizon-state="hidden"] {
+                    transform: translateY(18px);
+                    opacity: 0.25;
+                    pointer-events: none;
+                    transition: transform 0.4s ease-out, opacity 0.35s ease-out;
+                }
+                .horizon-container[data-horizon-mode="ocean"] [data-horizon-state="visible"] {
+                    transform: translateY(0px);
+                    opacity: 1;
+                    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease-out;
+                }
+
+                /* Mode: 3D Curve (Curving over the earth/ocean horizon) */
+                .horizon-container[data-horizon-mode="3d"] {
+                    perspective: 1000px;
+                    perspective-origin: center 75%;
+                }
                 .horizon-container[data-horizon-mode="3d"] [data-horizon-state="hidden"] {
-                    transform: rotateX(${tilt}) translateY(${yShift}) scale(${scaleFactor});
+                    transform: rotateX(22deg) translateY(32px) scale(0.96);
                     opacity: 0.15;
-                    filter: blur(${blurAmount});
                     transform-origin: center bottom;
                     pointer-events: none;
+                    transition: transform 0.45s ease-out, opacity 0.35s ease-out;
                 }
-
                 .horizon-container[data-horizon-mode="3d"] [data-horizon-state="visible"] {
                     transform: rotateX(0deg) translateY(0px) scale(1);
                     opacity: 1;
-                    filter: blur(0px);
                     transform-origin: center bottom;
-                    transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-                                opacity 0.85s ease-out,
-                                filter 0.85s ease-out;
+                    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out;
                 }
 
+                /* Mode: Coastal Mist (Soft sea-fog dissolution at the waterline) */
                 .horizon-container[data-horizon-mode="mist"] [data-horizon-state="hidden"] {
-                    transform: translateY(${yShift});
+                    transform: translateY(24px);
+                    filter: blur(3.5px);
                     opacity: 0.1;
-                    filter: blur(${intensity === "pronounced" ? "4px" : "2.5px"});
                     pointer-events: none;
+                    transition: transform 0.45s ease, filter 0.35s ease, opacity 0.35s ease;
                 }
-
                 .horizon-container[data-horizon-mode="mist"] [data-horizon-state="visible"] {
                     transform: translateY(0px);
-                    opacity: 1;
                     filter: blur(0px);
-                    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                                opacity 0.8s ease-out,
-                                filter 0.8s ease-out;
+                    opacity: 1;
+                    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.55s ease, opacity 0.55s ease;
                 }
 
+                /* Mode: Rising Tide (Kinetic buoyant upward float) */
                 .horizon-container[data-horizon-mode="rise"] [data-horizon-state="hidden"] {
-                    transform: translateY(${intensity === "pronounced" ? "80px" : "45px"});
+                    transform: translateY(48px);
                     opacity: 0;
                     pointer-events: none;
+                    transition: transform 0.4s ease-out, opacity 0.3s ease-out;
                 }
-
                 .horizon-container[data-horizon-mode="rise"] [data-horizon-state="visible"] {
                     transform: translateY(0px);
                     opacity: 1;
-                    transition: transform 0.9s cubic-bezier(0.18, 0.9, 0.25, 1),
-                                opacity 0.8s ease-out;
+                    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out;
                 }
             `}</style>
 
-            {/* The Main Content Container wrapped with horizon attributes */}
+            {/* The Main Content Container with bottom padding so thoughts can scroll completely clear of waves */}
             <div
                 ref={containerRef}
-                className="horizon-container relative transition-all duration-300"
+                className="horizon-container relative pb-48 sm:pb-60 transition-all duration-300"
                 data-horizon-mode={mode}
+                data-mask={mode !== "off" && isMaskEnabled ? "true" : "false"}
             >
                 {children}
             </div>
 
-            {/* Optional Horizon Mist Line when in Mist mode */}
-            {mode === "mist" && (
-                <div
-                    aria-hidden="true"
-                    className="pointer-events-none fixed bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[var(--bg-color)] via-[var(--bg-color)]/70 to-transparent z-20 transition-opacity duration-300"
-                />
-            )}
-
             {/* Interactive Horizon Experiment Controller */}
             <aside
                 aria-label="Horizon Scroll Experiment Dock"
-                className="fixed right-4 sm:right-6 bottom-6 z-50 font-mono text-xs text-[var(--text-muted)]"
+                className="fixed right-4 sm:right-6 bottom-4 z-50 font-mono text-xs text-[var(--text-muted)]"
             >
                 {!isExpanded ? (
                     <button
                         type="button"
                         onClick={() => setIsExpanded(true)}
                         className="px-3 py-2 rounded border border-current/20 bg-[var(--bg-color)]/95 backdrop-blur-md shadow-lg text-[11px] text-[var(--text-color)] hover:border-current/40 transition-colors flex items-center gap-2 cursor-pointer"
-                        title="Open Horizon Scroll Controller"
+                        title="Open Horizon Emergence Controller"
                     >
                         <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-                        <span>🌅 Horizon: {mode === "3d" ? "3D Curve" : mode}</span>
+                        <span>
+                            🌊 Horizon: {mode === "ocean" ? "Ocean Waves" : mode === "3d" ? "3D Curve" : mode} ({depth}px)
+                        </span>
                         <span className="text-[var(--text-muted)]">[open]</span>
                     </button>
                 ) : (
-                    <div className="p-3.5 rounded border border-current/20 bg-[var(--bg-color)]/95 backdrop-blur-md shadow-xl space-y-3 w-72 max-w-[calc(100vw-2rem)]">
+                    <div className="p-3.5 rounded border border-current/20 bg-[var(--bg-color)]/95 backdrop-blur-md shadow-xl space-y-3 w-80 max-w-[calc(100vw-2rem)]">
                         {/* Header */}
                         <div className="flex items-center justify-between border-b border-current/10 pb-2">
                             <span className="text-[11px] uppercase tracking-wider font-semibold text-[var(--text-color)] flex items-center gap-1.5">
                                 <span className="w-2 h-2 rounded-full bg-cyan-500" />
-                                Horizon Scroll Experiment
+                                Ocean Horizon Emergence
                             </span>
                             <button
                                 type="button"
                                 onClick={() => setIsExpanded(false)}
                                 className="text-[11px] text-[var(--text-muted)] hover:text-[var(--text-color)] hover:underline cursor-pointer"
-                                title="Minimize controller to corner"
+                                title="Minimize controller"
                             >
-                                [− minimize]
+                                [− close]
                             </button>
                         </div>
 
@@ -204,6 +242,17 @@ export default function HorizonScrollExperiment({
                             <div className="grid grid-cols-2 gap-1.5">
                                 <button
                                     type="button"
+                                    onClick={() => setMode("ocean")}
+                                    className={`px-2 py-1.5 rounded text-[11px] text-left border cursor-pointer transition-colors ${
+                                        mode === "ocean"
+                                            ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent"
+                                            : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
+                                    }`}
+                                >
+                                    🌊 Ocean Horizon
+                                </button>
+                                <button
+                                    type="button"
                                     onClick={() => setMode("3d")}
                                     className={`px-2 py-1.5 rounded text-[11px] text-left border cursor-pointer transition-colors ${
                                         mode === "3d"
@@ -211,7 +260,7 @@ export default function HorizonScrollExperiment({
                                             : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
                                     }`}
                                 >
-                                    ✦ 3D Horizon
+                                    🌅 3D Curve
                                 </button>
                                 <button
                                     type="button"
@@ -238,44 +287,70 @@ export default function HorizonScrollExperiment({
                                 <button
                                     type="button"
                                     onClick={() => setMode("off")}
-                                    className={`px-2 py-1.5 rounded text-[11px] text-left border cursor-pointer transition-colors ${
+                                    className={`col-span-2 px-2 py-1.5 rounded text-[11px] text-left border cursor-pointer transition-colors ${
                                         mode === "off"
                                             ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent"
                                             : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
                                     }`}
                                 >
-                                    ✕ Off (Static)
+                                    ✕ Off (Static Overlap — shows text collision)
                                 </button>
                             </div>
                         </div>
 
-                        {/* Intensity Setting (when not off) */}
+                        {/* Horizon Depth / Waterline Cutoff */}
                         {mode !== "off" && (
                             <div className="pt-2 border-t border-current/10 flex items-center justify-between text-[11px]">
-                                <span className="text-[var(--text-muted)]">Intensity:</span>
+                                <span className="text-[var(--text-muted)]">Wave Horizon:</span>
                                 <div className="flex items-center gap-1">
-                                    {(["subtle", "pronounced"] as const).map((lvl) => (
+                                    {([140, 180, 220] as const).map((h) => (
                                         <button
-                                            key={lvl}
+                                            key={h}
                                             type="button"
-                                            onClick={() => setIntensity(lvl)}
+                                            onClick={() => setDepth(h)}
                                             className={`px-2 py-0.5 rounded text-[10px] cursor-pointer transition-colors ${
-                                                intensity === lvl
+                                                depth === h
                                                     ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
                                                     : "text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
                                             }`}
                                         >
-                                            {lvl}
+                                            {h}px {h === 180 ? "(std)" : h === 220 ? "(high)" : "(low)"}
                                         </button>
                                     ))}
                                 </div>
                             </div>
                         )}
 
+                        {/* Occlusion Mask Toggle */}
+                        {mode !== "off" && (
+                            <div className="pt-2 border-t border-current/10 flex items-center justify-between text-[11px]">
+                                <span className="text-[var(--text-muted)]">Behind Waves:</span>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsMaskEnabled(!isMaskEnabled)}
+                                    className={`px-2 py-0.5 rounded text-[10px] cursor-pointer transition-colors ${
+                                        isMaskEnabled
+                                            ? "bg-emerald-600/20 text-emerald-600 dark:text-emerald-400 font-medium"
+                                            : "bg-red-500/10 text-red-500 font-medium"
+                                    }`}
+                                >
+                                    {isMaskEnabled ? "[Mask: ON]" : "[Mask: OFF]"}
+                                </button>
+                            </div>
+                        )}
+
                         {/* Status Readout */}
-                        <div className="pt-1.5 border-t border-current/10 text-[10px] text-[var(--text-muted)] flex items-center justify-between">
-                            <span>Active: <strong className="text-[var(--text-color)]">{mode}</strong> ({intensity})</span>
-                            <span className="text-cyan-500 font-medium">Scroll to test</span>
+                        <div className="pt-1.5 border-t border-current/10 text-[10px] text-[var(--text-muted)] flex flex-col gap-1">
+                            <div className="flex items-center justify-between">
+                                <span>Glassframe card:</span>
+                                <span className="text-emerald-600 dark:text-emerald-400 font-medium">Removed ✓</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span>Submerged elements:</span>
+                                <span className="text-cyan-500 font-medium">
+                                    {mode === "off" ? "0 (off)" : `${submergedCount} behind waves`}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 )}
