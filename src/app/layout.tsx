@@ -5,7 +5,7 @@ import GlassFrame from "@/components/Glassframe";
 import ThemeToggle from "@/components/Themetoggle";
 import Navigation from "@/components/Navigation";
 import SiteTitle from "@/components/SiteTitle";
-import BackgroundSwitcher from "@/components/BackgroundSwitcher";
+import HorizonScrollExperiment from "@/components/HorizonScrollExperiment";
 
 const newsreader = Newsreader({
     subsets: ["latin"],
@@ -34,7 +34,7 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`${newsreader.variable} ${geistMono.variable} h-full antialiased`}
+            className={`dark ${newsreader.variable} ${geistMono.variable} h-full antialiased`}
         >
             <body className="min-h-full flex flex-col font-serif">
                 <GlassFrame>
@@ -54,8 +54,9 @@ export default function RootLayout({
                         </div>
                     </header>
 
-                    <main className="flex-1">{children}</main>
-                    <BackgroundSwitcher />
+                    <main className="flex-1">
+                        <HorizonScrollExperiment>{children}</HorizonScrollExperiment>
+                    </main>
                 </GlassFrame>
             </body>
         </html>
