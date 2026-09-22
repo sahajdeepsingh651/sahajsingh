@@ -39,7 +39,7 @@ export default async function ThoughtPage({
         notFound();
     }
     return (
-        <main className="max-w-2xl space-y-8">
+        <div className="max-w-2xl space-y-8">
             <div>
                 <Link
                     href="/thoughts"
@@ -65,6 +65,6 @@ export default async function ThoughtPage({
                     }}
                 />
             </article>
-        </main>
+        </div>
     );
 }

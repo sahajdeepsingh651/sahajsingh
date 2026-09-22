@@ -43,7 +43,7 @@ export default async function EssayPage({
     }
 
     return (
-        <main className="max-w-2xl space-y-8">
+        <div className="max-w-2xl space-y-8">
             {/* Back Navigation */}
             <div>
                 <Link
@@ -148,6 +148,6 @@ export default async function EssayPage({
                 references={essay.references}
                 originalUrl={essay.originalUrl}
             />
-        </main>
+        </div>
     );
 }

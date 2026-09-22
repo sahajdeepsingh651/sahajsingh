@@ -4,7 +4,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname } from "next/navigation";
 
 export type HorizonMode = "ocean" | "3d" | "mist" | "rise" | "off";
-export type HorizonDepth = 140 | 180 | 220;
+export type HorizonDepth = 140 | 170 | 210;
+export type TransitionSpeed = "instant" | "snappy";
 
 interface HorizonScrollExperimentProps {
     children: React.ReactNode;
@@ -13,8 +14,10 @@ interface HorizonScrollExperimentProps {
 export default function HorizonScrollExperiment({
     children,
 }: HorizonScrollExperimentProps) {
+    // Default to 'ocean' (pure optical mask with zero transition delay)
     const [mode, setMode] = useState<HorizonMode>("ocean");
-    const [depth, setDepth] = useState<HorizonDepth>(180);
+    const [depth, setDepth] = useState<HorizonDepth>(170);
+    const [speed, setSpeed] = useState<TransitionSpeed>("instant");
     const [isMaskEnabled, setIsMaskEnabled] = useState<boolean>(true);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [submergedCount, setSubmergedCount] = useState<number>(0);
@@ -23,17 +26,23 @@ export default function HorizonScrollExperiment({
     const rafRef = useRef<number | null>(null);
     const pathname = usePathname();
 
-    // Restore saved preference on mount
+    // Check if the current route is an essay or thought reading page
+    const isLongFormReading = pathname.startsWith("/essays/") || pathname.startsWith("/thoughts/");
+
+    // Restore saved preferences on mount
     useEffect(() => {
         try {
             const savedMode = (localStorage.getItem("horizon_mode") as HorizonMode) || "ocean";
-            const savedDepth = Number(localStorage.getItem("horizon_depth")) as HorizonDepth || 180;
+            const savedDepth = Number(localStorage.getItem("horizon_depth")) as HorizonDepth || 170;
+            const savedSpeed = (localStorage.getItem("horizon_speed") as TransitionSpeed) || "instant";
             const savedMask = localStorage.getItem("horizon_mask");
+
             setMode(savedMode);
-            if ([140, 180, 220].includes(savedDepth)) setDepth(savedDepth);
+            if ([140, 170, 210].includes(savedDepth)) setDepth(savedDepth);
+            if (["instant", "snappy"].includes(savedSpeed)) setSpeed(savedSpeed);
             if (savedMask !== null) setIsMaskEnabled(savedMask === "true");
         } catch {
-            // Ignore localStorage errors in private mode
+            // Ignore localStorage errors in private browsing
         }
     }, []);
 
@@ -42,29 +51,39 @@ export default function HorizonScrollExperiment({
         try {
             localStorage.setItem("horizon_mode", mode);
             localStorage.setItem("horizon_depth", depth.toString());
+            localStorage.setItem("horizon_speed", speed);
             localStorage.setItem("horizon_mask", isMaskEnabled.toString());
         } catch {
             // Ignore localStorage errors
         }
-    }, [mode, depth, isMaskEnabled]);
+    }, [mode, depth, speed, isMaskEnabled]);
 
-    // Active scroll evaluation: tracks elements crossing the ocean waves threshold
+    // Active scroll evaluation for discrete items (sections, list items)
     const updateElementStates = useCallback(() => {
-        if (!containerRef.current || mode === "off") {
+        if (!containerRef.current || mode === "off" || mode === "ocean") {
+            // In 'ocean' mode or 'off' mode, the optical mask handles emergence with 0ms delay.
+            // No delayed transforms or opacity reduction are applied to reading text.
+            if (containerRef.current) {
+                const elements = containerRef.current.querySelectorAll<HTMLElement>("[data-horizon-state]");
+                elements.forEach((el) => el.removeAttribute("data-horizon-state"));
+            }
             setSubmergedCount(0);
             return;
         }
 
         const horizonThreshold = window.innerHeight - depth;
-        const targets = containerRef.current.querySelectorAll<HTMLElement>(
-            "section, article, ul.space-y-3 > li, ul.space-y-4 > li, ul.space-y-6 > li, .horizon-item"
+
+        // In 3D / rise modes, track semantic containers and list items (never individual markdown reading paragraphs)
+        const targets = Array.from(
+            containerRef.current.querySelectorAll<HTMLElement>(
+                "section, ul > li, ol > li, dl > div, .horizon-card"
+            )
         );
 
         let submerged = 0;
 
         targets.forEach((el) => {
             const rect = el.getBoundingClientRect();
-            // If top is beyond the horizon threshold, mark it submerged behind waves
             if (rect.top > horizonThreshold) {
                 el.setAttribute("data-horizon-state", "hidden");
                 submerged++;
@@ -76,14 +95,10 @@ export default function HorizonScrollExperiment({
         setSubmergedCount(submerged);
     }, [mode, depth]);
 
-    // Scroll and resize listener
+    // Scroll, resize, and route change listener
     useEffect(() => {
-        if (mode === "off") {
-            if (containerRef.current) {
-                const targets = containerRef.current.querySelectorAll<HTMLElement>("[data-horizon-state]");
-                targets.forEach((el) => el.removeAttribute("data-horizon-state"));
-            }
-            setSubmergedCount(0);
+        if (mode === "off" || mode === "ocean") {
+            updateElementStates();
             return;
         }
 
@@ -92,14 +107,15 @@ export default function HorizonScrollExperiment({
             rafRef.current = requestAnimationFrame(updateElementStates);
         };
 
-        // Initial measurement
         handleScrollOrResize();
+        const t1 = setTimeout(handleScrollOrResize, 50);
 
         window.addEventListener("scroll", handleScrollOrResize, { passive: true });
         window.addEventListener("resize", handleScrollOrResize, { passive: true });
 
         return () => {
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
+            clearTimeout(t1);
             window.removeEventListener("scroll", handleScrollOrResize);
             window.removeEventListener("resize", handleScrollOrResize);
         };
@@ -107,91 +123,84 @@ export default function HorizonScrollExperiment({
 
     return (
         <>
-            {/* Scoped CSS for the Horizon Perspective, Emergence, and Viewport Masking */}
+            {/* Scoped CSS: Zero-delay optical horizon mask + optional snappy tactile transitions */}
             <style jsx global>{`
-                /* Viewport Mask: ensures thoughts and content dissolve behind the ocean waves */
+                /* Viewport Mask:
+                   - Above (100vh - depth): 100% solid, crisp, and immediately readable (0ms delay).
+                   - Between (100vh - depth) and bottom: smoothly dissolves behind the ocean waves.
+                   - Text NEVER renders on top of the waves etching.
+                   - Completely GPU-accelerated: 0ms JavaScript delay, perfectly synced with scroll!
+                */
                 .horizon-container[data-mask="true"] {
                     -webkit-mask-image: linear-gradient(
                         to bottom,
                         black 0%,
                         black calc(100vh - ${depth}px),
-                        rgba(0, 0, 0, 0.4) calc(100vh - ${Math.round(depth * 0.6)}px),
+                        rgba(0, 0, 0, 0.4) calc(100vh - ${Math.round(depth * 0.65)}px),
                         transparent calc(100vh - ${Math.round(depth * 0.2)}px)
                     );
                     mask-image: linear-gradient(
                         to bottom,
                         black 0%,
                         black calc(100vh - ${depth}px),
-                        rgba(0, 0, 0, 0.4) calc(100vh - ${Math.round(depth * 0.6)}px),
+                        rgba(0, 0, 0, 0.4) calc(100vh - ${Math.round(depth * 0.65)}px),
                         transparent calc(100vh - ${Math.round(depth * 0.2)}px)
                     );
                 }
 
-                /* Mode: Ocean Horizon (Pure clean emergence from behind waves) */
-                .horizon-container[data-horizon-mode="ocean"] [data-horizon-state="hidden"] {
-                    transform: translateY(18px);
-                    opacity: 0.25;
-                    pointer-events: none;
-                    transition: transform 0.4s ease-out, opacity 0.35s ease-out;
-                }
-                .horizon-container[data-horizon-mode="ocean"] [data-horizon-state="visible"] {
-                    transform: translateY(0px);
-                    opacity: 1;
-                    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease-out;
+                /* Mode: Ocean Horizon (Pure Optical Mask)
+                   No artificial animation delays, no dimmed text, no float. 100% reader focus. */
+                .horizon-container[data-horizon-mode="ocean"] * {
+                    pointer-events: auto !important;
                 }
 
-                /* Mode: 3D Curve (Curving over the earth/ocean horizon) */
+                /* Mode: 3D Perspective (Snappy, non-blocking) */
                 .horizon-container[data-horizon-mode="3d"] {
                     perspective: 1000px;
-                    perspective-origin: center 75%;
                 }
                 .horizon-container[data-horizon-mode="3d"] [data-horizon-state="hidden"] {
-                    transform: rotateX(22deg) translateY(32px) scale(0.96);
-                    opacity: 0.15;
-                    transform-origin: center bottom;
-                    pointer-events: none;
-                    transition: transform 0.45s ease-out, opacity 0.35s ease-out;
+                    transform: rotateX(10deg) translateY(12px);
+                    opacity: 0.7;
+                    transition: ${speed === "instant" ? "none" : "transform 0.15s ease-out, opacity 0.12s ease-out"};
                 }
                 .horizon-container[data-horizon-mode="3d"] [data-horizon-state="visible"] {
-                    transform: rotateX(0deg) translateY(0px) scale(1);
+                    transform: rotateX(0deg) translateY(0px);
                     opacity: 1;
-                    transform-origin: center bottom;
-                    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out;
+                    transition: ${speed === "instant" ? "none" : "transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease-out"};
                 }
 
-                /* Mode: Coastal Mist (Soft sea-fog dissolution at the waterline) */
+                /* Mode: Coastal Mist (Soft waterline ambient haze, 0ms lag) */
                 .horizon-container[data-horizon-mode="mist"] [data-horizon-state="hidden"] {
-                    transform: translateY(24px);
-                    filter: blur(3.5px);
-                    opacity: 0.1;
-                    pointer-events: none;
-                    transition: transform 0.45s ease, filter 0.35s ease, opacity 0.35s ease;
+                    filter: blur(1.5px);
+                    opacity: 0.8;
+                    transition: ${speed === "instant" ? "none" : "filter 0.15s ease, opacity 0.15s ease"};
                 }
                 .horizon-container[data-horizon-mode="mist"] [data-horizon-state="visible"] {
-                    transform: translateY(0px);
                     filter: blur(0px);
                     opacity: 1;
-                    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.55s ease, opacity 0.55s ease;
+                    transition: ${speed === "instant" ? "none" : "filter 0.15s ease, opacity 0.15s ease"};
                 }
 
-                /* Mode: Rising Tide (Kinetic buoyant upward float) */
+                /* Mode: Rising Tide (Quick 12px buoyant lift) */
                 .horizon-container[data-horizon-mode="rise"] [data-horizon-state="hidden"] {
-                    transform: translateY(48px);
-                    opacity: 0;
-                    pointer-events: none;
-                    transition: transform 0.4s ease-out, opacity 0.3s ease-out;
+                    transform: translateY(14px);
+                    opacity: 0.75;
+                    transition: ${speed === "instant" ? "none" : "transform 0.14s ease-out, opacity 0.12s ease-out"};
                 }
                 .horizon-container[data-horizon-mode="rise"] [data-horizon-state="visible"] {
                     transform: translateY(0px);
                     opacity: 1;
-                    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out;
+                    transition: ${speed === "instant" ? "none" : "transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease-out"};
                 }
             `}</style>
 
-            {/* The Main Content Container with bottom padding so thoughts can scroll completely clear of waves */}
+            {/* The Main Content Container:
+                - min-h ensures comfortable reading flow
+                - pb-48 allows the final lines and footer to clear the ocean waves completely
+            */}
             <div
                 ref={containerRef}
-                className="horizon-container relative pb-48 sm:pb-60 transition-all duration-300"
+                className="horizon-container relative min-h-[calc(100vh-140px)] pb-48 sm:pb-60 transition-all duration-300"
                 data-horizon-mode={mode}
                 data-mask={mode !== "off" && isMaskEnabled ? "true" : "false"}
             >
@@ -208,11 +217,11 @@ export default function HorizonScrollExperiment({
                         type="button"
                         onClick={() => setIsExpanded(true)}
                         className="px-3 py-2 rounded border border-current/20 bg-[var(--bg-color)]/95 backdrop-blur-md shadow-lg text-[11px] text-[var(--text-color)] hover:border-current/40 transition-colors flex items-center gap-2 cursor-pointer"
-                        title="Open Horizon Emergence Controller"
+                        title="Open Horizon Controller"
                     >
                         <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
                         <span>
-                            🌊 Horizon: {mode === "ocean" ? "Ocean Waves" : mode === "3d" ? "3D Curve" : mode} ({depth}px)
+                            🌊 Horizon: {mode === "ocean" ? "Reading Mode (0ms delay)" : mode} ({depth}px)
                         </span>
                         <span className="text-[var(--text-muted)]">[open]</span>
                     </button>
@@ -222,7 +231,7 @@ export default function HorizonScrollExperiment({
                         <div className="flex items-center justify-between border-b border-current/10 pb-2">
                             <span className="text-[11px] uppercase tracking-wider font-semibold text-[var(--text-color)] flex items-center gap-1.5">
                                 <span className="w-2 h-2 rounded-full bg-cyan-500" />
-                                Ocean Horizon Emergence
+                                Ocean Horizon (Reading Mode)
                             </span>
                             <button
                                 type="button"
@@ -234,6 +243,19 @@ export default function HorizonScrollExperiment({
                             </button>
                         </div>
 
+                        {/* Reading Context Badge */}
+                        <div className="text-[10px] text-[var(--text-muted)] flex items-center justify-between">
+                            <span>
+                                Context:{" "}
+                                <strong className="text-[var(--text-color)]">
+                                    {isLongFormReading ? "Essay / Reading" : pathname}
+                                </strong>
+                            </span>
+                            <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                                0ms delay active
+                            </span>
+                        </div>
+
                         {/* Mode Selection */}
                         <div className="space-y-1.5">
                             <span className="block text-[10px] uppercase tracking-wider text-[var(--text-muted)]">
@@ -242,14 +264,17 @@ export default function HorizonScrollExperiment({
                             <div className="grid grid-cols-2 gap-1.5">
                                 <button
                                     type="button"
-                                    onClick={() => setMode("ocean")}
-                                    className={`px-2 py-1.5 rounded text-[11px] text-left border cursor-pointer transition-colors ${
+                                    onClick={() => {
+                                        setMode("ocean");
+                                        setSpeed("instant");
+                                    }}
+                                    className={`col-span-2 px-2 py-1.5 rounded text-[11px] text-left border cursor-pointer transition-colors ${
                                         mode === "ocean"
                                             ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent"
                                             : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
                                     }`}
                                 >
-                                    🌊 Ocean Horizon
+                                    🌊 Pure Reading (0ms delay — Optical Mask)
                                 </button>
                                 <button
                                     type="button"
@@ -260,7 +285,7 @@ export default function HorizonScrollExperiment({
                                             : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
                                     }`}
                                 >
-                                    🌅 3D Curve
+                                    🌅 Snappy 3D
                                 </button>
                                 <button
                                     type="button"
@@ -282,28 +307,51 @@ export default function HorizonScrollExperiment({
                                             : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
                                     }`}
                                 >
-                                    ▲ Rising Tide
+                                    ▲ Fast Rise
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setMode("off")}
-                                    className={`col-span-2 px-2 py-1.5 rounded text-[11px] text-left border cursor-pointer transition-colors ${
+                                    className={`px-2 py-1.5 rounded text-[11px] text-left border cursor-pointer transition-colors ${
                                         mode === "off"
                                             ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent"
                                             : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
                                     }`}
                                 >
-                                    ✕ Off (Static Overlap — shows text collision)
+                                    ✕ Off (Static Overlap)
                                 </button>
                             </div>
                         </div>
 
-                        {/* Horizon Depth / Waterline Cutoff */}
+                        {/* Speed Control (when not off) */}
+                        {mode !== "off" && (
+                            <div className="pt-2 border-t border-current/10 flex items-center justify-between text-[11px]">
+                                <span className="text-[var(--text-muted)]">Transition Speed:</span>
+                                <div className="flex items-center gap-1">
+                                    {(["instant", "snappy"] as const).map((s) => (
+                                        <button
+                                            key={s}
+                                            type="button"
+                                            onClick={() => setSpeed(s)}
+                                            className={`px-2 py-0.5 rounded text-[10px] cursor-pointer transition-colors ${
+                                                speed === s
+                                                    ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
+                                                    : "text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
+                                            }`}
+                                        >
+                                            {s === "instant" ? "Instant (0ms)" : "Snappy (150ms)"}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Horizon Waterline Cutoff */}
                         {mode !== "off" && (
                             <div className="pt-2 border-t border-current/10 flex items-center justify-between text-[11px]">
                                 <span className="text-[var(--text-muted)]">Wave Horizon:</span>
                                 <div className="flex items-center gap-1">
-                                    {([140, 180, 220] as const).map((h) => (
+                                    {([140, 170, 210] as const).map((h) => (
                                         <button
                                             key={h}
                                             type="button"
@@ -314,7 +362,7 @@ export default function HorizonScrollExperiment({
                                                     : "text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
                                             }`}
                                         >
-                                            {h}px {h === 180 ? "(std)" : h === 220 ? "(high)" : "(low)"}
+                                            {h}px {h === 170 ? "(std)" : h === 210 ? "(deep)" : "(low)"}
                                         </button>
                                     ))}
                                 </div>
@@ -339,18 +387,10 @@ export default function HorizonScrollExperiment({
                             </div>
                         )}
 
-                        {/* Status Readout */}
-                        <div className="pt-1.5 border-t border-current/10 text-[10px] text-[var(--text-muted)] flex flex-col gap-1">
-                            <div className="flex items-center justify-between">
-                                <span>Glassframe card:</span>
-                                <span className="text-emerald-600 dark:text-emerald-400 font-medium">Removed ✓</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span>Submerged elements:</span>
-                                <span className="text-cyan-500 font-medium">
-                                    {mode === "off" ? "0 (off)" : `${submergedCount} behind waves`}
-                                </span>
-                            </div>
+                        {/* Reading Explanation Note */}
+                        <div className="pt-1.5 border-t border-current/10 text-[10px] text-[var(--text-muted)] leading-relaxed">
+                            <span className="text-emerald-600 dark:text-emerald-400 font-medium">✓ Zero Lag:</span>{" "}
+                            Text is 100% solid and clickable above the waves with no animation delay. Text emerges organically at 1:1 scroll speed.
                         </div>
                     </div>
                 )}
