@@ -5,8 +5,8 @@ import GlassFrame from "@/components/Glassframe";
 import ThemeToggle from "@/components/Themetoggle";
 import Navigation from "@/components/Navigation";
 import SiteTitle from "@/components/SiteTitle";
-import HorizonScrollExperiment from "@/components/HorizonScrollExperiment";
-import OceanHorizon from "@/components/OceanHorizon";
+import BackgroundSwitcher from "@/components/BackgroundSwitcher";
+import HorizonForeground from "@/components/HorizonForeground";
 
 const newsreader = Newsreader({
     subsets: ["latin"],
@@ -55,13 +55,10 @@ export default function RootLayout({
                         </div>
                     </header>
 
-                    <main className="flex-1">
-                        <HorizonScrollExperiment>{children}</HorizonScrollExperiment>
-                    </main>
+                    <main className="flex-1">{children}</main>
+                    <BackgroundSwitcher />
                 </GlassFrame>
-
-                {/* Foreground Ocean Horizon Layer: text physically scrolls behind these waves */}
-                <OceanHorizon />
+                <HorizonForeground />
             </body>
         </html>
     );

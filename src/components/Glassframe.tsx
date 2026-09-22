@@ -2,50 +2,38 @@
 
 import { useState, useEffect } from "react";
 
-export type GlassFrameMode = "card" | "unboxed" | "floating";
-
 export default function GlassFrame({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    // Default to 'card' so the user can immediately experience the focused essay frame!
-    const [glassMode, setGlassMode] = useState<GlassFrameMode>("card");
+    // Default: false (clean, borderless, allowing text to slip behind horizon in foreground)
+    const [useFrostedBox, setUseFrostedBox] = useState(false);
 
     useEffect(() => {
-        const handleGlassModeChange = (e: CustomEvent<GlassFrameMode>) => {
-            setGlassMode(e.detail);
-        };
-
-        try {
-            const saved = localStorage.getItem("glassframe_mode") as GlassFrameMode;
-            if (saved && ["card", "unboxed", "floating"].includes(saved)) {
-                setGlassMode(saved);
-            }
-        } catch {
-            // Ignore localStorage errors in private mode
+        const saved = localStorage.getItem("glass_frame_box");
+        if (saved !== null) {
+            setUseFrostedBox(saved === "true");
         }
 
-        window.addEventListener("glassframe-mode-change" as any, handleGlassModeChange);
-        return () => {
-            window.removeEventListener("glassframe-mode-change" as any, handleGlassModeChange);
+        const handleSync = () => {
+            const updated = localStorage.getItem("glass_frame_box");
+            if (updated !== null) {
+                setUseFrostedBox(updated === "true");
+            }
         };
-    }, []);
 
-    // Mode classes:
-    // - card: Focused editorial frosted glass card with subtle border & backdrop blur
-    // - unboxed: Pure open typography without borders
-    // - floating: Glass card elevated above the ocean waves waterline
-    const modeClasses = {
-        card: "bg-[var(--bg-color)]/75 backdrop-blur-md border border-current/10 rounded-lg shadow-sm p-6 sm:p-10",
-        unboxed: "bg-transparent border-transparent px-6 sm:px-8",
-        floating: "bg-[var(--bg-color)]/80 backdrop-blur-md border border-current/10 rounded-lg shadow-md p-6 sm:p-10 mb-44",
-    };
+        window.addEventListener("glass-box-toggle", handleSync);
+        return () => window.removeEventListener("glass-box-toggle", handleSync);
+    }, []);
 
     return (
         <div
-            className={`relative w-full max-w-6xl mx-auto my-6 sm:my-8 transition-all duration-300 ${modeClasses[glassMode]}`}
-            data-glass-mode={glassMode}
+            className={`relative w-full max-w-6xl mx-auto my-8 p-6 sm:p-8 pb-52 transition-all duration-500 z-10 ${
+                useFrostedBox
+                    ? "border border-current/10 rounded-sm bg-[var(--bg-color)]/70 backdrop-blur-md"
+                    : "border-none bg-transparent backdrop-blur-none"
+            }`}
         >
             {children}
         </div>
