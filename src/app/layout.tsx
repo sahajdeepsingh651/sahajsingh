@@ -5,6 +5,7 @@ import GlassFrame from "@/components/Glassframe";
 import ThemeToggle from "@/components/Themetoggle";
 import Navigation from "@/components/Navigation";
 import SiteTitle from "@/components/SiteTitle";
+import BackgroundSwitcher from "@/components/BackgroundSwitcher";
 
 const newsreader = Newsreader({
     subsets: ["latin"],
@@ -54,6 +55,7 @@ export default function RootLayout({
                     </header>
 
                     <main className="flex-1">{children}</main>
+                    <BackgroundSwitcher />
                 </GlassFrame>
             </body>
         </html>
