@@ -50,20 +50,20 @@ export default function BackgroundSwitcher() {
         const body = document.body;
         if (!body) return;
 
-        // Determine background image based on selection and theme
-        if (bgOption === "none") {
-            body.style.backgroundImage = "none";
-        } else if (bgOption === "candidate") {
-            body.style.backgroundImage = isDark
-                ? 'url("/candidate_bg_dark.png")'
-                : 'url("/candidate_bg.png")';
-        } else if (bgOption === "original") {
-            body.style.backgroundImage = isDark
-                ? 'url("/real_write_mode.png")'
-                : 'url("/real_read_mode.original.png")';
-        } else {
-            // Default: clear inline override so globals.css controls it (theme-dependent)
+        // When in dark mode, preserve original cosmic night mode art completely untouched
+        if (isDark) {
             body.style.backgroundImage = "";
+        } else {
+            // Light mode background selection
+            if (bgOption === "none") {
+                body.style.backgroundImage = "none";
+            } else if (bgOption === "candidate") {
+                body.style.backgroundImage = 'url("/candidate_bg.png")';
+            } else if (bgOption === "original") {
+                body.style.backgroundImage = 'url("/real_read_mode.original.png")';
+            } else {
+                body.style.backgroundImage = "";
+            }
         }
 
         body.style.backgroundSize = bgSize;
@@ -198,54 +198,60 @@ export default function BackgroundSwitcher() {
                     {/* Background Selection */}
                     <div className="space-y-1.5 pt-2 border-t border-current/10">
                         <span className="block text-[10px] uppercase tracking-wider text-[var(--text-muted)]">
-                            Background Art
+                            Background Art {isDark ? "(Original Night Locked)" : "(Daytime Testing)"}
                         </span>
-                        <div className="grid grid-cols-2 gap-1.5">
-                            <button
-                                type="button"
-                                onClick={() => selectBg("candidate")}
-                                className={`px-2 py-1 rounded text-[11px] text-left border cursor-pointer transition-colors ${
-                                    bgOption === "candidate"
-                                        ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent"
-                                        : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
-                                }`}
-                            >
-                                ★ Candidate {isDark ? "(Night)" : "(Day)"}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => selectBg("default")}
-                                className={`px-2 py-1 rounded text-[11px] text-left border cursor-pointer transition-colors ${
-                                    bgOption === "default"
-                                        ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent"
-                                        : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
-                                }`}
-                            >
-                                Default (Theme)
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => selectBg("original")}
-                                className={`px-2 py-1 rounded text-[11px] text-left border cursor-pointer transition-colors ${
-                                    bgOption === "original"
-                                        ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent"
-                                        : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
-                                }`}
-                            >
-                                Original Read
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => selectBg("none")}
-                                className={`px-2 py-1 rounded text-[11px] text-left border cursor-pointer transition-colors ${
-                                    bgOption === "none"
-                                        ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent"
-                                        : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
-                                }`}
-                            >
-                                None (Clean)
-                            </button>
-                        </div>
+                        {isDark ? (
+                            <div className="p-2 rounded bg-current/5 border border-current/10 text-[10px] text-[var(--text-muted)] leading-relaxed">
+                                🌌 Night mode uses your original cosmic artwork (<code className="text-[var(--text-color)]">/real_write_mode.png</code>). Switch to light mode to test daytime backgrounds.
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-2 gap-1.5">
+                                <button
+                                    type="button"
+                                    onClick={() => selectBg("candidate")}
+                                    className={`px-2 py-1 rounded text-[11px] text-left border cursor-pointer transition-colors ${
+                                        bgOption === "candidate"
+                                            ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent"
+                                            : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
+                                    }`}
+                                >
+                                    ★ Candidate Art
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => selectBg("default")}
+                                    className={`px-2 py-1 rounded text-[11px] text-left border cursor-pointer transition-colors ${
+                                        bgOption === "default"
+                                            ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent"
+                                            : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
+                                    }`}
+                                >
+                                    Default (Theme)
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => selectBg("original")}
+                                    className={`px-2 py-1 rounded text-[11px] text-left border cursor-pointer transition-colors ${
+                                        bgOption === "original"
+                                            ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent"
+                                            : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
+                                    }`}
+                                >
+                                    Original Read
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => selectBg("none")}
+                                    className={`px-2 py-1 rounded text-[11px] text-left border cursor-pointer transition-colors ${
+                                        bgOption === "none"
+                                            ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent"
+                                            : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/10"
+                                    }`}
+                                >
+                                    None (Clean)
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     {/* Scaling & Placement */}
