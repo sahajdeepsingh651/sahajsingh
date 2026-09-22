@@ -122,7 +122,25 @@ export default function AboutPage() {
                             >
                                 ByteByteGo
                             </a>
-                            . For books, I track my reading diet on Goodreads, physical workouts on Hevy, and I also enjoy anime.
+                            . For books, I track my reading diet on{" "}
+                            <a
+                                href="https://www.goodreads.com/user/show/191905377-sahajdeep-singh"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[var(--text-color)] underline underline-offset-4 decoration-current/30 hover:decoration-current"
+                            >
+                                Goodreads
+                            </a>
+                            , physical workouts on{" "}
+                            <a
+                                href="https://hevy.com/user/sahaj_1445"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[var(--text-color)] underline underline-offset-4 decoration-current/30 hover:decoration-current"
+                            >
+                                Hevy
+                            </a>
+                            , and I also enjoy anime.
                         </p>
                     </div>
 
@@ -144,7 +162,7 @@ export default function AboutPage() {
                             </li>
                             <li>
                                 <a
-                                    href="https://linkedin.com"
+                                    href="https://www.linkedin.com/in/sahajdeep-singh-46817b260"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="hover:text-[var(--text-color)] underline underline-offset-4 decoration-current/30"
@@ -154,7 +172,7 @@ export default function AboutPage() {
                             </li>
                             <li>
                                 <a
-                                    href="https://x.com"
+                                    href="https://x.com/SahajSingh_1445"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="hover:text-[var(--text-color)] underline underline-offset-4 decoration-current/30"
@@ -172,7 +190,7 @@ export default function AboutPage() {
                             </li>
                             <li>
                                 <a
-                                    href="https://www.goodreads.com"
+                                    href="https://www.goodreads.com/user/show/191905377-sahajdeep-singh"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="hover:text-[var(--text-color)] underline underline-offset-4 decoration-current/30"
@@ -182,7 +200,7 @@ export default function AboutPage() {
                             </li>
                             <li>
                                 <a
-                                    href="https://hevy.com"
+                                    href="https://hevy.com/user/sahaj_1445"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="hover:text-[var(--text-color)] underline underline-offset-4 decoration-current/30"

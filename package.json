@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "cp -f /home/sahaj/Downloads/resumes/latest/*.pdf public/resume.pdf 2>/dev/null || true",
+    "sync-resume": "cp -f /home/sahaj/Downloads/resumes/latest/*.pdf public/resume.pdf && echo 'Synced latest resume to public/resume.pdf'",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
