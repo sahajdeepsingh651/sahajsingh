@@ -6,6 +6,7 @@ import ThemeToggle from "@/components/Themetoggle";
 import Navigation from "@/components/Navigation";
 import SiteTitle from "@/components/SiteTitle";
 import HorizonScrollExperiment from "@/components/HorizonScrollExperiment";
+import OceanHorizon from "@/components/OceanHorizon";
 
 const newsreader = Newsreader({
     subsets: ["latin"],
@@ -58,6 +59,9 @@ export default function RootLayout({
                         <HorizonScrollExperiment>{children}</HorizonScrollExperiment>
                     </main>
                 </GlassFrame>
+
+                {/* Foreground Ocean Horizon Layer: text physically scrolls behind these waves */}
+                <OceanHorizon />
             </body>
         </html>
     );
