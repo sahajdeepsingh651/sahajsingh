@@ -140,7 +140,16 @@ export default function AboutPage() {
                             >
                                 Hevy
                             </a>
-                            , and I also enjoy anime.
+                            , and I also enjoy anime (logged on{" "}
+                            <a
+                                href="https://myanimelist.net/profile/sahaj_1445"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[var(--text-color)] underline underline-offset-4 decoration-current/30 hover:decoration-current"
+                            >
+                                MyAnimeList
+                            </a>
+                            ).
                         </p>
                     </div>
 
@@ -206,6 +215,16 @@ export default function AboutPage() {
                                     className="hover:text-[var(--text-color)] underline underline-offset-4 decoration-current/30"
                                 >
                                     [hevy ↗]
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="https://myanimelist.net/profile/sahaj_1445"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hover:text-[var(--text-color)] underline underline-offset-4 decoration-current/30"
+                                >
+                                    [myanimelist ↗]
                                 </a>
                             </li>
                             <li>
