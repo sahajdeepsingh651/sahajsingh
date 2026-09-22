@@ -3,6 +3,7 @@ import { getAllEssays } from "@/lib/essays";
 import { getAllThoughts } from "@/lib/thoughts";
 import { ALL_PROJECTS } from "@/lib/projects";
 import { getHomepageEssays } from "@/lib/curation";
+import { STATUS_CONFIG } from "@/lib/metadata";
 
 export default function Home() {
     const essays = getHomepageEssays(getAllEssays(), 3);
@@ -66,7 +67,12 @@ export default function Home() {
                                 href={`/essays/${essay.slug}`}
                                 className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
                             >
-                                {essay.title}
+                                <span>{essay.title}</span>
+                                {essay.status && (
+                                    <span className="text-xs font-mono text-[var(--text-muted)] ml-2 whitespace-nowrap inline-block no-underline">
+                                        [{STATUS_CONFIG[essay.status]?.label || essay.status}]
+                                    </span>
+                                )}
                             </Link>
                             <span className="text-sm font-mono text-[var(--text-color)] shrink-0">
                                 {essay.date}

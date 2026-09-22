@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getAllEssays } from "@/lib/essays";
 import { getHighlightedSlugs } from "@/lib/curation";
+import { STATUS_CONFIG } from "@/lib/metadata";
 
 export const metadata: Metadata = {
     title: "Essays | Sahaj Singh",
@@ -32,17 +33,22 @@ export default function EssaysPage() {
                             <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
                                 <Link
                                     href={`/essays/${essay.slug}`}
-                                    className="text-[16px] text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40 inline-flex items-baseline"
+                                    className="text-[16px] text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
                                 >
                                     {isHighlighted && (
                                         <span
-                                            className="select-none text-[var(--text-muted)] mr-1.5 shrink-0"
+                                            className="select-none text-[var(--text-muted)] mr-1.5"
                                             title="Recommended reading"
                                         >
                                             ※
                                         </span>
                                     )}
                                     <span>{essay.title}</span>
+                                    {essay.status && (
+                                        <span className="text-xs font-mono text-[var(--text-muted)] ml-2 whitespace-nowrap inline-block no-underline">
+                                            [{STATUS_CONFIG[essay.status]?.label || essay.status}]
+                                        </span>
+                                    )}
                                 </Link>
                                 <span className="text-xs font-mono text-[var(--text-color)] shrink-0">
                                     {essay.date}
