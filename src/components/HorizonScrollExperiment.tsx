@@ -28,6 +28,7 @@ export default function HorizonScrollExperiment({
 
     // Check if the current route is an essay or thought reading page
     const isLongFormReading = pathname.startsWith("/essays/") || pathname.startsWith("/thoughts/");
+    const effectiveMode = isLongFormReading ? "ocean" : mode;
 
     // Restore saved preferences on mount
     useEffect(() => {
@@ -60,7 +61,7 @@ export default function HorizonScrollExperiment({
 
     // Active scroll evaluation for discrete items (sections, list items)
     const updateElementStates = useCallback(() => {
-        if (!containerRef.current || mode === "off" || mode === "ocean") {
+        if (!containerRef.current || effectiveMode === "off" || effectiveMode === "ocean") {
             // In 'ocean' mode or 'off' mode, the optical mask handles emergence with 0ms delay.
             // No delayed transforms or opacity reduction are applied to reading text.
             if (containerRef.current) {
@@ -97,7 +98,7 @@ export default function HorizonScrollExperiment({
 
     // Scroll, resize, and route change listener
     useEffect(() => {
-        if (mode === "off" || mode === "ocean") {
+        if (effectiveMode === "off" || effectiveMode === "ocean") {
             updateElementStates();
             return;
         }
@@ -119,7 +120,7 @@ export default function HorizonScrollExperiment({
             window.removeEventListener("scroll", handleScrollOrResize);
             window.removeEventListener("resize", handleScrollOrResize);
         };
-    }, [mode, depth, pathname, updateElementStates]);
+    }, [effectiveMode, depth, pathname, updateElementStates]);
 
     return (
         <>
@@ -201,8 +202,8 @@ export default function HorizonScrollExperiment({
             <div
                 ref={containerRef}
                 className="horizon-container relative min-h-[calc(100vh-140px)] pb-48 sm:pb-60 transition-all duration-300"
-                data-horizon-mode={mode}
-                data-mask={mode !== "off" && isMaskEnabled ? "true" : "false"}
+                data-horizon-mode={effectiveMode}
+                data-mask={effectiveMode !== "off" && isMaskEnabled ? "true" : "false"}
             >
                 {children}
             </div>
