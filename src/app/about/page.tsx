@@ -13,7 +13,7 @@ export default function AboutPage() {
         <div className="space-y-16 w-full">
             {/* Page Header */}
             <header className="space-y-2 pb-4 border-b border-current/10">
-                <h1 className="text-xl sm:text-2xl font-normal tracking-tight">
+                <h1 className="text-xl sm:text-2xl font-normal tracking-tight text-[var(--heading-color)]">
                     About
                 </h1>
                 <p className="text-xs font-mono text-[var(--text-muted)]">
@@ -24,7 +24,7 @@ export default function AboutPage() {
             {/* Section 1: About Me */}
             <section id="about-me" className="space-y-6 scroll-mt-12">
                 <div className="border-b border-current/10 pb-2">
-                    <h2 className="text-sm uppercase tracking-widest font-mono text-[var(--text-muted)]">
+                    <h2 className="section-heading">
                         About Me
                     </h2>
                 </div>
@@ -91,7 +91,7 @@ export default function AboutPage() {
 
                     {/* Information Diet */}
                     <div className="pt-4 border-t border-current/10 space-y-2">
-                        <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--text-color)] font-semibold">
+                        <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--heading-color)] font-semibold">
                             Information Diet &amp; Influences
                         </h3>
                         <p className="text-sm text-[var(--text-muted)] leading-relaxed">
@@ -155,7 +155,7 @@ export default function AboutPage() {
 
                     {/* Online Coordinates */}
                     <div className="pt-4 border-t border-current/10 space-y-3">
-                        <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--text-color)] font-semibold">
+                        <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--heading-color)] font-semibold">
                             Online Coordinates
                         </h3>
                         <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-mono text-[var(--text-muted)]">
@@ -257,7 +257,7 @@ export default function AboutPage() {
             {/* Section 2: About Site */}
             <section id="about-site" className="space-y-10 scroll-mt-12">
                 <div className="border-b border-current/10 pb-2">
-                    <h2 className="text-sm uppercase tracking-widest font-mono text-[var(--text-muted)]">
+                    <h2 className="section-heading">
                         About Site
                     </h2>
                 </div>
@@ -284,7 +284,7 @@ export default function AboutPage() {
                     className="space-y-4 scroll-mt-12 pt-6 border-t border-current/10"
                 >
                     <div className="space-y-1">
-                        <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--text-color)] font-semibold">
+                        <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--heading-color)] font-semibold">
                             Document Maturity (Status)
                         </h3>
                         <p className="text-xs font-mono text-[var(--text-muted)]">
@@ -315,7 +315,7 @@ export default function AboutPage() {
                     className="space-y-4 scroll-mt-12 pt-6 border-t border-current/10"
                 >
                     <div className="space-y-1">
-                        <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--text-color)] font-semibold">
+                        <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--heading-color)] font-semibold">
                             Epistemic Confidence (Personal Belief)
                         </h3>
                         <p className="text-xs font-mono text-[var(--text-muted)]">
@@ -324,7 +324,7 @@ export default function AboutPage() {
                     </div>
 
                     <div className="p-4 rounded border border-current/10 space-y-2 bg-current/[0.02]">
-                        <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--text-color)] font-medium">
+                        <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--heading-color)] font-medium">
                             What Confidence Means Here
                         </h4>
                         <p className="text-sm leading-relaxed text-[var(--text-muted)] font-serif">
@@ -370,7 +370,7 @@ export default function AboutPage() {
                     className="space-y-4 scroll-mt-12 pt-6 border-t border-current/10"
                 >
                     <div className="space-y-1">
-                        <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--text-color)] font-semibold">
+                        <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--heading-color)] font-semibold">
                             Revision History
                         </h3>
                         <p className="text-xs font-mono text-[var(--text-muted)]">
