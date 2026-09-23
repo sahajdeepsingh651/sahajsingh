@@ -27,8 +27,8 @@ export default function BackgroundSwitcher() {
     const [alignMode, setAlignMode] = useState<EntryAlignMode>("justified");
     const [pageAlign, setPageAlign] = useState<"left" | "center">("left");
     const [pageLeftOffset, setPageLeftOffset] = useState<number>(48);
-    const [navDistance, setNavDistance] = useState<number>(64);
-    const [navAlign, setNavAlign] = useState<"custom" | "edge">("custom");
+    const [navDistance, setNavDistance] = useState<number>(36);
+    const [navPlacement, setNavPlacement] = useState<"after-border" | "inside-box" | "edge">("after-border");
 
     // Art & Horizon state
     const [bgOption, setBgOption] = useState<BgOption>("candidate");
@@ -62,7 +62,7 @@ export default function BackgroundSwitcher() {
         const savedPageAlign = localStorage.getItem("experiment_page_align") as "left" | "center";
         const savedPageLeftOffset = localStorage.getItem("experiment_page_left_offset");
         const savedNavDistance = localStorage.getItem("experiment_nav_distance");
-        const savedNavAlign = localStorage.getItem("experiment_nav_align") as "custom" | "edge";
+        const savedNavPlacement = localStorage.getItem("experiment_nav_placement") as "after-border" | "inside-box" | "edge";
         const savedDockSide = (localStorage.getItem("experiment_dock_side") as "right" | "left") || "right";
         const savedDockPos = localStorage.getItem("experiment_dock_pos");
 
@@ -91,7 +91,7 @@ export default function BackgroundSwitcher() {
         }
         if (savedPageLeftOffset) setPageLeftOffset(Number(savedPageLeftOffset));
         if (savedNavDistance) setNavDistance(Number(savedNavDistance));
-        if (savedNavAlign) setNavAlign(savedNavAlign);
+        if (savedNavPlacement) setNavPlacement(savedNavPlacement);
         setDockSide(savedDockSide);
 
         if (savedDockPos) {
@@ -122,7 +122,7 @@ export default function BackgroundSwitcher() {
         root.style.setProperty("--nav-distance", `${navDistance}px`);
         root.setAttribute("data-entry-align", alignMode);
         root.setAttribute("data-page-align", pageAlign);
-        root.setAttribute("data-nav-align", navAlign);
+        root.setAttribute("data-nav-placement", navPlacement);
 
         localStorage.setItem("experiment_font_size", String(fontSize));
         localStorage.setItem("experiment_entry_gap", String(entryGap));
@@ -131,8 +131,8 @@ export default function BackgroundSwitcher() {
         localStorage.setItem("experiment_page_align", pageAlign);
         localStorage.setItem("experiment_page_left_offset", String(pageLeftOffset));
         localStorage.setItem("experiment_nav_distance", String(navDistance));
-        localStorage.setItem("experiment_nav_align", navAlign);
-    }, [fontSize, entryGap, contentWidth, alignMode, pageAlign, pageLeftOffset, navDistance, navAlign]);
+        localStorage.setItem("experiment_nav_placement", navPlacement);
+    }, [fontSize, entryGap, contentWidth, alignMode, pageAlign, pageLeftOffset, navDistance, navPlacement]);
 
     // Apply background styles to body and sync with foreground horizon
     useEffect(() => {
@@ -430,75 +430,166 @@ export default function BackgroundSwitcher() {
                                 )}
                             </div>
 
-                            {/* 1B. Distance between "Sahaj Singh" and Navigation */}
-                            <div className="space-y-2 p-2.5 rounded-lg border border-sky-500/25 bg-sky-500/5">
+                            {/* 1B. Navigation Positioning & Distance */}
+                            <div className="space-y-2.5 p-2.5 rounded-lg border border-sky-500/25 bg-sky-500/5">
                                 <div className="flex items-center justify-between text-[11px]">
                                     <span className="font-semibold text-[var(--text-color)] flex items-center gap-1.5">
                                         <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
-                                        &ldquo;Sahaj Singh&rdquo; ↔ Navigation Distance:
+                                        Navigation Alignment &amp; Placement:
                                     </span>
                                     <span className="text-[10px] text-sky-600 dark:text-sky-400 font-bold">
-                                        {navAlign === "edge" ? "Edge-to-Edge (Right)" : `${navDistance}px`}
+                                        {navPlacement === "after-border"
+                                            ? `After Border (+${navDistance}px)`
+                                            : navPlacement === "edge"
+                                                ? "Edge-to-Edge (Right)"
+                                                : `Inside Box (${navDistance}px)`}
                                     </span>
                                 </div>
 
-                                <div className="space-y-1.5">
-                                    <input
-                                        type="range"
-                                        min={16}
-                                        max={480}
-                                        step={4}
-                                        value={navAlign === "edge" ? 480 : navDistance}
-                                        onChange={(e) => {
-                                            setNavAlign("custom");
-                                            setNavDistance(Number(e.target.value));
-                                        }}
-                                        className="w-full accent-sky-500 cursor-pointer"
-                                    />
-                                    <div className="flex flex-wrap items-center gap-1 text-[10px]">
-                                        <button
-                                            type="button"
-                                            onClick={() => setNavAlign("edge")}
-                                            className={`px-1.5 py-0.5 rounded cursor-pointer transition-colors ${
-                                                navAlign === "edge"
-                                                    ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
-                                                    : "border border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
-                                            }`}
-                                        >
-                                            ★ Edge-to-Edge
-                                        </button>
-                                        {[16, 24, 36, 48, 64, 96, 140, 200, 280, 360].map((d) => (
-                                            <button
-                                                key={d}
-                                                type="button"
-                                                onClick={() => {
-                                                    setNavAlign("custom");
-                                                    setNavDistance(d);
-                                                }}
-                                                className={`px-1.5 py-0.5 rounded cursor-pointer transition-colors ${
-                                                    navAlign === "custom" && navDistance === d
-                                                        ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
-                                                        : "border border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
-                                                }`}
-                                            >
-                                                {d}px
-                                            </button>
-                                        ))}
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setNavAlign("custom");
-                                                setNavDistance(64);
-                                            }}
-                                            className="text-[10px] text-[var(--text-muted)] hover:underline ml-auto cursor-pointer"
-                                        >
-                                            [reset 64px]
-                                        </button>
-                                    </div>
-                                    <p className="text-[9.5px] text-[var(--text-muted)] leading-tight pt-0.5">
-                                        Adjusts the exact gap separating <code>[ Sahaj Singh ]</code> from the navigation links (now, essays, projects, thoughts, about).
-                                    </p>
+                                {/* Placement Mode Selector */}
+                                <div className="grid grid-cols-3 gap-1 text-[10px]">
+                                    <button
+                                        type="button"
+                                        onClick={() => setNavPlacement("after-border")}
+                                        className={`p-1.5 rounded text-left border cursor-pointer transition-colors ${
+                                            navPlacement === "after-border"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        ★ After Border
+                                        <span className="block text-[8.5px] opacity-75 mt-0.5">
+                                            After &ldquo;view all [essays] →&rdquo;
+                                        </span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setNavPlacement("inside-box")}
+                                        className={`p-1.5 rounded text-left border cursor-pointer transition-colors ${
+                                            navPlacement === "inside-box"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        Inside Box
+                                        <span className="block text-[8.5px] opacity-75 mt-0.5">
+                                            Inline with Sahaj Singh
+                                        </span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setNavPlacement("edge")}
+                                        className={`p-1.5 rounded text-left border cursor-pointer transition-colors ${
+                                            navPlacement === "edge"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        Pinned to Edge
+                                        <span className="block text-[8.5px] opacity-75 mt-0.5">
+                                            Right edge of box
+                                        </span>
+                                    </button>
                                 </div>
+
+                                {navPlacement === "after-border" && (
+                                    <div className="space-y-1.5 pt-1.5 border-t border-current/10">
+                                        <div className="flex items-center justify-between text-[11px]">
+                                            <span className="text-[var(--text-muted)] font-medium">
+                                                Gap after &ldquo;view all [essays] →&rdquo; border:
+                                            </span>
+                                            <span className="font-bold text-sky-600 dark:text-sky-400">
+                                                {navDistance}px
+                                            </span>
+                                        </div>
+                                        <input
+                                            type="range"
+                                            min={8}
+                                            max={160}
+                                            step={4}
+                                            value={navDistance}
+                                            onChange={(e) => setNavDistance(Number(e.target.value))}
+                                            className="w-full accent-sky-500 cursor-pointer"
+                                        />
+                                        <div className="flex flex-wrap items-center gap-1 text-[10px]">
+                                            {[16, 24, 32, 36, 48, 64, 80, 100].map((d) => (
+                                                <button
+                                                    key={d}
+                                                    type="button"
+                                                    onClick={() => setNavDistance(d)}
+                                                    className={`px-1.5 py-0.5 rounded cursor-pointer transition-colors ${
+                                                        navDistance === d
+                                                            ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
+                                                            : "border border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
+                                                    }`}
+                                                >
+                                                    {d}px {d === 36 ? "(mockup)" : ""}
+                                                </button>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() => setNavDistance(36)}
+                                                className="text-[10px] text-[var(--text-muted)] hover:underline ml-auto cursor-pointer"
+                                            >
+                                                [reset 36px]
+                                            </button>
+                                        </div>
+                                        <div className="p-1.5 rounded bg-sky-500/10 border border-sky-500/20 text-[9.5px] leading-tight space-y-0.5">
+                                            <div className="flex items-center justify-between text-sky-600 dark:text-sky-400 font-semibold">
+                                                <span>✓ Mode: Began After Border</span>
+                                                <span>Starts at ~{contentWidth + navDistance}px</span>
+                                            </div>
+                                            <p className="text-[var(--text-muted)]">
+                                                Content box ends at {contentWidth}px (right edge of &ldquo;view all [essays] →&rdquo;). Navigation links begin {navDistance}px immediately after it!
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {navPlacement === "inside-box" && (
+                                    <div className="space-y-1.5 pt-1.5 border-t border-current/10">
+                                        <div className="flex items-center justify-between text-[11px]">
+                                            <span className="text-[var(--text-muted)] font-medium">
+                                                Gap from &ldquo;Sahaj Singh&rdquo;:
+                                            </span>
+                                            <span className="font-bold text-sky-600 dark:text-sky-400">
+                                                {navDistance}px
+                                            </span>
+                                        </div>
+                                        <input
+                                            type="range"
+                                            min={16}
+                                            max={400}
+                                            step={4}
+                                            value={navDistance}
+                                            onChange={(e) => setNavDistance(Number(e.target.value))}
+                                            className="w-full accent-sky-500 cursor-pointer"
+                                        />
+                                        <div className="flex flex-wrap items-center gap-1 text-[10px]">
+                                            {[16, 24, 36, 48, 64, 96, 140, 200].map((d) => (
+                                                <button
+                                                    key={d}
+                                                    type="button"
+                                                    onClick={() => setNavDistance(d)}
+                                                    className={`px-1.5 py-0.5 rounded cursor-pointer transition-colors ${
+                                                        navDistance === d
+                                                            ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
+                                                            : "border border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
+                                                    }`}
+                                                >
+                                                    {d}px
+                                                </button>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() => setNavDistance(48)}
+                                                className="text-[10px] text-[var(--text-muted)] hover:underline ml-auto cursor-pointer"
+                                            >
+                                                [reset 48px]
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             {/* 2. Global Font Size Slider & Presets */}

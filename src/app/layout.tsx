@@ -46,12 +46,14 @@ export default function RootLayout({
                         </div>
                     </div>
 
-                    <header className="pb-6 mb-8 content-box w-full" style={{ maxWidth: "var(--content-width, 860px)" }}>
+                    <header className="pb-6 mb-8 w-full">
                         <div className="site-header-nav-row">
-                            <div className="flex flex-wrap items-baseline gap-3 sm:gap-4 shrink-0">
+                            <div className="site-title-container shrink-0 flex items-baseline">
                                 <SiteTitle />
                             </div>
-                            <Navigation />
+                            <div className="site-nav-container shrink-0">
+                                <Navigation />
+                            </div>
                         </div>
                     </header>
 
