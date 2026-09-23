@@ -23,7 +23,14 @@
 - **Static Assets:** Placed in `public/` (e.g. `real_read_mode.png`, `real_write_mode.png`).
 
 ## Design Decisions & Palette Records
-- **Base Typography:** 15px base size, 1.65 line leading, Newsreader serif (`--font-newsreader`), OpenType old-style numbers enabled (`oldstyle-nums`, `"onum" 1`).
+- **Base Typography:** 18px base size (`--base-font-size: 18px`), 1.65 line leading, Newsreader serif (`--font-newsreader`), OpenType old-style numbers enabled (`oldstyle-nums`, `"onum" 1`).
+- **Canvas Layout & Margin:** Left-anchored with 120px left screen margin (`--page-left-offset: 120px`).
+- **Navigation Placement:** Begins after the content box border (matching `blo.png` mockup guide, `data-nav-placement="after-border"`), with a 36px separation gap (`--nav-distance: 36px`).
+- **Content Box Width:** 896px / `max-w-4xl` (`--content-width: 896px`), equalized across all pages via `RootLayout` inheritance, leaving ~200px of breathing room before essay dates.
+- **Essay Line Alignment:** Justified edge-to-edge (`data-entry-align="justified"`), minimum distance / safety gap: 28px (`--entry-gap: 28px`).
+- **Background Art:**
+  - Light mode: Original Read (`/real_read_mode.original.png`).
+  - Dark mode: Strictly locked to `/real_write_mode.png` (cosmic night sky, never modified).
 - **Navigation & Active State:** Brackets indicate current location (`[ Sahaj Singh ]` on `/`, `[now]` on `/now`).
 - **Unselected / Secondary Text Evaluation:**
   - **Chosen Palette:**

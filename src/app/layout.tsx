@@ -36,6 +36,9 @@ export default function RootLayout({
         <html
             lang="en"
             className={`dark ${newsreader.variable} ${geistMono.variable} h-full antialiased`}
+            data-page-align="left"
+            data-entry-align="justified"
+            data-nav-placement="after-border"
         >
             <body className="min-h-full flex flex-col font-serif">
                 <GlassFrame>
@@ -57,7 +60,7 @@ export default function RootLayout({
                         </div>
                     </header>
 
-                    <main className="flex-1 content-box w-full" style={{ maxWidth: "var(--content-width, 860px)" }}>
+                    <main className="flex-1 content-box w-full" style={{ maxWidth: "var(--content-width, 896px)" }}>
                         {children}
                     </main>
                     <BackgroundSwitcher />

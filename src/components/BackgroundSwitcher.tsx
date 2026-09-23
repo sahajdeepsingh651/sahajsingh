@@ -20,18 +20,18 @@ export default function BackgroundSwitcher() {
     const dragStartRef = useRef<{ startX: number; startY: number; initX: number; initY: number } | null>(null);
     const panelRef = useRef<HTMLDivElement>(null);
 
-    // Typography, Spacing, Layout & Width state
-    const [fontSize, setFontSize] = useState<number>(15);
+    // Typography, Spacing, Layout & Width state (user-chosen baseline defaults)
+    const [fontSize, setFontSize] = useState<number>(18);
     const [entryGap, setEntryGap] = useState<number>(28);
-    const [contentWidth, setContentWidth] = useState<number>(860);
+    const [contentWidth, setContentWidth] = useState<number>(896);
     const [alignMode, setAlignMode] = useState<EntryAlignMode>("justified");
     const [pageAlign, setPageAlign] = useState<"left" | "center">("left");
-    const [pageLeftOffset, setPageLeftOffset] = useState<number>(48);
+    const [pageLeftOffset, setPageLeftOffset] = useState<number>(120);
     const [navDistance, setNavDistance] = useState<number>(36);
     const [navPlacement, setNavPlacement] = useState<"after-border" | "inside-box" | "edge">("after-border");
 
     // Art & Horizon state
-    const [bgOption, setBgOption] = useState<BgOption>("candidate");
+    const [bgOption, setBgOption] = useState<BgOption>("original");
     const [bgSize, setBgSize] = useState<SizeOption>("100% auto");
     const [bgPosition, setBgPosition] = useState<PositionOption>("bottom center");
     const [horizonEnabled, setHorizonEnabled] = useState<boolean>(true);
@@ -55,6 +55,32 @@ export default function BackgroundSwitcher() {
 
     // Load saved preferences
     useEffect(() => {
+        const hasBaselineV3 = localStorage.getItem("experiment_baseline_v3");
+        if (!hasBaselineV3) {
+            // Apply user-chosen permanent baseline
+            setFontSize(18);
+            setEntryGap(28);
+            setContentWidth(896);
+            setAlignMode("justified");
+            setPageAlign("left");
+            setPageLeftOffset(120);
+            setNavDistance(36);
+            setNavPlacement("after-border");
+            setBgOption("original");
+
+            localStorage.setItem("experiment_font_size", "18");
+            localStorage.setItem("experiment_entry_gap", "28");
+            localStorage.setItem("experiment_content_width", "896");
+            localStorage.setItem("experiment_entry_align", "justified");
+            localStorage.setItem("experiment_page_align", "left");
+            localStorage.setItem("experiment_page_left_offset", "120");
+            localStorage.setItem("experiment_nav_distance", "36");
+            localStorage.setItem("experiment_nav_placement", "after-border");
+            localStorage.setItem("experiment_bg", "original");
+            localStorage.setItem("experiment_baseline_v3", "true");
+            return;
+        }
+
         const savedFontSize = localStorage.getItem("experiment_font_size");
         const savedEntryGap = localStorage.getItem("experiment_entry_gap");
         const savedContentWidth = localStorage.getItem("experiment_content_width");
@@ -66,7 +92,7 @@ export default function BackgroundSwitcher() {
         const savedDockSide = (localStorage.getItem("experiment_dock_side") as "right" | "left") || "right";
         const savedDockPos = localStorage.getItem("experiment_dock_pos");
 
-        const savedBg = (localStorage.getItem("experiment_bg") as BgOption) || "candidate";
+        const savedBg = (localStorage.getItem("experiment_bg") as BgOption) || "original";
         const savedSize = (localStorage.getItem("experiment_bg_size") as SizeOption) || "100% auto";
         const savedPos = (localStorage.getItem("experiment_bg_pos") as PositionOption) || "bottom center";
         const savedHorizon = localStorage.getItem("horizon_foreground");
@@ -77,7 +103,7 @@ export default function BackgroundSwitcher() {
         if (savedContentWidth) {
             setContentWidth(Number(savedContentWidth));
         } else {
-            setContentWidth(860);
+            setContentWidth(896);
         }
         if (savedAlign) {
             setAlignMode(savedAlign);
@@ -417,10 +443,10 @@ export default function BackgroundSwitcher() {
                                             ))}
                                             <button
                                                 type="button"
-                                                onClick={() => setPageLeftOffset(48)}
+                                                onClick={() => setPageLeftOffset(120)}
                                                 className="text-[10px] text-[var(--text-muted)] hover:underline ml-auto cursor-pointer"
                                             >
-                                                [reset 48px]
+                                                [reset 120px]
                                             </button>
                                         </div>
                                         <p className="text-[9.5px] text-[var(--text-muted)] leading-tight pt-0.5">
@@ -628,10 +654,10 @@ export default function BackgroundSwitcher() {
                                     ))}
                                     <button
                                         type="button"
-                                        onClick={() => setFontSize(15)}
+                                        onClick={() => setFontSize(18)}
                                         className="text-[10px] text-[var(--text-muted)] hover:underline ml-auto cursor-pointer"
                                     >
-                                        [reset 15px]
+                                        [reset 18px]
                                     </button>
                                 </div>
                             </div>
@@ -672,10 +698,10 @@ export default function BackgroundSwitcher() {
                                     ))}
                                     <button
                                         type="button"
-                                        onClick={() => setContentWidth(860)}
+                                        onClick={() => setContentWidth(896)}
                                         className="text-[10px] text-[var(--text-muted)] hover:underline ml-auto cursor-pointer"
                                     >
-                                        [reset 860px]
+                                        [reset 896px]
                                     </button>
                                 </div>
                                 <p className="text-[9.5px] text-[var(--text-muted)] leading-tight">

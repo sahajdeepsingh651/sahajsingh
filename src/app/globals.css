@@ -14,15 +14,15 @@
         --bg-color: #faf7ed;
         --text-color: #1a1a1a;
         --text-muted: #595147;
-        --base-font-size: 15px;
+        --base-font-size: 18px;
         --entry-gap: 28px;
-        --content-width: 860px;
-        --page-left-offset: 48px;
-        --nav-distance: 64px;
+        --content-width: 896px;
+        --page-left-offset: 120px;
+        --nav-distance: 36px;
     }
 
     html {
-        font-size: var(--base-font-size, 15px);
+        font-size: var(--base-font-size, 18px);
     }
 
     /* Page Canvas Positioning (Left-Anchored vs. Centered) */
@@ -31,7 +31,7 @@
     }
 
     [data-page-align="left"] .page-canvas {
-        margin-left: var(--page-left-offset, 48px) !important;
+        margin-left: var(--page-left-offset, 120px) !important;
         margin-right: auto !important;
         max-width: min(94vw, 1440px) !important;
     }
@@ -69,7 +69,7 @@
         }
         [data-nav-placement="after-border"] .site-title-container,
         :not([data-nav-placement]) .site-title-container {
-            width: var(--content-width, 860px);
+            width: var(--content-width, 896px);
             max-width: 100%;
             flex-shrink: 0;
         }
@@ -80,7 +80,7 @@
 
         /* 2. Inside-Box Mode: Navigation contained inside content box with custom gap from Sahaj Singh */
         [data-nav-placement="inside-box"] .site-header-nav-row {
-            max-width: var(--content-width, 860px);
+            max-width: var(--content-width, 896px);
             justify-content: flex-start;
             gap: var(--nav-distance, 48px);
         }
@@ -90,7 +90,7 @@
 
         /* 3. Edge Mode: Navigation ends at the right edge of the content box */
         [data-nav-placement="edge"] .site-header-nav-row {
-            max-width: var(--content-width, 860px);
+            max-width: var(--content-width, 896px);
             justify-content: space-between;
             width: 100%;
         }
@@ -103,7 +103,7 @@
     .content-box,
     .content-container,
     .max-w-2xl {
-        max-width: var(--content-width, 860px) !important;
+        max-width: var(--content-width, 896px) !important;
         width: 100%;
         transition: max-width 0.2s ease-out;
     }
@@ -124,7 +124,7 @@
             "liga" 1,
             "onum" 1;
         font-variant-numeric: oldstyle-nums;
-        background-image: url("/real_read_mode.png");
+        background-image: url("/real_read_mode.original.png");
         background-repeat: no-repeat;
         background-position: bottom center;
         background-size: 100% auto;
