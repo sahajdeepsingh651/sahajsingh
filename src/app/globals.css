@@ -15,7 +15,7 @@
         --text-color: #1a1a1a;
         --text-muted: #595147;
         --heading-color: #2c221e;
-        --base-font-size: 18px;
+        --base-font-size: 20px;
         --entry-gap: 28px;
         --content-width: 896px;
         --page-left-offset: 120px;
@@ -23,24 +23,34 @@
     }
 
     html {
-        font-size: var(--base-font-size, 18px);
+        font-size: 16px;
     }
 
-    /* Page Canvas Positioning (Left-Anchored vs. Centered) */
+    @media (min-width: 640px) {
+        html {
+            font-size: var(--base-font-size, 20px);
+        }
+    }
+
+    /* Page Canvas Positioning (Centered on Mobile, Left-Anchored on Desktop) */
     .page-canvas {
+        margin-left: auto !important;
+        margin-right: auto !important;
         transition: margin-left 0.2s ease, max-width 0.2s ease;
     }
 
-    [data-page-align="left"] .page-canvas {
-        margin-left: var(--page-left-offset, 120px) !important;
-        margin-right: auto !important;
-        max-width: min(94vw, 1440px) !important;
-    }
+    @media (min-width: 768px) {
+        [data-page-align="left"] .page-canvas {
+            margin-left: var(--page-left-offset, 120px) !important;
+            margin-right: auto !important;
+            max-width: min(94vw, 1440px) !important;
+        }
 
-    [data-page-align="center"] .page-canvas {
-        margin-left: auto !important;
-        margin-right: auto !important;
-        max-width: min(94vw, 1440px) !important;
+        [data-page-align="center"] .page-canvas {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: min(94vw, 1440px) !important;
+        }
     }
 
     /* Header Navigation Distance & Alignment */
@@ -263,9 +273,10 @@ html:not([data-entry-align]) .entry-row .entry-date {
 [data-entry-align="justified"] .entry-row {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: baseline;
-    gap: var(--entry-gap, 24px);
+    gap: 0.25rem var(--entry-gap, 24px);
     transition: gap 0.15s ease;
 }
 [data-entry-align="justified"] .entry-row .entry-title {

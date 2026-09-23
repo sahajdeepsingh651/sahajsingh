@@ -14,7 +14,7 @@ export default function Navigation() {
     const pathname = usePathname();
 
     return (
-        <nav className="flex items-center gap-6 sm:gap-7 text-base">
+        <nav className="flex items-center gap-4 sm:gap-7 flex-wrap text-base">
             {NAV_ITEMS.map(({ href, label }) => {
                 const isActive =
                     pathname === href ||
