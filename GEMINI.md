@@ -48,20 +48,11 @@
     - *Maritime Slate / Blue*: `#1E293B` (Deep Navy) in light, `#93C5FD` (Moonlit Silver) in dark.
     - *Sumi Ink / Ivory*: `#111111` in light, `#EDE8DC` in dark.
   - Typography modes: Serif (`blo.png` mockup style, 1.35rem) vs. Mono uppercase small-caps (`[data-heading-style="mono"]`).
-- **Scroll Clearance & Geometry:**
-  - Foreground Horizon occupies ~250-300px at bottom. Container clearance updated to `pb-[45vh]` so content (e.g. "Recent Thoughts") can easily scroll into clear view without elastic obstruction.
-  - Added unobtrusive `ScrollCue` affordance (`↓ scroll for projects & thoughts`) that self-fades after 50px of scroll travel.
-- **Scroll Dynamics & Multi-Pattern Affordances (Studio Controller Tab 2):**
-  - Added dedicated `📜 Scroll Cue` tab with live interactive controls for authentic field notebook patterns:
-    - *Pattern 1: Celestial Astrolabe Star (blo.png mockup)*: 8-facet diamond compass star in the lower margin. Rhythmic breathing rotation, toggles `[ ✦ descend ]` and `[ ↑ zenith ]`. Matches the faceted star sitting above the horizon in `blo.png` & `dark_mode_blog.png`.
-    - *Pattern 2: Historical Renaissance Catchword*: Centuries-old bookbinding technique printing next section title at the lower fold: `[ next: recent thoughts → ]`. Clicking jumps straight to next chapter.
-    - *Pattern 3: Marginal Field Ledger*: Monospace coordinates pinned in the bottom corner margin: `[ 20°N • fol. 01/03 • 25% ↓ ]`. Changes to `[ ↑ top ]` once scrolled.
-    - *Pattern 4: Editorial Dashed Perforation*: Field notebook tear-line boundary: `[ ┈┈┈ § inquiries continue below fold ↓ ┈┈┈ ]`.
-    - *Pattern 5: Visual Cliff Layout (Zero UI)*: No overlay widgets. Content naturally slips under horizon waves with deliberate vertical rhythm.
-    - *Pattern 6: Dynamic Floating Pill*: Auto-fading bottom-center capsule (`↓ scroll for projects & thoughts`).
-    - *Pattern 7: Pure Minimalist (None)*: Raw canvas relying purely on native browser scroll.
-  - *Atmospheric Bottom Scrim*: Off / Subtle vellum mist / Deep atmospheric veil.
-  - *Scroll Clearance Slider*: 15vh to 65vh with instant test jump triggers (`Down 55vh`, `To Thoughts`, `To Top`) and cross-browser 60ms direct fallback.
+- **Scroll Clearance & Boundary:**
+  - Dead viewport space eliminated: `--scroll-clearance` set to `0` (natural stop). Scrolling terminates precisely when the content ends, preventing the page from scrolling endlessly into blank air.
+- **Reading Progress Indicator Scope:**
+  - **Essays Only**: The 1px / 2px silent graphite hairline reading rule (`ScrollCue`) is strictly scoped via `usePathname()` to long-form reading routes (`/essays`).
+  - **Clean Canvas Everywhere Else**: Home (`/`), About (`/about`), Now (`/now`), Projects (`/projects`), and Thoughts (`/thoughts`) have zero overlay cues, zero floating widgets, and zero header lines, preserving a completely undisturbed digital garden canvas.
 
 
 
