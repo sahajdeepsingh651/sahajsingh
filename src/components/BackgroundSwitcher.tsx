@@ -197,7 +197,8 @@ export default function BackgroundSwitcher() {
         setBgOption(savedBg);
         setBgSize(savedSize);
         setBgPosition(savedPos);
-        if (savedHorizon !== null) setHorizonEnabled(savedHorizon === "true");
+        setHorizonEnabled(true);
+        localStorage.setItem("horizon_foreground", "true");
         if (savedBox !== null) setFrostedBoxEnabled(savedBox === "true");
     }, []);
 
@@ -209,7 +210,6 @@ export default function BackgroundSwitcher() {
         root.style.setProperty("--content-width", `${contentWidth}px`);
         root.style.setProperty("--page-left-offset", `${pageLeftOffset}px`);
         root.style.setProperty("--nav-distance", `${navDistance}px`);
-        root.style.setProperty("--scroll-clearance", `${scrollClearance}vh`);
 
         const activeHeadingColor = isDark
             ? HEADING_THEMES[headingTheme].dark

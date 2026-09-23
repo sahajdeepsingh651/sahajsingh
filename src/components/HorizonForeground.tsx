@@ -8,10 +8,9 @@ export default function HorizonForeground() {
     const [bgPosition, setBgPosition] = useState<string>("bottom center");
 
     useEffect(() => {
-        const saved = localStorage.getItem("horizon_foreground");
-        if (saved !== null) {
-            setActive(saved === "true");
-        }
+        // Ensure horizon foreground is active so text emerges from behind ocean waves
+        setActive(true);
+        localStorage.setItem("horizon_foreground", "true");
         const savedSize = localStorage.getItem("experiment_bg_size");
         if (savedSize) setBgSize(savedSize);
         const savedPos = localStorage.getItem("experiment_bg_pos");
