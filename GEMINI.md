@@ -40,4 +40,16 @@
   - **Option 1 (Single Ink Alternative):**
     - `--text-muted: var(--text-color)` (uniform ivory `#ede8dc` / walnut `#1f140e`).
     - *Verdict:* Kept on file as reference.
+- **Section Heading Hierarchy & Palette (`--heading-color`):**
+  - Decoupled from `--text-muted` to solve washed-out headings on parchment and flat hierarchy in dark mode.
+  - Palettes added to Studio Controller:
+    - *Espresso / Amber (Default)*: `#2C221E` (Warm Espresso Bronze) in light, `#F3D8A2` (Celestial Amber) in dark.
+    - *Terracotta / Copper*: `#8B3A22` (Field Rust) in light, `#F6AD7B` (Warm Copper) in dark.
+    - *Maritime Slate / Blue*: `#1E293B` (Deep Navy) in light, `#93C5FD` (Moonlit Silver) in dark.
+    - *Sumi Ink / Ivory*: `#111111` in light, `#EDE8DC` in dark.
+  - Typography modes: Serif (`blo.png` mockup style, 1.35rem) vs. Mono uppercase small-caps (`[data-heading-style="mono"]`).
+- **Scroll Clearance & Geometry:**
+  - Foreground Horizon occupies ~250-300px at bottom. Container clearance updated to `pb-[45vh]` so content (e.g. "Recent Thoughts") can easily scroll into clear view without elastic obstruction.
+  - Added unobtrusive `ScrollCue` affordance (`↓ scroll for projects & thoughts`) that self-fades after 50px of scroll travel.
+
 
