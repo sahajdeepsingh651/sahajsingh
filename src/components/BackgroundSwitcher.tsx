@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 
-type ActiveTab = "typography" | "art";
+type ActiveTab = "typography" | "scroll" | "art";
+export type ScrollCueMode = "pill" | "tick" | "peek" | "drift" | "none";
+export type ScrollFogMode = "none" | "subtle" | "pronounced";
 type BgOption = "default" | "candidate" | "original" | "none";
 type SizeOption = "100% auto" | "cover" | "contain";
 type PositionOption = "bottom center" | "center center" | "top center";
@@ -43,6 +45,9 @@ export default function BackgroundSwitcher() {
     const [navPlacement, setNavPlacement] = useState<"after-border" | "inside-box" | "edge">("after-border");
     const [headingTheme, setHeadingTheme] = useState<HeadingColorTheme>("espresso");
     const [headingStyle, setHeadingStyle] = useState<"serif" | "mono">("serif");
+    const [scrollCueMode, setScrollCueMode] = useState<ScrollCueMode>("pill");
+    const [scrollFogMode, setScrollFogMode] = useState<ScrollFogMode>("none");
+    const [scrollClearance, setScrollClearance] = useState<number>(45);
 
     // Art & Horizon state
     const [bgOption, setBgOption] = useState<BgOption>("original");
@@ -137,6 +142,15 @@ export default function BackgroundSwitcher() {
         if (savedNavPlacement) setNavPlacement(savedNavPlacement);
         if (savedHeadingTheme && HEADING_THEMES[savedHeadingTheme]) setHeadingTheme(savedHeadingTheme);
         if (savedHeadingStyle) setHeadingStyle(savedHeadingStyle);
+
+        const savedScrollCue = localStorage.getItem("experiment_scroll_cue") as ScrollCueMode;
+        const savedScrollFog = localStorage.getItem("experiment_scroll_fog") as ScrollFogMode;
+        const savedClearance = localStorage.getItem("experiment_scroll_clearance");
+
+        if (savedScrollCue) setScrollCueMode(savedScrollCue);
+        if (savedScrollFog) setScrollFogMode(savedScrollFog);
+        if (savedClearance) setScrollClearance(Number(savedClearance));
+
         setDockSide(savedDockSide);
 
         if (savedDockPos) {
@@ -157,7 +171,7 @@ export default function BackgroundSwitcher() {
         if (savedBox !== null) setFrostedBoxEnabled(savedBox === "true");
     }, []);
 
-    // Apply typography, layout, spacing & section width variables to documentElement
+    // Apply typography, layout, spacing, section width & scroll dynamics to documentElement
     useEffect(() => {
         const root = document.documentElement;
         root.style.setProperty("--base-font-size", `${fontSize}px`);
@@ -165,6 +179,8 @@ export default function BackgroundSwitcher() {
         root.style.setProperty("--content-width", `${contentWidth}px`);
         root.style.setProperty("--page-left-offset", `${pageLeftOffset}px`);
         root.style.setProperty("--nav-distance", `${navDistance}px`);
+        root.style.setProperty("--scroll-clearance", `${scrollClearance}vh`);
+
         const activeHeadingColor = isDark
             ? HEADING_THEMES[headingTheme].dark
             : HEADING_THEMES[headingTheme].light;
@@ -173,6 +189,14 @@ export default function BackgroundSwitcher() {
         root.setAttribute("data-page-align", pageAlign);
         root.setAttribute("data-nav-placement", navPlacement);
         root.setAttribute("data-heading-style", headingStyle);
+        root.setAttribute("data-scroll-cue", scrollCueMode);
+        root.setAttribute("data-scroll-fog", scrollFogMode);
+
+        window.dispatchEvent(
+            new CustomEvent("scroll-cue-change", {
+                detail: { mode: scrollCueMode, fog: scrollFogMode },
+            })
+        );
 
         localStorage.setItem("experiment_font_size", String(fontSize));
         localStorage.setItem("experiment_entry_gap", String(entryGap));
@@ -184,7 +208,25 @@ export default function BackgroundSwitcher() {
         localStorage.setItem("experiment_nav_placement", navPlacement);
         localStorage.setItem("experiment_heading_theme", headingTheme);
         localStorage.setItem("experiment_heading_style", headingStyle);
-    }, [fontSize, entryGap, contentWidth, alignMode, pageAlign, pageLeftOffset, navDistance, navPlacement, headingTheme, headingStyle, isDark]);
+        localStorage.setItem("experiment_scroll_cue", scrollCueMode);
+        localStorage.setItem("experiment_scroll_fog", scrollFogMode);
+        localStorage.setItem("experiment_scroll_clearance", String(scrollClearance));
+    }, [
+        fontSize,
+        entryGap,
+        contentWidth,
+        alignMode,
+        pageAlign,
+        pageLeftOffset,
+        navDistance,
+        navPlacement,
+        headingTheme,
+        headingStyle,
+        scrollCueMode,
+        scrollFogMode,
+        scrollClearance,
+        isDark,
+    ]);
 
     // Apply background styles to body and sync with foreground horizon
     useEffect(() => {
@@ -289,6 +331,27 @@ export default function BackgroundSwitcher() {
         window.dispatchEvent(new Event("glass-box-toggle"));
     };
 
+    const handleSimulateScrollDown = () => {
+        window.scrollBy({ top: window.innerHeight * 0.55, behavior: "smooth" });
+    };
+
+    const handleScrollToThoughts = () => {
+        const headings = document.querySelectorAll(".section-heading");
+        let target: Element | null = null;
+        headings.forEach((h) => {
+            if (h.textContent?.includes("Thoughts")) target = h;
+        });
+        if (target) {
+            (target as HTMLElement).scrollIntoView({ behavior: "smooth", block: "center" });
+        } else {
+            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+        }
+    };
+
+    const handleSimulateScrollTop = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
     const containerClasses =
         pos !== null
             ? "fixed z-50 font-mono text-xs text-[var(--text-muted)]"
@@ -363,7 +426,7 @@ export default function BackgroundSwitcher() {
                     </div>
 
                     {/* Navigation Tabs */}
-                    <div className="grid grid-cols-2 gap-1 p-0.5 rounded-md bg-current/5 border border-current/10 text-[11px]">
+                    <div className="grid grid-cols-3 gap-1 p-0.5 rounded-md bg-current/5 border border-current/10 text-[10px]">
                         <button
                             type="button"
                             onClick={() => setActiveTab("typography")}
@@ -373,7 +436,18 @@ export default function BackgroundSwitcher() {
                                     : "text-[var(--text-muted)] hover:text-[var(--text-color)]"
                             }`}
                         >
-                            🔤 Text Size &amp; Distance
+                            🔤 Layout &amp; Ink
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setActiveTab("scroll")}
+                            className={`py-1 rounded font-medium cursor-pointer transition-colors ${
+                                activeTab === "scroll"
+                                    ? "bg-[var(--text-color)] text-[var(--bg-color)] shadow-sm"
+                                    : "text-[var(--text-muted)] hover:text-[var(--text-color)]"
+                            }`}
+                        >
+                            📜 Scroll Cue
                         </button>
                         <button
                             type="button"
@@ -1079,7 +1153,257 @@ export default function BackgroundSwitcher() {
                         </div>
                     )}
 
-                    {/* TAB 2: HORIZON & BACKGROUND ART */}
+                    {/* TAB 2: SCROLL DYNAMICS & AFFORDANCE PATTERNS */}
+                    {activeTab === "scroll" && (
+                        <div className="space-y-4 pt-1">
+                            {/* Pattern Selector */}
+                            <div className="space-y-2 p-2.5 rounded-lg border border-indigo-500/25 bg-indigo-500/5">
+                                <div className="flex items-center justify-between text-[11px]">
+                                    <span className="font-semibold text-[var(--text-color)] flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                                        Scroll Affordance Pattern:
+                                    </span>
+                                    <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-wider">
+                                        {scrollCueMode}
+                                    </span>
+                                </div>
+                                <p className="text-[9.5px] text-[var(--text-muted)] leading-tight">
+                                    Signals to visitors that more content exists below the fold without clashing with the field notebook aesthetic.
+                                </p>
+
+                                <div className="space-y-1.5 text-[10.5px]">
+                                    {/* 1. Floating Pill */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollCueMode("pill")}
+                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollCueMode === "pill"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-semibold">★ Pattern 1: Dynamic Floating Pill</span>
+                                            <span className="text-[9px] font-mono opacity-80">[default]</span>
+                                        </div>
+                                        <div className="text-[9px] opacity-80 mt-0.5">
+                                            Minimal pill &ldquo;↓ scroll for projects &amp; thoughts&rdquo;. Auto-fades after 50px of scroll travel.
+                                        </div>
+                                    </button>
+
+                                    {/* 2. Marginal Monospace Tick */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollCueMode("tick")}
+                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollCueMode === "tick"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-semibold">Pattern 2: Marginal Progress Tick</span>
+                                            <span className="text-[9px] font-mono opacity-80">[digital garden]</span>
+                                        </div>
+                                        <div className="text-[9px] opacity-80 mt-0.5">
+                                            Pinned in corner: &ldquo;[ 24% • ↓ scroll ]&rdquo;. When scrolled, changes to &ldquo;[ 85% • ↑ top ]&rdquo;.
+                                        </div>
+                                    </button>
+
+                                    {/* 3. Layout Peek Rule */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollCueMode("peek")}
+                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollCueMode === "peek"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-semibold">Pattern 3: Layout Fold Boundary</span>
+                                            <span className="text-[9px] font-mono opacity-80">[editorial]</span>
+                                        </div>
+                                        <div className="text-[9px] opacity-80 mt-0.5">
+                                            Dashed notebook divider &ldquo;[ ┈┈┈ more entries below fold ↓ ┈┈┈ ]&rdquo;.
+                                        </div>
+                                    </button>
+
+                                    {/* 4. Continuous Drift */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollCueMode("drift")}
+                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollCueMode === "drift"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-semibold">Pattern 4: Continuous Pulse Drift</span>
+                                            <span className="text-[9px] font-mono opacity-80">[motion]</span>
+                                        </div>
+                                        <div className="text-[9px] opacity-80 mt-0.5">
+                                            Rhythmic breathing badge with amber signal ping: &ldquo;● continue reading ↓&rdquo;.
+                                        </div>
+                                    </button>
+
+                                    {/* 5. Pure Canvas (None) */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollCueMode("none")}
+                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollCueMode === "none"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-semibold">Pattern 5: Pure Minimalist (None)</span>
+                                            <span className="text-[9px] font-mono opacity-80">[raw canvas]</span>
+                                        </div>
+                                        <div className="text-[9px] opacity-80 mt-0.5">
+                                            Completely hides all overlay cues; relies entirely on browser scroll bar.
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Atmospheric Fog / Scrim Depth */}
+                            <div className="space-y-2 p-2.5 rounded-lg border border-purple-500/25 bg-purple-500/5">
+                                <div className="flex items-center justify-between text-[11px]">
+                                    <span className="font-semibold text-[var(--text-color)] flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                                        Atmospheric Bottom Scrim:
+                                    </span>
+                                    <span className="text-[10px] text-purple-600 dark:text-purple-400 font-bold capitalize">
+                                        {scrollFogMode}
+                                    </span>
+                                </div>
+                                <p className="text-[9.5px] text-[var(--text-muted)] leading-tight">
+                                    Soft gradient mist rising above the horizon waves to naturally fade bottom text, showing that content slips underneath.
+                                </p>
+                                <div className="grid grid-cols-3 gap-1 text-[10px]">
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollFogMode("none")}
+                                        className={`p-1.5 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollFogMode === "none"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
+                                        }`}
+                                    >
+                                        Off
+                                        <span className="block text-[8.5px] opacity-75 mt-0.5">Sharp cutoff</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollFogMode("subtle")}
+                                        className={`p-1.5 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollFogMode === "subtle"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
+                                        }`}
+                                    >
+                                        ★ Subtle
+                                        <span className="block text-[8.5px] opacity-75 mt-0.5">Soft vellum mist</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollFogMode("pronounced")}
+                                        className={`p-1.5 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollFogMode === "pronounced"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
+                                        }`}
+                                    >
+                                        Deep
+                                        <span className="block text-[8.5px] opacity-75 mt-0.5">Atmospheric veil</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Bottom Scroll Travel / Clearance Slider */}
+                            <div className="space-y-2 p-2.5 rounded-lg border border-amber-500/25 bg-amber-500/5">
+                                <div className="flex items-center justify-between text-[11px]">
+                                    <span className="font-semibold text-[var(--text-color)] flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                                        Bottom Scroll Clearance:
+                                    </span>
+                                    <span className="font-bold text-amber-600 dark:text-amber-400">
+                                        {scrollClearance}vh
+                                    </span>
+                                </div>
+                                <p className="text-[9.5px] text-[var(--text-muted)] leading-tight">
+                                    Adds bottom buffer past the 250px waves so the 3 items in &ldquo;Recent Thoughts&rdquo; can scroll up without being trapped behind horizon art!
+                                </p>
+                                <input
+                                    type="range"
+                                    min={15}
+                                    max={65}
+                                    step={5}
+                                    value={scrollClearance}
+                                    onChange={(e) => setScrollClearance(Number(e.target.value))}
+                                    className="w-full accent-amber-500 cursor-pointer"
+                                />
+                                <div className="flex flex-wrap items-center gap-1 text-[10px]">
+                                    {[20, 30, 35, 45, 55].map((vh) => (
+                                        <button
+                                            key={vh}
+                                            type="button"
+                                            onClick={() => setScrollClearance(vh)}
+                                            className={`px-1.5 py-0.5 rounded cursor-pointer transition-colors ${
+                                                scrollClearance === vh
+                                                    ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
+                                                    : "border border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
+                                            }`}
+                                        >
+                                            {vh}vh {vh === 20 ? "(old/trapped)" : vh === 45 ? "(baseline)" : ""}
+                                        </button>
+                                    ))}
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollClearance(45)}
+                                        className="text-[10px] text-[var(--text-muted)] hover:underline ml-auto cursor-pointer"
+                                    >
+                                        [reset 45vh]
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Live Scroll Simulation Triggers */}
+                            <div className="space-y-1.5 pt-2 border-t border-current/10">
+                                <span className="block text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-semibold">
+                                    Instant Scroll Test Triggers:
+                                </span>
+                                <div className="grid grid-cols-3 gap-1 text-[10.5px]">
+                                    <button
+                                        type="button"
+                                        onClick={handleSimulateScrollDown}
+                                        className="p-1.5 rounded border border-current/15 text-[var(--text-color)] hover:bg-current/5 transition-colors cursor-pointer text-center"
+                                    >
+                                        ↓ Down 55vh
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleScrollToThoughts}
+                                        className="p-1.5 rounded border border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 transition-colors cursor-pointer text-center font-medium"
+                                    >
+                                        🎯 To Thoughts
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleSimulateScrollTop}
+                                        className="p-1.5 rounded border border-current/15 text-[var(--text-color)] hover:bg-current/5 transition-colors cursor-pointer text-center"
+                                    >
+                                        ↑ To Top
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* TAB 3: HORIZON & BACKGROUND ART */}
                     {activeTab === "art" && (
                         <div className="space-y-3 pt-1">
                             {/* Horizon Depth Toggle */}

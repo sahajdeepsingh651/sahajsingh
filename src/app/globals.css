@@ -20,6 +20,7 @@
         --content-width: 896px;
         --page-left-offset: 120px;
         --nav-distance: 36px;
+        --scroll-clearance: 45vh;
     }
 
     html {
