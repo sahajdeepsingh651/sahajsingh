@@ -56,7 +56,11 @@
 - **Reading Progress Indicator Scope:**
   - **Essays Only**: The 1px / 2px silent graphite hairline reading rule (`ScrollCue`) is strictly scoped via `usePathname()` to long-form reading routes (`/essays`).
   - **Clean Canvas Everywhere Else**: Home (`/`), About (`/about`), Now (`/now`), Projects (`/projects`), and Thoughts (`/thoughts`) have zero overlay cues, zero floating widgets, and zero header lines, preserving a completely undisturbed digital garden canvas.
-
-
-
+- **Essay Footer Architecture & Canonical Standard:**
+  - **Ledger Format (`EssayFooter.tsx`)**: Stacked academic standard with substantive revision changelog, annotated bibliography with bidirectional anchor jumps (`#ref-X` ↔ `#cite-X`), and permanent archive colophon.
+  - **Branch Preservation**: Interactive test switcher components are preserved in the `test-interactive-components` branch for reference; production `main` remains clean with zero experimental UI toolbars.
+- **About Site Taxonomy & Structure:**
+  - **Header Subtitle**: "Two perspectives: the author and the site."
+  - **About Site Section**: Strictly dedicated to the site itself (personal field notebook, digital garden workspace, physical book/typography inspirations, nocturnal observation).
+  - **Epistemic Confidence & Status**: Gwern-inspired document maturity tags (seed, developing, draft, revised) and Kesselman estimative probability scales are unified under Epistemic Confidence, preserving `#status` and `#confidence` anchor targets.
 
