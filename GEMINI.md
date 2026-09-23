@@ -38,8 +38,8 @@
     - Dark mode: `--text-muted: #cbd5e1` (Refined Platinum Silver / Slate-300, 12.5:1 contrast ratio against cosmic `#0b0f17`).
     - *Verdict:* Provides distinct subordination to primary text while remaining sharply readable.
 - **Dark Mode Primary & Heading Contrast Standard:**
-  - Primary text and headings strictly locked to **Crisp Starlight Silver** (`--text-color: #f8fafc`, `--heading-color: #f8fafc` / Slate-50), delivering an ultra-crisp 17.5:1 contrast ratio against `#0b0f17`. Replaced antique ivory with luminous cool silver.
-  - **Atmospheric Reading Scrim**: `.dark .page-canvas` uses a subtle borderless radial gradient (`rgba(11, 15, 23, 0.55)` fading to transparent) behind the central column, preventing background stardust from competing with fine serif typography while preserving the organic ocean waterline emergence.
+  - Primary text and headings strictly locked to **Crisp Starlight Silver** (`--text-color: #f8fafc`, `--heading-color: #f8fafc` / Slate-50), delivering an ultra-crisp 18.8:1 contrast ratio against cosmic obsidian `#0b0f17`. Replaced antique ivory with luminous cool silver.
+  - **Zero Box Boundaries / Borderless Canvas**: `.page-canvas` is 100% transparent (`border-none bg-transparent backdrop-blur-none`) with zero radial or linear scrims, avoiding any rectangular or gradient box edges. Contrast is provided globally via the deepened cosmic night sky artwork (`real_write_mode.png` and `horizon_foreground_dark.png` with calibrated gamma 1.45 tone curve) while constellations and the lighthouse glow sharply.
   - Light mode uses Warm Espresso Bronze (`#2C221E`).
   - Palettes in Studio Controller:
     - *Charcoal / Platinum (Silver - Default)*: `#595147` in light, `#E2E8F0` in dark.

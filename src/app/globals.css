@@ -116,11 +116,6 @@
         --heading-color: #f8fafc;
     }
 
-    .dark .page-canvas {
-        /* Soft atmospheric backing that gently lifts text contrast over background art */
-        background: radial-gradient(ellipse at 50% 25%, rgba(11, 15, 23, 0.55) 0%, rgba(11, 15, 23, 0.25) 75%, transparent 100%);
-    }
-
     /* Section Headings (Recent Essays, Projects, Thoughts) */
     .section-heading {
         color: var(--heading-color, #2c221e);
