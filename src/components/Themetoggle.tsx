@@ -1,24 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
 export default function ThemeToggle() {
-    const [isDark, setIsDark] = useState(false);
-
-    useEffect(() => {
-        // Read the class set synchronously by the blocking <head> script
-        setIsDark(document.documentElement.classList.contains("dark"));
-    }, []);
-
     function toggleTheme() {
+        const isDark = document.documentElement.classList.contains("dark");
         if (isDark) {
             document.documentElement.classList.remove("dark");
             localStorage.setItem("theme", "light");
-            setIsDark(false);
         } else {
             document.documentElement.classList.add("dark");
             localStorage.setItem("theme", "dark");
-            setIsDark(true);
         }
     }
 
@@ -47,8 +37,7 @@ export default function ThemeToggle() {
 
             {/* Sketched active indicator ring sliding vertically between Sun and Moon */}
             <div
-                className={`absolute top-[2px] left-[2px] w-[20px] h-[20px] transition-transform duration-300 ease-out ${isDark ? "translate-y-[24px]" : "translate-y-0"
-                    }`}
+                className="absolute top-[2px] left-[2px] w-[20px] h-[20px] transition-transform duration-300 ease-out translate-y-0 dark:translate-y-[24px]"
             >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <circle
@@ -64,8 +53,7 @@ export default function ThemeToggle() {
 
             {/* Hand-drawn Sun (Top) */}
             <div
-                className={`absolute top-[3px] left-[3px] w-[18px] h-[18px] flex items-center justify-center transition-opacity duration-200 ${!isDark ? "opacity-100" : "opacity-30 group-hover:opacity-60"
-                    }`}
+                className="absolute top-[3px] left-[3px] w-[18px] h-[18px] flex items-center justify-center transition-opacity duration-200 opacity-100 dark:opacity-30 group-hover:opacity-60 dark:group-hover:opacity-60"
             >
                 <svg
                     width="13"
@@ -91,8 +79,7 @@ export default function ThemeToggle() {
 
             {/* Hand-drawn Moon (Bottom) */}
             <div
-                className={`absolute bottom-[3px] left-[3px] w-[18px] h-[18px] flex items-center justify-center transition-opacity duration-200 ${isDark ? "opacity-100" : "opacity-30 group-hover:opacity-60"
-                    }`}
+                className="absolute bottom-[3px] left-[3px] w-[18px] h-[18px] flex items-center justify-center transition-opacity duration-200 opacity-30 dark:opacity-100 group-hover:opacity-60 dark:group-hover:opacity-100"
             >
                 <svg
                     width="13"
