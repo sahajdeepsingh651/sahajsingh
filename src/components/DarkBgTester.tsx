@@ -2,21 +2,53 @@
 
 import { useState, useEffect } from "react";
 
-type DarkBgOption = "original" | "candidate";
+type StarDensityOption = "clean" | "thinned" | "minimal" | "original";
 type BgSizing = "100% auto" | "cover";
 
+const STAR_OPTIONS: Record<
+    StarDensityOption,
+    { label: string; file: string; desc: string; count: string }
+> = {
+    clean: {
+        label: "Calm Sky (Recommended)",
+        file: "/real_write_mode.clean.png",
+        desc: "837 stardust specks removed, 320 prominent stars kept",
+        count: "320 stars (-72%)",
+    },
+    thinned: {
+        label: "Subtle Thinning",
+        file: "/real_write_mode.thinned.png",
+        desc: "637 noisy stars removed, 520 stars kept",
+        count: "520 stars (-45%)",
+    },
+    minimal: {
+        label: "Minimal Constellations",
+        file: "/real_write_mode.minimal.png",
+        desc: "Only the primary focal constellations remain",
+        count: "140 stars (-88%)",
+    },
+    original: {
+        label: "Dense Original",
+        file: "/real_write_mode.original.png",
+        desc: "Unmodified dense stardust sky",
+        count: "1,157 stars (100%)",
+    },
+};
+
 export default function DarkBgTester() {
-    const [selectedBg, setSelectedBg] = useState<DarkBgOption>("candidate");
+    const [density, setDensity] = useState<StarDensityOption>("clean");
     const [sizing, setSizing] = useState<BgSizing>("100% auto");
     const [showHorizon, setShowHorizon] = useState<boolean>(true);
     const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
     useEffect(() => {
-        const savedBg = (localStorage.getItem("test_dark_bg") as DarkBgOption) || "candidate";
+        const savedDensity = (localStorage.getItem("test_star_density") as StarDensityOption) || "clean";
         const savedSizing = (localStorage.getItem("test_dark_bg_sizing") as BgSizing) || "100% auto";
         const savedHorizon = localStorage.getItem("horizon_foreground");
 
-        setSelectedBg(savedBg);
+        if (STAR_OPTIONS[savedDensity]) {
+            setDensity(savedDensity);
+        }
         setSizing(savedSizing);
         if (savedHorizon !== null) {
             setShowHorizon(savedHorizon === "true");
@@ -25,25 +57,22 @@ export default function DarkBgTester() {
 
     useEffect(() => {
         const root = document.documentElement;
-        const bgUrl =
-            selectedBg === "candidate"
-                ? 'url("/real_real_night_mode.png")'
-                : 'url("/real_write_mode.png")';
+        const bgUrl = `url("${STAR_OPTIONS[density].file}")`;
 
         root.style.setProperty("--dark-bg-image", bgUrl);
         root.style.setProperty("--dark-bg-size", sizing);
-        localStorage.setItem("test_dark_bg", selectedBg);
+        localStorage.setItem("test_star_density", density);
         localStorage.setItem("test_dark_bg_sizing", sizing);
 
         // Notify HorizonForeground if horizon toggle changes
         localStorage.setItem("horizon_foreground", String(showHorizon));
         window.dispatchEvent(new Event("horizon-toggle"));
-    }, [selectedBg, sizing, showHorizon]);
+    }, [density, sizing, showHorizon]);
 
     if (isCollapsed) {
         return (
             <aside
-                aria-label="Dark mode background tester"
+                aria-label="Star density comparison tool"
                 className="fixed bottom-4 right-4 z-50 select-none print:hidden"
             >
                 <button
@@ -52,7 +81,7 @@ export default function DarkBgTester() {
                     className="px-3 py-1.5 rounded-full border border-current/20 bg-[var(--bg-color)]/90 backdrop-blur-md text-xs font-mono text-[var(--text-color)] shadow-lg hover:border-current/40 cursor-pointer flex items-center gap-1.5 transition-all"
                 >
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>Compare Night BG [{selectedBg}]</span>
+                    <span>Stars: [{density}]</span>
                 </button>
             </aside>
         );
@@ -60,15 +89,15 @@ export default function DarkBgTester() {
 
     return (
         <aside
-            aria-label="Dark mode background tester panel"
-            className="fixed bottom-4 right-4 z-50 select-none p-3.5 rounded-lg border border-current/20 bg-[var(--bg-color)]/95 backdrop-blur-md shadow-2xl text-xs font-mono text-[var(--text-color)] max-w-xs space-y-3 print:hidden"
+            aria-label="Star density comparison panel"
+            className="fixed bottom-4 right-4 z-50 select-none p-3.5 rounded-lg border border-current/20 bg-[var(--bg-color)]/95 backdrop-blur-md shadow-2xl text-xs font-mono text-[var(--text-color)] max-w-sm space-y-3 print:hidden"
         >
             {/* Header */}
             <div className="flex items-center justify-between gap-2 border-b border-current/15 pb-2">
                 <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500" />
                     <span className="font-semibold uppercase tracking-wider text-[11px]">
-                        Dark Mode BG Tester
+                        Night Sky Stardust Density
                     </span>
                 </div>
                 <button
@@ -81,80 +110,42 @@ export default function DarkBgTester() {
                 </button>
             </div>
 
-            {/* Background Switcher Options */}
+            {/* Density Selector */}
             <div className="space-y-1.5">
                 <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider block">
-                    Select Artwork:
+                    Choose Star Variation:
                 </span>
-                <div className="grid grid-cols-2 gap-1.5">
-                    <button
-                        type="button"
-                        onClick={() => setSelectedBg("candidate")}
-                        className={`p-2 rounded border text-left cursor-pointer transition-all ${
-                            selectedBg === "candidate"
-                                ? "border-emerald-500 bg-emerald-500/15 font-semibold text-[var(--text-color)]"
-                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:border-current/30"
-                        }`}
-                    >
-                        <div className="text-[11px]">Candidate</div>
-                        <div className="text-[9px] text-[var(--text-muted)] truncate">
-                            real_real_night_mode
-                        </div>
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setSelectedBg("original")}
-                        className={`p-2 rounded border text-left cursor-pointer transition-all ${
-                            selectedBg === "original"
-                                ? "border-emerald-500 bg-emerald-500/15 font-semibold text-[var(--text-color)]"
-                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:border-current/30"
-                        }`}
-                    >
-                        <div className="text-[11px]">Original</div>
-                        <div className="text-[9px] text-[var(--text-muted)] truncate">
-                            real_write_mode
-                        </div>
-                    </button>
+                <div className="grid grid-cols-1 gap-1.5">
+                    {(Object.keys(STAR_OPTIONS) as StarDensityOption[]).map((key) => {
+                        const opt = STAR_OPTIONS[key];
+                        const isSelected = density === key;
+                        return (
+                            <button
+                                key={key}
+                                type="button"
+                                onClick={() => setDensity(key)}
+                                className={`p-2 rounded border text-left cursor-pointer transition-all ${
+                                    isSelected
+                                        ? "border-emerald-500 bg-emerald-500/15 font-semibold text-[var(--text-color)]"
+                                        : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:border-current/30"
+                                }`}
+                            >
+                                <div className="flex items-baseline justify-between">
+                                    <span className="text-[11px]">{opt.label}</span>
+                                    <span className="text-[10px] font-mono opacity-80">{opt.count}</span>
+                                </div>
+                                <div className="text-[9.5px] text-[var(--text-muted)] leading-tight pt-0.5">
+                                    {opt.desc}
+                                </div>
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
 
-            {/* Sizing Toggle */}
-            <div className="space-y-1.5 pt-1 border-t border-current/10">
-                <div className="flex items-center justify-between text-[10px]">
-                    <span className="text-[var(--text-muted)] uppercase tracking-wider">
-                        Artwork Sizing:
-                    </span>
-                    <span className="text-[var(--text-color)]">{sizing}</span>
-                </div>
-                <div className="grid grid-cols-2 gap-1.5 text-[11px]">
-                    <button
-                        type="button"
-                        onClick={() => setSizing("100% auto")}
-                        className={`py-1 px-2 rounded border text-center cursor-pointer transition-all ${
-                            sizing === "100% auto"
-                                ? "border-current bg-current/10 font-medium"
-                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
-                        }`}
-                    >
-                        100% auto
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setSizing("cover")}
-                        className={`py-1 px-2 rounded border text-center cursor-pointer transition-all ${
-                            sizing === "cover"
-                                ? "border-current bg-current/10 font-medium"
-                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
-                        }`}
-                    >
-                        Cover
-                    </button>
-                </div>
-            </div>
-
-            {/* Horizon Foreground Layer Toggle */}
+            {/* Ocean Waves Layer Toggle */}
             <div className="flex items-center justify-between pt-1 border-t border-current/10 text-[11px]">
-                <span className="text-[var(--text-muted)]">Ocean Waves Overlay:</span>
+                <span className="text-[var(--text-muted)]">Ocean Waves Foreground:</span>
                 <button
                     type="button"
                     onClick={() => setShowHorizon(!showHorizon)}
