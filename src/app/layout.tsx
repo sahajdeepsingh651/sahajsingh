@@ -7,6 +7,7 @@ import Navigation from "@/components/Navigation";
 import SiteTitle from "@/components/SiteTitle";
 import BackgroundSwitcher from "@/components/BackgroundSwitcher";
 import HorizonForeground from "@/components/HorizonForeground";
+import ScrollCue from "@/components/ScrollCue";
 
 const newsreader = Newsreader({
     subsets: ["latin"],
@@ -66,6 +67,7 @@ export default function RootLayout({
                     <BackgroundSwitcher />
                 </GlassFrame>
                 <HorizonForeground />
+                <ScrollCue />
             </body>
         </html>
     );

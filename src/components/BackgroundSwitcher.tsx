@@ -7,6 +7,18 @@ type BgOption = "default" | "candidate" | "original" | "none";
 type SizeOption = "100% auto" | "cover" | "contain";
 type PositionOption = "bottom center" | "center center" | "top center";
 type EntryAlignMode = "left-flow" | "date-left" | "stacked" | "tabular" | "justified";
+export type HeadingColorTheme = "espresso" | "terracotta" | "slate" | "ink" | "muted";
+
+export const HEADING_THEMES: Record<
+    HeadingColorTheme,
+    { label: string; light: string; dark: string; desc: string }
+> = {
+    espresso: { label: "Espresso / Amber", light: "#2C221E", dark: "#F3D8A2", desc: "Warm bookish bronze" },
+    terracotta: { label: "Terracotta / Copper", light: "#8B3A22", dark: "#F6AD7B", desc: "Field notebook rust" },
+    slate: { label: "Maritime Slate / Blue", light: "#1E293B", dark: "#93C5FD", desc: "Deep sea indigo" },
+    ink: { label: "Sumi Ink / Ivory", light: "#111111", dark: "#EDE8DC", desc: "High contrast primary ink" },
+    muted: { label: "Charcoal / Platinum", light: "#595147", dark: "#E2E8F0", desc: "Classic muted secondary" },
+};
 
 export default function BackgroundSwitcher() {
     // Tab state
@@ -29,6 +41,8 @@ export default function BackgroundSwitcher() {
     const [pageLeftOffset, setPageLeftOffset] = useState<number>(120);
     const [navDistance, setNavDistance] = useState<number>(36);
     const [navPlacement, setNavPlacement] = useState<"after-border" | "inside-box" | "edge">("after-border");
+    const [headingTheme, setHeadingTheme] = useState<HeadingColorTheme>("espresso");
+    const [headingStyle, setHeadingStyle] = useState<"serif" | "mono">("serif");
 
     // Art & Horizon state
     const [bgOption, setBgOption] = useState<BgOption>("original");
@@ -98,6 +112,9 @@ export default function BackgroundSwitcher() {
         const savedHorizon = localStorage.getItem("horizon_foreground");
         const savedBox = localStorage.getItem("glass_frame_box");
 
+        const savedHeadingTheme = localStorage.getItem("experiment_heading_theme") as HeadingColorTheme;
+        const savedHeadingStyle = localStorage.getItem("experiment_heading_style") as "serif" | "mono";
+
         if (savedFontSize) setFontSize(Number(savedFontSize));
         if (savedEntryGap) setEntryGap(Number(savedEntryGap));
         if (savedContentWidth) {
@@ -118,6 +135,8 @@ export default function BackgroundSwitcher() {
         if (savedPageLeftOffset) setPageLeftOffset(Number(savedPageLeftOffset));
         if (savedNavDistance) setNavDistance(Number(savedNavDistance));
         if (savedNavPlacement) setNavPlacement(savedNavPlacement);
+        if (savedHeadingTheme && HEADING_THEMES[savedHeadingTheme]) setHeadingTheme(savedHeadingTheme);
+        if (savedHeadingStyle) setHeadingStyle(savedHeadingStyle);
         setDockSide(savedDockSide);
 
         if (savedDockPos) {
@@ -146,9 +165,14 @@ export default function BackgroundSwitcher() {
         root.style.setProperty("--content-width", `${contentWidth}px`);
         root.style.setProperty("--page-left-offset", `${pageLeftOffset}px`);
         root.style.setProperty("--nav-distance", `${navDistance}px`);
+        const activeHeadingColor = isDark
+            ? HEADING_THEMES[headingTheme].dark
+            : HEADING_THEMES[headingTheme].light;
+        root.style.setProperty("--heading-color", activeHeadingColor);
         root.setAttribute("data-entry-align", alignMode);
         root.setAttribute("data-page-align", pageAlign);
         root.setAttribute("data-nav-placement", navPlacement);
+        root.setAttribute("data-heading-style", headingStyle);
 
         localStorage.setItem("experiment_font_size", String(fontSize));
         localStorage.setItem("experiment_entry_gap", String(entryGap));
@@ -158,7 +182,9 @@ export default function BackgroundSwitcher() {
         localStorage.setItem("experiment_page_left_offset", String(pageLeftOffset));
         localStorage.setItem("experiment_nav_distance", String(navDistance));
         localStorage.setItem("experiment_nav_placement", navPlacement);
-    }, [fontSize, entryGap, contentWidth, alignMode, pageAlign, pageLeftOffset, navDistance, navPlacement]);
+        localStorage.setItem("experiment_heading_theme", headingTheme);
+        localStorage.setItem("experiment_heading_style", headingStyle);
+    }, [fontSize, entryGap, contentWidth, alignMode, pageAlign, pageLeftOffset, navDistance, navPlacement, headingTheme, headingStyle, isDark]);
 
     // Apply background styles to body and sync with foreground horizon
     useEffect(() => {
@@ -616,6 +642,88 @@ export default function BackgroundSwitcher() {
                                         </div>
                                     </div>
                                 )}
+                            </div>
+
+                            {/* 1C. Section Headings: Color Palette & Style */}
+                            <div className="space-y-2 pt-2 border-t border-current/10">
+                                <div className="flex items-center justify-between text-[11px]">
+                                    <span className="font-semibold text-[var(--text-color)]">
+                                        Section Heading Style:
+                                    </span>
+                                    <span
+                                        className="font-bold text-xs"
+                                        style={{ color: "var(--heading-color)" }}
+                                    >
+                                        {HEADING_THEMES[headingTheme].label}
+                                    </span>
+                                </div>
+
+                                {/* Heading Font Style: Serif (Mockup) vs Mono (Small Caps) */}
+                                <div className="grid grid-cols-2 gap-1.5 text-[11px]">
+                                    <button
+                                        type="button"
+                                        onClick={() => setHeadingStyle("serif")}
+                                        className={`px-2 py-1.5 rounded border text-left cursor-pointer transition-all ${
+                                            headingStyle === "serif"
+                                                ? "border-amber-500 bg-amber-500/10 font-semibold"
+                                                : "border-current/15 opacity-70 hover:opacity-100"
+                                        }`}
+                                    >
+                                        <div className="font-serif text-xs font-medium">Recent Essays</div>
+                                        <div className="text-[9px] text-[var(--text-muted)]">Serif (blo.png mockup)</div>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setHeadingStyle("mono")}
+                                        className={`px-2 py-1.5 rounded border text-left cursor-pointer transition-all ${
+                                            headingStyle === "mono"
+                                                ? "border-amber-500 bg-amber-500/10 font-semibold"
+                                                : "border-current/15 opacity-70 hover:opacity-100"
+                                        }`}
+                                    >
+                                        <div className="font-mono uppercase tracking-wider text-[10px]">RECENT ESSAYS</div>
+                                        <div className="text-[9px] text-[var(--text-muted)]">Mono small-caps</div>
+                                    </button>
+                                </div>
+
+                                {/* Color Swatches */}
+                                <div className="space-y-1">
+                                    <span className="text-[10px] text-[var(--text-muted)]">
+                                        Heading Color Palette ({isDark ? "Dark: Night Sky" : "Light: Parchment"}):
+                                    </span>
+                                    <div className="grid grid-cols-1 gap-1">
+                                        {(Object.keys(HEADING_THEMES) as HeadingColorTheme[]).map((themeKey) => {
+                                            const t = HEADING_THEMES[themeKey];
+                                            const swatch = isDark ? t.dark : t.light;
+                                            const isSelected = headingTheme === themeKey;
+                                            return (
+                                                <button
+                                                    key={themeKey}
+                                                    type="button"
+                                                    onClick={() => setHeadingTheme(themeKey)}
+                                                    className={`w-full flex items-center justify-between px-2 py-1 rounded border text-left cursor-pointer transition-colors ${
+                                                        isSelected
+                                                            ? "border-amber-500 bg-amber-500/10 font-medium"
+                                                            : "border-current/10 hover:border-current/30"
+                                                    }`}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <span
+                                                            className="w-3.5 h-3.5 rounded-full border border-current/20 inline-block shadow-xs shrink-0"
+                                                            style={{ backgroundColor: swatch }}
+                                                        />
+                                                        <span className="text-[10.5px] text-[var(--text-color)]">
+                                                            {t.label}
+                                                        </span>
+                                                    </div>
+                                                    <span className="text-[9.5px] text-[var(--text-muted)]">
+                                                        {t.desc}
+                                                    </span>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                             </div>
 
                             {/* 2. Global Font Size Slider & Presets */}

@@ -46,7 +46,7 @@ export default function Home() {
             {/* 1. Recent Essays (Curated Showcase) */}
             <section className="space-y-4">
                 <div className="flex items-baseline justify-between border-b border-current/10 pb-2">
-                    <h2 className="text-sm uppercase tracking-widest font-mono text-[var(--text-muted)]">
+                    <h2 className="section-heading">
                         Recent Essays
                     </h2>
                     <Link
@@ -85,7 +85,7 @@ export default function Home() {
             {/* 2. Projects */}
             <section className="space-y-4">
                 <div className="flex items-baseline justify-between border-b border-current/10 pb-2">
-                    <h2 className="text-sm uppercase tracking-widest font-mono text-[var(--text-muted)]">
+                    <h2 className="section-heading">
                         Projects
                     </h2>
                     <Link
@@ -130,7 +130,7 @@ export default function Home() {
             {/* 3. Recent Thoughts */}
             <section className="space-y-4">
                 <div className="flex items-baseline justify-between border-b border-current/10 pb-2">
-                    <h2 className="text-sm uppercase tracking-widest font-mono text-[var(--text-muted)]">
+                    <h2 className="section-heading">
                         Recent Thoughts
                     </h2>
                     <Link

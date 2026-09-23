@@ -14,6 +14,7 @@
         --bg-color: #faf7ed;
         --text-color: #1a1a1a;
         --text-muted: #595147;
+        --heading-color: #2c221e;
         --base-font-size: 18px;
         --entry-gap: 28px;
         --content-width: 896px;
@@ -112,6 +113,32 @@
         --bg-color: #0b0f17;
         --text-color: #ede8dc;
         --text-muted: #e2e8f0;
+        --heading-color: #f3d8a2;
+    }
+
+    /* Section Headings (Recent Essays, Projects, Thoughts) */
+    .section-heading {
+        color: var(--heading-color, #2c221e);
+        transition: color 0.2s ease, font-size 0.2s ease;
+    }
+
+    /* Default & Serif Mode (blo.png mockup style) */
+    :not([data-heading-style]) .section-heading,
+    [data-heading-style="serif"] .section-heading {
+        font-family: var(--font-serif);
+        font-size: 1.35rem;
+        text-transform: none;
+        letter-spacing: -0.015em;
+        font-weight: 400;
+    }
+
+    /* Monospace Uppercase Mode */
+    [data-heading-style="mono"] .section-heading {
+        font-family: var(--font-geist-mono), monospace;
+        font-size: 0.825rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 500;
     }
 
     body {

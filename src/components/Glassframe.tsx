@@ -29,7 +29,7 @@ export default function GlassFrame({
 
     return (
         <div
-            className={`page-canvas relative w-full max-w-6xl mx-auto my-8 p-6 sm:p-8 pb-52 transition-all duration-500 z-10 ${
+            className={`page-canvas relative w-full max-w-6xl mx-auto my-8 p-6 sm:p-8 pb-[45vh] transition-all duration-500 z-10 ${
                 useFrostedBox
                     ? "border border-current/10 rounded-sm bg-[var(--bg-color)]/70 backdrop-blur-md"
                     : "border-none bg-transparent backdrop-blur-none"
