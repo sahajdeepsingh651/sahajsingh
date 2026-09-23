@@ -55,7 +55,7 @@ export default function BackgroundSwitcher() {
     const [headingStyle, setHeadingStyle] = useState<"serif" | "mono">("serif");
     const [scrollCueMode, setScrollCueMode] = useState<ScrollCueMode>("hairline");
     const [scrollFogMode, setScrollFogMode] = useState<ScrollFogMode>("none");
-    const [scrollClearance, setScrollClearance] = useState<number>(45);
+    const [scrollClearance, setScrollClearance] = useState<number>(0);
 
     // Art & Horizon state
     const [bgOption, setBgOption] = useState<BgOption>("original");
@@ -174,7 +174,12 @@ export default function BackgroundSwitcher() {
 
         if (rawScrollCue) setScrollCueMode(savedScrollCue);
         if (savedScrollFog) setScrollFogMode(savedScrollFog);
-        if (savedClearance) setScrollClearance(Number(savedClearance));
+        if (savedClearance && savedClearance !== "45") {
+            setScrollClearance(Number(savedClearance));
+        } else {
+            setScrollClearance(0);
+            localStorage.setItem("experiment_scroll_clearance", "0");
+        }
 
         setDockSide(savedDockSide);
 
@@ -1478,19 +1483,19 @@ export default function BackgroundSwitcher() {
                                     </span>
                                 </div>
                                 <p className="text-[9.5px] text-[var(--text-muted)] leading-tight">
-                                    Adds bottom buffer past the 250px waves so the 3 items in &ldquo;Recent Thoughts&rdquo; can scroll up without being trapped behind horizon art!
+                                    Bottom buffer past the items. 0vh stops scrolling immediately after the last item.
                                 </p>
                                 <input
                                     type="range"
-                                    min={15}
-                                    max={65}
+                                    min={0}
+                                    max={45}
                                     step={5}
                                     value={scrollClearance}
                                     onChange={(e) => setScrollClearance(Number(e.target.value))}
                                     className="w-full accent-amber-500 cursor-pointer"
                                 />
                                 <div className="flex flex-wrap items-center gap-1 text-[10px]">
-                                    {[20, 30, 35, 45, 55].map((vh) => (
+                                    {[0, 10, 20, 30, 45].map((vh) => (
                                         <button
                                             key={vh}
                                             type="button"
@@ -1501,15 +1506,15 @@ export default function BackgroundSwitcher() {
                                                     : "border border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
                                             }`}
                                         >
-                                            {vh}vh {vh === 20 ? "(old/trapped)" : vh === 45 ? "(baseline)" : ""}
+                                            {vh}vh {vh === 0 ? "(natural stop)" : ""}
                                         </button>
                                     ))}
                                     <button
                                         type="button"
-                                        onClick={() => setScrollClearance(45)}
+                                        onClick={() => setScrollClearance(0)}
                                         className="text-[10px] text-[var(--text-muted)] hover:underline ml-auto cursor-pointer"
                                     >
-                                        [reset 45vh]
+                                        [reset 0vh]
                                     </button>
                                 </div>
                             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export type ScrollCueMode =
     | "hairline"
@@ -84,6 +85,9 @@ function CelestialStar({ className }: { className?: string }) {
 }
 
 export default function ScrollCue() {
+    const pathname = usePathname();
+    const isEssay = pathname?.startsWith("/essays");
+
     const [scrolled, setScrolled] = useState(false);
     const [hasMoreContent, setHasMoreContent] = useState(true);
     const [scrollPercent, setScrollPercent] = useState(0);
@@ -188,6 +192,11 @@ export default function ScrollCue() {
             handleScrollDown();
         }
     };
+
+    // Keep scroll indicators strictly inside essays only
+    if (!isEssay) {
+        return null;
+    }
 
     return (
         <>

@@ -34,7 +34,7 @@ export default function GlassFrame({
                     ? "border border-current/10 rounded-sm bg-[var(--bg-color)]/70 backdrop-blur-md"
                     : "border-none bg-transparent backdrop-blur-none"
             }`}
-            style={{ paddingBottom: "var(--scroll-clearance, 45vh)" }}
+            style={{ paddingBottom: "var(--scroll-clearance, 0px)" }}
         >
             {children}
         </div>
