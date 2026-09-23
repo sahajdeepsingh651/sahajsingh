@@ -61,20 +61,20 @@ export default function Home() {
                     {essays.map((essay) => (
                         <li
                             key={essay.slug}
-                            className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1"
+                            className="entry-row"
                         >
                             <Link
                                 href={`/essays/${essay.slug}`}
-                                className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
+                                className="entry-title text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40 inline-flex items-baseline"
                             >
                                 <span>{essay.title}</span>
                                 {essay.status && (
-                                    <span className="text-xs font-mono text-[var(--text-muted)] ml-2 whitespace-nowrap inline-block no-underline">
+                                    <span className="entry-status text-xs font-mono text-[var(--text-muted)] ml-2 whitespace-nowrap inline-block no-underline">
                                         [{STATUS_CONFIG[essay.status]?.label || essay.status}]
                                     </span>
                                 )}
                             </Link>
-                            <span className="text-sm font-mono text-[var(--text-color)] shrink-0">
+                            <span className="entry-date text-sm font-mono text-[var(--text-color)] shrink-0">
                                 {essay.date}
                             </span>
                         </li>
@@ -145,15 +145,15 @@ export default function Home() {
                     {thoughts.map((thought) => (
                         <li
                             key={thought.slug}
-                            className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1"
+                            className="entry-row"
                         >
                             <Link
                                 href={`/thoughts/${thought.slug}`}
-                                className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
+                                className="entry-title text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
                             >
                                 {thought.title}
                             </Link>
-                            <span className="text-sm font-mono text-[var(--text-color)] shrink-0">
+                            <span className="entry-date text-sm font-mono text-[var(--text-color)] shrink-0">
                                 {thought.date}
                             </span>
                         </li>

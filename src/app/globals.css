@@ -14,6 +14,12 @@
         --bg-color: #faf7ed;
         --text-color: #1a1a1a;
         --text-muted: #595147;
+        --base-font-size: 15px;
+        --entry-gap: 28px;
+    }
+
+    html {
+        font-size: var(--base-font-size, 15px);
     }
 
     .dark {
@@ -26,7 +32,7 @@
         background-attachment: fixed;
         background-color: var(--bg-color);
         color: var(--text-color);
-        font-size: 15px;
+        font-size: 1rem;
         line-height: 1.65;
         font-feature-settings:
             "liga" 1,
@@ -51,4 +57,56 @@
         text-decoration: none;
         transition: opacity 0.2s ease;
     }
+}
+
+/* Essay & Thought Entry Rows - Dynamic Alignment & Spacing */
+.entry-row {
+    display: flex;
+    align-items: baseline;
+    transition: column-gap 0.2s ease, gap 0.2s ease;
+}
+
+/* 1. Left-aligned flow: Title + Status + (Custom Gap) + Date */
+[data-entry-align="left-flow"] .entry-row,
+html:not([data-entry-align]) .entry-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: baseline;
+    column-gap: var(--entry-gap, 28px);
+    row-gap: 2px;
+}
+
+/* 2. Date first (Field Notebook / Gwern style): Date + (Custom Gap) + Title + Status */
+[data-entry-align="date-left"] .entry-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: baseline;
+    column-gap: var(--entry-gap, 28px);
+    row-gap: 2px;
+}
+[data-entry-align="date-left"] .entry-row .entry-date {
+    order: -1;
+}
+
+/* 3. Justified (Original baseline): Title left, Date far right */
+[data-entry-align="justified"] .entry-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+}
+
+/* 4. Tabular column: Fixed date column, then Title + Status */
+[data-entry-align="tabular"] .entry-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    column-gap: var(--entry-gap, 28px);
+    row-gap: 2px;
+}
+[data-entry-align="tabular"] .entry-row .entry-date {
+    order: -1;
+    min-width: 95px;
 }

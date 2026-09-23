@@ -30,10 +30,10 @@ export default function EssaysPage() {
 
                     return (
                         <li key={essay.slug} className="space-y-1">
-                            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                            <div className="entry-row">
                                 <Link
                                     href={`/essays/${essay.slug}`}
-                                    className="text-[16px] text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
+                                    className="entry-title text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40 inline-flex items-baseline"
                                 >
                                     {isHighlighted && (
                                         <span
@@ -45,12 +45,12 @@ export default function EssaysPage() {
                                     )}
                                     <span>{essay.title}</span>
                                     {essay.status && (
-                                        <span className="text-xs font-mono text-[var(--text-muted)] ml-2 whitespace-nowrap inline-block no-underline">
+                                        <span className="entry-status text-xs font-mono text-[var(--text-muted)] ml-2 whitespace-nowrap inline-block no-underline">
                                             [{STATUS_CONFIG[essay.status]?.label || essay.status}]
                                         </span>
                                     )}
                                 </Link>
-                                <span className="text-xs font-mono text-[var(--text-color)] shrink-0">
+                                <span className="entry-date text-xs font-mono text-[var(--text-color)] shrink-0">
                                     {essay.date}
                                 </span>
                             </div>
