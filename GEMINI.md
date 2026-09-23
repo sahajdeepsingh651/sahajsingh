@@ -50,9 +50,9 @@
   - Typography modes: Serif (`blo.png` mockup style, 1.35rem) vs. Mono uppercase small-caps (`[data-heading-style="mono"]`).
 - **Ocean Waterline Emergence & Scroll Boundary:**
   - Foreground Horizon Layer (`HorizonForeground`) is fixed at `z-20` so the coastal waves sit physically in front of page content.
-  - Page Canvas (`GlassFrame`) is placed at `z-10` with calibrated directional padding `px-6 sm:px-8 pt-6 sm:pt-8 pb-60 sm:pb-64` (256px).
+  - Page Canvas (`GlassFrame`) is placed at `z-10` with calibrated directional padding `px-6 sm:px-8 pt-6 sm:pt-8 pb-28 sm:pb-32` (112px - 128px).
   - *Emergence Effect*: Text physically emerges from behind the ocean waves as the reader scrolls down.
-  - *Natural Stop (No Over-scroll, No Sticky Scroll)*: When the final item ("Understanding from First Principles") clears the ocean waterline with comfortable breathing room, scrolling terminates naturally. Eliminates the artificial `45vh` dead air while preserving standard fluid browser scrolling.
+  - *Natural Stop (No Over-scroll, No Sticky Scroll)*: When the final item ("Understanding from First Principles") clears the ocean waterline with ~35px of breathing room, scrolling terminates naturally. Eliminates the artificial dead air while preserving standard fluid browser scrolling.
 - **Reading Progress Indicator Scope:**
   - **Essays Only**: The 1px / 2px silent graphite hairline reading rule (`ScrollCue`) is strictly scoped via `usePathname()` to long-form reading routes (`/essays`).
   - **Clean Canvas Everywhere Else**: Home (`/`), About (`/about`), Now (`/now`), Projects (`/projects`), and Thoughts (`/thoughts`) have zero overlay cues, zero floating widgets, and zero header lines, preserving a completely undisturbed digital garden canvas.
