@@ -32,13 +32,25 @@
         }
     }
 
-    /* Page Canvas Positioning (Canonical Centered Layout across all devices) */
+    /* Page Canvas Positioning (Left-Anchored on Desktop, Cleanly Centered on Mobile) */
     .page-canvas {
         margin-left: auto !important;
         margin-right: auto !important;
-        max-width: var(--content-width, 896px) !important;
-        width: 100%;
-        transition: max-width 0.2s ease;
+        transition: margin-left 0.2s ease, max-width 0.2s ease;
+    }
+
+    @media (min-width: 768px) {
+        [data-page-align="left"] .page-canvas {
+            margin-left: var(--page-left-offset, 120px) !important;
+            margin-right: auto !important;
+            max-width: min(94vw, 1440px) !important;
+        }
+
+        [data-page-align="center"] .page-canvas {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: min(94vw, 1440px) !important;
+        }
     }
 
     /* Header Navigation Layout: Balanced Title on Left, Navigation on Right */
@@ -109,6 +121,7 @@
 
     body {
         background-attachment: fixed;
+        background-repeat: no-repeat;
         background-color: var(--bg-color);
         color: var(--text-color);
         font-size: 1rem;
@@ -117,18 +130,30 @@
             "liga" 1,
             "onum" 1;
         font-variant-numeric: oldstyle-nums;
-        background-image: url("/real_read_mode.original.png");
-        background-repeat: no-repeat;
-        background-position: bottom center;
-        background-size: 100% auto;
         min-height: 100vh;
         transition:
             background-color 0.3s ease,
             color 0.3s ease;
+        /* Mobile: cover entire height, anchored to bottom 70% to frame the lighthouse */
+        background-size: cover;
+        background-position: 70% bottom;
+    }
+
+    /* Light mode background */
+    :not(.dark) body {
+        background-image: url("/real_read_mode.original.png");
     }
 
     .dark body {
         background-image: url("/real_write_mode.png");
+    }
+
+    @media (min-width: 768px) {
+        body {
+            /* Desktop: 100% width, bottom center */
+            background-size: 100% auto;
+            background-position: bottom center;
+        }
     }
 
     a {

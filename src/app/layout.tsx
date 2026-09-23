@@ -37,7 +37,7 @@ export default function RootLayout({
             lang="en"
             suppressHydrationWarning
             className={`${newsreader.variable} ${geistMono.variable} h-full antialiased`}
-            data-page-align="center"
+            data-page-align="left"
             data-entry-align="justified"
         >
             <head>
@@ -53,7 +53,7 @@ export default function RootLayout({
                 <HorizonForeground />
                 <GlassFrame>
                     {/* Hand-drawn switch button attached directly to the right border of GlassFrame */}
-                    <div className="absolute right-2 md:-right-10 top-0 bottom-0 pointer-events-none z-30">
+                    <div className="absolute right-2 md:-right-[12px] top-0 bottom-0 pointer-events-none z-30">
                         <div className="sticky top-20 sm:top-24 pointer-events-auto flex items-center justify-center">
                             <ThemeToggle />
                         </div>
@@ -70,7 +70,7 @@ export default function RootLayout({
                         </div>
                     </header>
 
-                    <main className="flex-1 content-box w-full">
+                    <main className="flex-1 content-box w-full" style={{ maxWidth: "var(--content-width, 896px)" }}>
                         {children}
                     </main>
                 </GlassFrame>

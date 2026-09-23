@@ -24,12 +24,16 @@
 
 ## Design Decisions & Palette Records
 - **Base Typography:** 20px desktop base size (`--base-font-size: 20px`, responsive 16px on mobile `< 640px`), 1.65 line leading, Newsreader serif (`--font-newsreader`), OpenType old-style numbers enabled (`oldstyle-nums`, `"onum" 1`).
-- **Canvas Layout & Margin:** Centered across all devices (`mx-auto`, `--content-width: 896px` / `max-w-4xl`) with responsive horizontal gutters (`px-6 sm:px-8`). Delivers balanced, symmetrical margins on mobile, laptop, desktop, and ultrawide screens.
-- **Header & Navigation Placement:** Unified within the 896px content box. `SiteTitle` anchors to the left, `Navigation` anchors to the right, aligning cleanly edge-to-edge above content and essay date columns.
+- **Canvas Layout & Margin:** Left-anchored on desktop (`>= 768px`) with 120px left margin (`--page-left-offset: 120px`, `data-page-align="left"`). Centered with natural gutters (`mx-auto`, `px-6 sm:px-8`) on mobile.
+- **Header & Navigation Placement:** `SiteTitle` anchors to the left, `Navigation` anchors to the right, aligning edge-to-edge above content and essay date columns.
 - **Essay Line Alignment:** Justified edge-to-edge (`data-entry-align="justified"`), minimum distance / safety gap: 28px (`--entry-gap: 28px`).
-- **Background Art:**
+- **Background Art & Responsive Sizing:**
   - Light mode: Original Read (`/real_read_mode.original.png`).
-  - Dark mode: Strictly locked to `/real_write_mode.png` (cosmic night sky, never modified).
+  - Dark mode: Strictly locked to `/real_write_mode.png` (cosmic night sky).
+  - Responsive Scaling:
+    - Mobile (`< 768px` portrait): `background-size: cover; background-position: 70% bottom;` (covers 100% viewport height, framing the lighthouse cleanly without letterboxing).
+    - Desktop (`>= 768px` landscape): `background-size: 100% auto; background-position: bottom center;`.
+  - Seamless Alpha Feathering: Top 80px feathered with linear alpha ramp to `--bg-color`, preventing any horizontal cut line across all viewport aspect ratios.
 - **Navigation & Active State:** Brackets indicate current location (`[ Sahaj Singh ]` on `/`, `[now]` on `/now`).
 - **Unselected / Secondary Text Evaluation:**
   - **Chosen Palette:**

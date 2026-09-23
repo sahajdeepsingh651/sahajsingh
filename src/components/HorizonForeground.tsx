@@ -11,7 +11,7 @@ export default function HorizonForeground() {
                 alt=""
                 fetchPriority="high"
                 decoding="sync"
-                className="dark:hidden absolute bottom-0 left-0 w-full h-auto pointer-events-none select-none"
+                className="dark:hidden fixed inset-0 w-full h-full object-cover object-[70%_bottom] md:object-bottom md:h-auto md:top-auto md:bottom-0 pointer-events-none select-none"
             />
             {/* Dark mode foreground horizon */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -20,7 +20,7 @@ export default function HorizonForeground() {
                 alt=""
                 fetchPriority="high"
                 decoding="sync"
-                className="hidden dark:block absolute bottom-0 left-0 w-full h-auto pointer-events-none select-none"
+                className="hidden dark:block fixed inset-0 w-full h-full object-cover object-[70%_bottom] md:object-bottom md:h-auto md:top-auto md:bottom-0 pointer-events-none select-none"
             />
         </div>
     );
