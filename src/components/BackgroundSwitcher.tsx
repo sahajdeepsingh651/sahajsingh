@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 type ActiveTab = "typography" | "art";
 type BgOption = "default" | "candidate" | "original" | "none";
@@ -12,6 +12,13 @@ export default function BackgroundSwitcher() {
     // Tab state
     const [activeTab, setActiveTab] = useState<ActiveTab>("typography");
     const [isOpen, setIsOpen] = useState<boolean>(true);
+
+    // Draggable position & docking state (defaults to right-aligned)
+    const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+    const [isDragging, setIsDragging] = useState<boolean>(false);
+    const [dockSide, setDockSide] = useState<"right" | "left">("right");
+    const dragStartRef = useRef<{ startX: number; startY: number; initX: number; initY: number } | null>(null);
+    const panelRef = useRef<HTMLDivElement>(null);
 
     // Typography & Alignment state
     const [fontSize, setFontSize] = useState<number>(15);
@@ -46,6 +53,8 @@ export default function BackgroundSwitcher() {
         const savedFontSize = localStorage.getItem("experiment_font_size");
         const savedEntryGap = localStorage.getItem("experiment_entry_gap");
         const savedAlign = localStorage.getItem("experiment_entry_align") as EntryAlignMode;
+        const savedDockSide = (localStorage.getItem("experiment_dock_side") as "right" | "left") || "right";
+        const savedDockPos = localStorage.getItem("experiment_dock_pos");
 
         const savedBg = (localStorage.getItem("experiment_bg") as BgOption) || "candidate";
         const savedSize = (localStorage.getItem("experiment_bg_size") as SizeOption) || "100% auto";
@@ -56,6 +65,18 @@ export default function BackgroundSwitcher() {
         if (savedFontSize) setFontSize(Number(savedFontSize));
         if (savedEntryGap) setEntryGap(Number(savedEntryGap));
         if (savedAlign) setAlignMode(savedAlign);
+        setDockSide(savedDockSide);
+
+        if (savedDockPos) {
+            try {
+                const parsed = JSON.parse(savedDockPos);
+                if (typeof parsed?.x === "number" && typeof parsed?.y === "number") {
+                    setPos(parsed);
+                }
+            } catch {
+                // Ignore parse errors
+            }
+        }
 
         setBgOption(savedBg);
         setBgSize(savedSize);
@@ -111,6 +132,58 @@ export default function BackgroundSwitcher() {
         );
     }, [bgOption, bgSize, bgPosition, isDark]);
 
+    // Pointer-based dragging handlers
+    const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+        if ((e.target as HTMLElement).closest("button, input, a, select")) return;
+        const panel = panelRef.current;
+        if (!panel) return;
+
+        const rect = panel.getBoundingClientRect();
+        dragStartRef.current = {
+            startX: e.clientX,
+            startY: e.clientY,
+            initX: rect.left,
+            initY: rect.top,
+        };
+        setIsDragging(true);
+        e.currentTarget.setPointerCapture(e.pointerId);
+    };
+
+    const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+        if (!isDragging || !dragStartRef.current || !panelRef.current) return;
+        const dx = e.clientX - dragStartRef.current.startX;
+        const dy = e.clientY - dragStartRef.current.startY;
+
+        const panel = panelRef.current;
+        const w = panel.offsetWidth;
+        const h = panel.offsetHeight;
+
+        const maxX = Math.max(0, window.innerWidth - w - 8);
+        const maxY = Math.max(0, window.innerHeight - h - 8);
+
+        const newX = Math.min(maxX, Math.max(8, dragStartRef.current.initX + dx));
+        const newY = Math.min(maxY, Math.max(8, dragStartRef.current.initY + dy));
+
+        setPos({ x: newX, y: newY });
+    };
+
+    const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+        if (isDragging) {
+            setIsDragging(false);
+            dragStartRef.current = null;
+            if (pos) {
+                localStorage.setItem("experiment_dock_pos", JSON.stringify(pos));
+            }
+        }
+    };
+
+    const dockTo = (side: "right" | "left") => {
+        setDockSide(side);
+        setPos(null);
+        localStorage.removeItem("experiment_dock_pos");
+        localStorage.setItem("experiment_dock_side", side);
+    };
+
     const selectBg = (option: BgOption) => {
         setBgOption(option);
     };
@@ -127,17 +200,28 @@ export default function BackgroundSwitcher() {
         window.dispatchEvent(new Event("glass-box-toggle"));
     };
 
+    const containerClasses =
+        pos !== null
+            ? "fixed z-50 font-mono text-xs text-[var(--text-muted)]"
+            : dockSide === "right"
+                ? "fixed right-3 sm:right-6 bottom-4 sm:bottom-6 z-50 font-mono text-xs text-[var(--text-muted)]"
+                : "fixed left-3 sm:left-6 bottom-4 sm:bottom-6 z-50 font-mono text-xs text-[var(--text-muted)]";
+
+    const containerStyle =
+        pos !== null ? { left: `${pos.x}px`, top: `${pos.y}px` } : undefined;
+
     return (
         <aside
             aria-label="Typography, layout spacing, and visual art experiment studio"
-            className="fixed left-3 sm:left-6 bottom-4 sm:bottom-6 z-50 font-mono text-xs text-[var(--text-muted)]"
+            className={containerClasses}
+            style={containerStyle}
         >
             {!isOpen ? (
                 <button
                     type="button"
                     onClick={() => setIsOpen(true)}
                     className="px-3.5 py-2.5 rounded-lg border border-current/25 bg-[var(--bg-color)]/95 backdrop-blur-md shadow-xl text-[11px] text-[var(--text-color)] hover:border-current/40 transition-all flex items-center gap-2.5 cursor-pointer"
-                    title="Open Typography & Design Studio"
+                    title="Open Typography & Design Studio (Right-Aligned / Draggable)"
                 >
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span>
@@ -152,21 +236,41 @@ export default function BackgroundSwitcher() {
                     <span className="text-[var(--text-muted)] ml-1">[open]</span>
                 </button>
             ) : (
-                <div className="p-4 rounded-xl border border-current/20 bg-[var(--bg-color)]/95 backdrop-blur-md shadow-2xl space-y-3.5 w-[340px] sm:w-[390px] max-w-[calc(100vw-1.5rem)] max-h-[85vh] overflow-y-auto">
-                    {/* Header with Title and Minimize */}
-                    <div className="flex items-center justify-between border-b border-current/10 pb-2.5">
+                <div
+                    ref={panelRef}
+                    className="p-4 rounded-xl border border-current/20 bg-[var(--bg-color)]/95 backdrop-blur-md shadow-2xl space-y-3.5 w-[340px] sm:w-[390px] max-w-[calc(100vw-1.5rem)] max-h-[85vh] overflow-y-auto"
+                >
+                    {/* Draggable Header Bar */}
+                    <div
+                        onPointerDown={handlePointerDown}
+                        onPointerMove={handlePointerMove}
+                        onPointerUp={handlePointerUp}
+                        className="flex items-center justify-between border-b border-current/10 pb-2.5 cursor-grab active:cursor-grabbing select-none"
+                        title="Click and drag from here to position the studio anywhere on screen"
+                    >
                         <span className="text-[12px] uppercase tracking-wider font-semibold text-[var(--text-color)] flex items-center gap-1.5">
                             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                            Studio Controller
+                            <span className="opacity-60 text-[10px] tracking-normal cursor-grab">⠿</span> Studio Controller
                         </span>
-                        <button
-                            type="button"
-                            onClick={() => setIsOpen(false)}
-                            className="text-[11px] text-[var(--text-muted)] hover:text-[var(--text-color)] hover:underline cursor-pointer"
-                            title="Minimize to corner"
-                        >
-                            [− minimize]
-                        </button>
+                        <div className="flex items-center gap-2 text-[10px]">
+                            <button
+                                type="button"
+                                onClick={() => dockTo(dockSide === "right" ? "left" : "right")}
+                                className="text-[var(--text-muted)] hover:text-[var(--text-color)] hover:underline cursor-pointer"
+                                title={`Dock to ${dockSide === "right" ? "left" : "right"}`}
+                            >
+                                {dockSide === "right" ? "⇤ dock left" : "⇥ dock right"}
+                            </button>
+                            <span className="opacity-30">|</span>
+                            <button
+                                type="button"
+                                onClick={() => setIsOpen(false)}
+                                className="text-[11px] text-[var(--text-muted)] hover:text-[var(--text-color)] hover:underline cursor-pointer"
+                                title="Minimize to corner"
+                            >
+                                [− minimize]
+                            </button>
+                        </div>
                     </div>
 
                     {/* Navigation Tabs */}
@@ -412,7 +516,7 @@ export default function BackgroundSwitcher() {
                                     )}
                                 </div>
                                 <p className="text-[10px] text-[var(--text-muted)] leading-tight">
-                                    Adjusting these controls immediately scales the actual homepage &amp; essays lists!
+                                    Tip: Grab the header bar above (⠿) to freely drag this window anywhere on your screen!
                                 </p>
                             </div>
                         </div>
