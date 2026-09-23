@@ -11,7 +11,7 @@ export default function Home() {
     const thoughts = getAllThoughts().slice(0, 3);
 
     return (
-        <div className="space-y-12 max-w-2xl">
+        <div className="space-y-12 content-box w-full" style={{ maxWidth: "var(--content-width, 860px)" }}>
             {/* Intro statement */}
             <section className="space-y-4">
                 <p className="leading-relaxed font-medium">

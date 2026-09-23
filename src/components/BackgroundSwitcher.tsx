@@ -20,11 +20,13 @@ export default function BackgroundSwitcher() {
     const dragStartRef = useRef<{ startX: number; startY: number; initX: number; initY: number } | null>(null);
     const panelRef = useRef<HTMLDivElement>(null);
 
-    // Typography, Spacing & Width state
+    // Typography, Spacing, Layout & Width state
     const [fontSize, setFontSize] = useState<number>(15);
     const [entryGap, setEntryGap] = useState<number>(28);
-    const [contentWidth, setContentWidth] = useState<number>(780);
+    const [contentWidth, setContentWidth] = useState<number>(860);
     const [alignMode, setAlignMode] = useState<EntryAlignMode>("justified");
+    const [pageAlign, setPageAlign] = useState<"left" | "center">("left");
+    const [pageLeftOffset, setPageLeftOffset] = useState<number>(48);
 
     // Art & Horizon state
     const [bgOption, setBgOption] = useState<BgOption>("candidate");
@@ -55,6 +57,8 @@ export default function BackgroundSwitcher() {
         const savedEntryGap = localStorage.getItem("experiment_entry_gap");
         const savedContentWidth = localStorage.getItem("experiment_content_width");
         const savedAlign = localStorage.getItem("experiment_entry_align") as EntryAlignMode;
+        const savedPageAlign = localStorage.getItem("experiment_page_align") as "left" | "center";
+        const savedPageLeftOffset = localStorage.getItem("experiment_page_left_offset");
         const savedDockSide = (localStorage.getItem("experiment_dock_side") as "right" | "left") || "right";
         const savedDockPos = localStorage.getItem("experiment_dock_pos");
 
@@ -66,12 +70,22 @@ export default function BackgroundSwitcher() {
 
         if (savedFontSize) setFontSize(Number(savedFontSize));
         if (savedEntryGap) setEntryGap(Number(savedEntryGap));
-        if (savedContentWidth) setContentWidth(Number(savedContentWidth));
+        if (savedContentWidth) {
+            setContentWidth(Number(savedContentWidth));
+        } else {
+            setContentWidth(860);
+        }
         if (savedAlign) {
             setAlignMode(savedAlign);
         } else {
             setAlignMode("justified");
         }
+        if (savedPageAlign) {
+            setPageAlign(savedPageAlign);
+        } else {
+            setPageAlign("left");
+        }
+        if (savedPageLeftOffset) setPageLeftOffset(Number(savedPageLeftOffset));
         setDockSide(savedDockSide);
 
         if (savedDockPos) {
@@ -92,19 +106,23 @@ export default function BackgroundSwitcher() {
         if (savedBox !== null) setFrostedBoxEnabled(savedBox === "true");
     }, []);
 
-    // Apply typography, spacing & section width variables to documentElement
+    // Apply typography, layout, spacing & section width variables to documentElement
     useEffect(() => {
         const root = document.documentElement;
         root.style.setProperty("--base-font-size", `${fontSize}px`);
         root.style.setProperty("--entry-gap", `${entryGap}px`);
         root.style.setProperty("--content-width", `${contentWidth}px`);
+        root.style.setProperty("--page-left-offset", `${pageLeftOffset}px`);
         root.setAttribute("data-entry-align", alignMode);
+        root.setAttribute("data-page-align", pageAlign);
 
         localStorage.setItem("experiment_font_size", String(fontSize));
         localStorage.setItem("experiment_entry_gap", String(entryGap));
         localStorage.setItem("experiment_content_width", String(contentWidth));
         localStorage.setItem("experiment_entry_align", alignMode);
-    }, [fontSize, entryGap, contentWidth, alignMode]);
+        localStorage.setItem("experiment_page_align", pageAlign);
+        localStorage.setItem("experiment_page_left_offset", String(pageLeftOffset));
+    }, [fontSize, entryGap, contentWidth, alignMode, pageAlign, pageLeftOffset]);
 
     // Apply background styles to body and sync with foreground horizon
     useEffect(() => {
@@ -308,11 +326,102 @@ export default function BackgroundSwitcher() {
                         </button>
                     </div>
 
-                    {/* TAB 1: TYPOGRAPHY & SPACING */}
+                    {/* TAB 1: TYPOGRAPHY, POSITIONING & SPACING */}
                     {activeTab === "typography" && (
                         <div className="space-y-4 pt-1">
-                            {/* 1. Global Font Size Slider & Presets */}
-                            <div className="space-y-2">
+                            {/* 1. Page Canvas Positioning (Left-Anchored vs. Centered) */}
+                            <div className="space-y-2 p-2.5 rounded-lg border border-emerald-500/25 bg-emerald-500/5">
+                                <div className="flex items-center justify-between text-[11px]">
+                                    <span className="font-semibold text-[var(--text-color)] flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                        Page Layout Alignment:
+                                    </span>
+                                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 capitalize font-medium">
+                                        {pageAlign === "left" ? "Left-Anchored" : "Centered (mx-auto)"}
+                                    </span>
+                                </div>
+                                <div className="grid grid-cols-2 gap-1.5 text-[10px]">
+                                    <button
+                                        type="button"
+                                        onClick={() => setPageAlign("left")}
+                                        className={`p-1.5 rounded text-left border cursor-pointer transition-colors ${
+                                            pageAlign === "left"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        ★ Left-Anchored
+                                        <span className="block text-[9px] opacity-75 mt-0.5">
+                                            Field notebook / Gwern style
+                                        </span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setPageAlign("center")}
+                                        className={`p-1.5 rounded text-left border cursor-pointer transition-colors ${
+                                            pageAlign === "center"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        Centered Canvas
+                                        <span className="block text-[9px] opacity-75 mt-0.5">
+                                            Standard mx-auto
+                                        </span>
+                                    </button>
+                                </div>
+
+                                {pageAlign === "left" && (
+                                    <div className="space-y-1.5 pt-2 border-t border-current/10">
+                                        <div className="flex items-center justify-between text-[11px]">
+                                            <span className="text-[var(--text-muted)] font-medium">
+                                                Left Screen Margin (&ldquo;Sahaj Singh&rdquo;):
+                                            </span>
+                                            <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                                                {pageLeftOffset}px
+                                            </span>
+                                        </div>
+                                        <input
+                                            type="range"
+                                            min={16}
+                                            max={320}
+                                            step={4}
+                                            value={pageLeftOffset}
+                                            onChange={(e) => setPageLeftOffset(Number(e.target.value))}
+                                            className="w-full accent-emerald-500 cursor-pointer"
+                                        />
+                                        <div className="flex flex-wrap items-center gap-1 text-[10px]">
+                                            {[16, 32, 48, 80, 120, 180, 240].map((o) => (
+                                                <button
+                                                    key={o}
+                                                    type="button"
+                                                    onClick={() => setPageLeftOffset(o)}
+                                                    className={`px-1.5 py-0.5 rounded cursor-pointer transition-colors ${
+                                                        pageLeftOffset === o
+                                                            ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
+                                                            : "border border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
+                                                    }`}
+                                                >
+                                                    {o}px {o === 48 ? "(bal)" : o === 80 ? "(gwern)" : ""}
+                                                </button>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() => setPageLeftOffset(48)}
+                                                className="text-[10px] text-[var(--text-muted)] hover:underline ml-auto cursor-pointer"
+                                            >
+                                                [reset 48px]
+                                            </button>
+                                        </div>
+                                        <p className="text-[9.5px] text-[var(--text-muted)] leading-tight pt-0.5">
+                                            Shifts &ldquo;Sahaj Singh&rdquo;, the header, and all content closer to or further from the left window edge!
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* 2. Global Font Size Slider & Presets */}
+                            <div className="space-y-2 pt-2 border-t border-current/10">
                                 <div className="flex items-center justify-between text-[11px]">
                                     <span className="font-semibold text-[var(--text-color)]">
                                         Site-Wide Text Size:
@@ -355,7 +464,54 @@ export default function BackgroundSwitcher() {
                                 </div>
                             </div>
 
-                            {/* 2. Alignment Mode (Left-Align Requested) */}
+                            {/* 3. Section Width / Stretch Slider */}
+                            <div className="space-y-2 pt-2 border-t border-current/10">
+                                <div className="flex items-center justify-between text-[11px]">
+                                    <span className="font-semibold text-[var(--text-color)]">
+                                        Content Box Width (Stretch):
+                                    </span>
+                                    <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                                        {contentWidth}px {contentWidth > 672 ? `(+${contentWidth - 672}px)` : "(std 2xl)"}
+                                    </span>
+                                </div>
+                                <input
+                                    type="range"
+                                    min={600}
+                                    max={1024}
+                                    step={10}
+                                    value={contentWidth}
+                                    onChange={(e) => setContentWidth(Number(e.target.value))}
+                                    className="w-full accent-emerald-500 cursor-pointer"
+                                />
+                                <div className="flex flex-wrap items-center gap-1 text-[10px]">
+                                    {[672, 768, 840, 896, 960, 1024].map((w) => (
+                                        <button
+                                            key={w}
+                                            type="button"
+                                            onClick={() => setContentWidth(w)}
+                                            className={`px-2 py-0.5 rounded cursor-pointer transition-colors ${
+                                                contentWidth === w
+                                                    ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
+                                                    : "border border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
+                                            }`}
+                                        >
+                                            {w}px {w === 672 ? "(2xl)" : w === 768 ? "(3xl)" : w === 896 ? "(4xl)" : ""}
+                                        </button>
+                                    ))}
+                                    <button
+                                        type="button"
+                                        onClick={() => setContentWidth(860)}
+                                        className="text-[10px] text-[var(--text-muted)] hover:underline ml-auto cursor-pointer"
+                                    >
+                                        [reset 860px]
+                                    </button>
+                                </div>
+                                <p className="text-[9.5px] text-[var(--text-muted)] leading-tight">
+                                    Stretches &lt;div className=&quot;space-y-12 content-box&quot;&gt; live across the screen!
+                                </p>
+                            </div>
+
+                            {/* 4. Alignment Mode */}
                             <div className="space-y-1.5 pt-2 border-t border-current/10">
                                 <div className="flex items-center justify-between text-[11px]">
                                     <span className="font-semibold text-[var(--text-color)]">
@@ -368,6 +524,20 @@ export default function BackgroundSwitcher() {
                                 <div className="grid grid-cols-2 gap-1.5 text-[10px]">
                                     <button
                                         type="button"
+                                        onClick={() => setAlignMode("justified")}
+                                        className={`col-span-2 p-1.5 rounded text-left border cursor-pointer transition-colors ${
+                                            alignMode === "justified"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        ★ Justified (Edge-to-Edge)
+                                        <span className="block text-[9px] opacity-75 mt-0.5">
+                                            Title [left] ── Date [far right]
+                                        </span>
+                                    </button>
+                                    <button
+                                        type="button"
                                         onClick={() => setAlignMode("left-flow")}
                                         className={`p-1.5 rounded text-left border cursor-pointer transition-colors ${
                                             alignMode === "left-flow"
@@ -375,7 +545,7 @@ export default function BackgroundSwitcher() {
                                                 : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
                                         }`}
                                     >
-                                        ★ Inline Flow
+                                        Inline Flow
                                         <span className="block text-[9px] opacity-75 mt-0.5">
                                             Title [status] ↔ Date
                                         </span>
@@ -422,28 +592,14 @@ export default function BackgroundSwitcher() {
                                             Fixed width date column
                                         </span>
                                     </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setAlignMode("justified")}
-                                        className={`col-span-2 p-1.5 rounded text-left border cursor-pointer transition-colors ${
-                                            alignMode === "justified"
-                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
-                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
-                                        }`}
-                                    >
-                                        Justified (Edge-to-Edge)
-                                        <span className="block text-[9px] opacity-75 mt-0.5">
-                                            Title [left] ── Date [far right]
-                                        </span>
-                                    </button>
                                 </div>
                             </div>
 
-                            {/* 3. Distance / Gap Slider (Between [in progress] and Date) */}
+                            {/* 5. Distance / Gap Slider (Between [in progress] and Date) */}
                             <div className="space-y-2 pt-2 border-t border-current/10">
                                 <div className="flex items-center justify-between text-[11px]">
                                     <span className="font-semibold text-[var(--text-color)]">
-                                        Distance: [status] ↔ Date:
+                                        Distance / Safety Gap:
                                     </span>
                                     <span className="font-bold text-emerald-600 dark:text-emerald-400">
                                         {entryGap}px
@@ -483,58 +639,20 @@ export default function BackgroundSwitcher() {
                                 </div>
                             </div>
 
-                            {/* 4. Section Width / Stretch Slider (Stretch reading column for room) */}
-                            <div className="space-y-2 pt-2 border-t border-current/10">
-                                <div className="flex items-center justify-between text-[11px]">
-                                    <span className="font-semibold text-[var(--text-color)]">
-                                        Section Width (Stretch Column):
-                                    </span>
-                                    <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                                        {contentWidth}px {contentWidth > 672 ? `(+${contentWidth - 672}px)` : "(std)"}
-                                    </span>
-                                </div>
-                                <input
-                                    type="range"
-                                    min={640}
-                                    max={980}
-                                    step={10}
-                                    value={contentWidth}
-                                    onChange={(e) => setContentWidth(Number(e.target.value))}
-                                    className="w-full accent-emerald-500 cursor-pointer"
-                                />
-                                <div className="flex flex-wrap items-center gap-1 text-[10px]">
-                                    {[672, 720, 760, 780, 820, 880, 940].map((w) => (
-                                        <button
-                                            key={w}
-                                            type="button"
-                                            onClick={() => setContentWidth(w)}
-                                            className={`px-2 py-0.5 rounded cursor-pointer transition-colors ${
-                                                contentWidth === w
-                                                    ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
-                                                    : "border border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
-                                            }`}
-                                        >
-                                            {w}px {w === 672 ? "(std)" : w === 780 ? "(bal)" : ""}
-                                        </button>
-                                    ))}
-                                    <button
-                                        type="button"
-                                        onClick={() => setContentWidth(780)}
-                                        className="text-[10px] text-[var(--text-muted)] hover:underline ml-auto cursor-pointer"
-                                    >
-                                        [reset 780px]
-                                    </button>
-                                </div>
-                                <p className="text-[9.5px] text-[var(--text-muted)] leading-tight">
-                                    Stretches the reading column width so long titles and justified dates have ample breathing room!
-                                </p>
-                            </div>
-
-                            {/* 5. Live Sandbox Test Preview */}
+                            {/* 6. Live Sandbox Test Preview */}
                             <div className="pt-2 border-t border-current/10 space-y-1.5">
-                                <span className="block text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-semibold">
-                                    Live Sandbox Preview (Simulated Item)
-                                </span>
+                                <div className="flex items-center justify-between">
+                                    <span className="block text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-semibold">
+                                        Live Sandbox Preview
+                                    </span>
+                                    <span className={`text-[9.5px] font-mono px-1.5 py-0.5 rounded ${
+                                        contentWidth >= 740
+                                            ? "text-emerald-700 bg-emerald-500/15 dark:text-emerald-300"
+                                            : "text-amber-700 bg-amber-500/15 dark:text-amber-300"
+                                    }`}>
+                                        {contentWidth >= 740 ? "✓ Fits on 1 line" : "⚠ Narrow: wraps to 2 lines"}
+                                    </span>
+                                </div>
                                 <div className="p-3 rounded-lg border border-current/15 bg-current/5 space-y-2.5">
                                     {alignMode === "left-flow" && (
                                         <div className="font-serif leading-relaxed text-[var(--text-color)] text-[12.5px]">
@@ -638,7 +756,7 @@ export default function BackgroundSwitcher() {
                                         </span>
                                         <span className="font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded">
                                             {alignMode === "justified"
-                                                ? `Justified edge-to-edge (${contentWidth}px stretched)`
+                                                ? `Justified (~${Math.max(0, contentWidth - 690)}px space)`
                                                 : `↔ ${entryGap}px gap / indent`}
                                         </span>
                                         <span>
@@ -649,7 +767,7 @@ export default function BackgroundSwitcher() {
                                     </div>
                                 </div>
                                 <p className="text-[10px] text-[var(--text-muted)] leading-tight">
-                                    Tip: Drag the sliders above to scale text size, spacing distance, and section stretch in real time!
+                                    Tip: Drag the sliders above to test page left-alignment (&ldquo;Sahaj Singh&rdquo;), box width stretch, and spacing live!
                                 </p>
                             </div>
                         </div>
