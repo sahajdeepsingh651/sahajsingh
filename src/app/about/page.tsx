@@ -35,20 +35,20 @@ export default function AboutPage() {
                         (Research and Development Associate) at ESDS Software Solution
                         Limited.
                     </p>
-                    <p>
+                    <p className="dark:text-slate-100 font-medium">
                         As a software engineer, I am interested in building scalable,
                         modular and reliable software. To me:
                     </p>
-                    <ul className="space-y-2 text-sm text-[var(--text-muted)] font-normal pl-3 border-l border-current/15 my-2">
+                    <ul className="space-y-2 text-sm text-[var(--text-muted)] dark:text-slate-200 font-normal pl-3 border-l border-current/25 my-2">
                         <li>
-                            <strong className="text-[var(--text-color)] font-mono text-xs">
+                            <strong className="text-[var(--text-color)] dark:text-slate-100 font-mono text-xs">
                                 [scalable]
                             </strong>{" "}
                             Scalable means it scales well according to the initial business
                             goals set by stakeholders.
                         </li>
                         <li>
-                            <strong className="text-[var(--text-color)] font-mono text-xs">
+                            <strong className="text-[var(--text-color)] dark:text-slate-100 font-mono text-xs">
                                 [modular]
                             </strong>{" "}
                             Modular means developers can make quality contributions to the
@@ -56,7 +56,7 @@ export default function AboutPage() {
                             black boxes.
                         </li>
                         <li>
-                            <strong className="text-[var(--text-color)] font-mono text-xs">
+                            <strong className="text-[var(--text-color)] dark:text-slate-100 font-mono text-xs">
                                 [reliable]
                             </strong>{" "}
                             Reliable means it performs according to the expectations of
