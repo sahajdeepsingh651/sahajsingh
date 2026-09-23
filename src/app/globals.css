@@ -162,7 +162,9 @@
     }
 
     .dark body {
-        background-image: url("/real_write_mode.png");
+        background-image: var(--dark-bg-image, url("/real_write_mode.png"));
+        background-size: var(--dark-bg-size, 100% auto);
+        background-position: var(--dark-bg-pos, bottom center);
     }
 
     a {
