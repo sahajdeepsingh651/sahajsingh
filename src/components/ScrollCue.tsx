@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 export type ScrollCueMode =
+    | "hairline"
     | "celestial"
     | "catchword"
     | "ledger"
@@ -86,7 +87,7 @@ export default function ScrollCue() {
     const [scrolled, setScrolled] = useState(false);
     const [hasMoreContent, setHasMoreContent] = useState(true);
     const [scrollPercent, setScrollPercent] = useState(0);
-    const [cueMode, setCueMode] = useState<ScrollCueMode>("celestial");
+    const [cueMode, setCueMode] = useState<ScrollCueMode>("hairline");
     const [fogMode, setFogMode] = useState<ScrollFogMode>("none");
     const [dockSide, setDockSide] = useState<"right" | "left">("right");
 
@@ -94,11 +95,12 @@ export default function ScrollCue() {
         const loadPreferences = () => {
             const rawMode = localStorage.getItem("experiment_scroll_cue");
             // Map previous test values
-            let savedMode: ScrollCueMode = "celestial";
+            let savedMode: ScrollCueMode = "hairline";
             if (rawMode === "tick") savedMode = "ledger";
             else if (rawMode === "peek") savedMode = "perforation";
             else if (rawMode === "drift") savedMode = "celestial";
             else if (
+                rawMode === "hairline" ||
                 rawMode === "celestial" ||
                 rawMode === "catchword" ||
                 rawMode === "ledger" ||
@@ -199,6 +201,21 @@ export default function ScrollCue() {
                             : "h-44 bg-gradient-to-t from-[var(--bg-color)] via-[var(--bg-color)]/70 to-transparent opacity-95"
                     }`}
                 />
+            )}
+
+            {/* OPTION 3: 1px Silent Graphite Hairline Reading Rule */}
+            {cueMode === "hairline" && (
+                <div
+                    aria-hidden="true"
+                    className="fixed top-0 left-0 right-0 h-[2px] z-50 pointer-events-none bg-current/5"
+                >
+                    <div
+                        className="h-full bg-[var(--heading-color)] opacity-70 transition-[transform] duration-75 ease-out origin-left will-change-transform"
+                        style={{
+                            transform: `scaleX(${scrollPercent / 100})`,
+                        }}
+                    />
+                </div>
             )}
 
             {/* METHOD 1: Celestial Astrolabe Star (blo.png & dark_mode_blog.png mockup) */}

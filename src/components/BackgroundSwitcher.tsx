@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 
 type ActiveTab = "typography" | "scroll" | "art";
 export type ScrollCueMode =
+    | "hairline"
     | "celestial"
     | "catchword"
     | "ledger"
@@ -52,7 +53,7 @@ export default function BackgroundSwitcher() {
     const [navPlacement, setNavPlacement] = useState<"after-border" | "inside-box" | "edge">("after-border");
     const [headingTheme, setHeadingTheme] = useState<HeadingColorTheme>("espresso");
     const [headingStyle, setHeadingStyle] = useState<"serif" | "mono">("serif");
-    const [scrollCueMode, setScrollCueMode] = useState<ScrollCueMode>("celestial");
+    const [scrollCueMode, setScrollCueMode] = useState<ScrollCueMode>("hairline");
     const [scrollFogMode, setScrollFogMode] = useState<ScrollFogMode>("none");
     const [scrollClearance, setScrollClearance] = useState<number>(45);
 
@@ -151,11 +152,12 @@ export default function BackgroundSwitcher() {
         if (savedHeadingStyle) setHeadingStyle(savedHeadingStyle);
 
         const rawScrollCue = localStorage.getItem("experiment_scroll_cue");
-        let savedScrollCue: ScrollCueMode = "celestial";
+        let savedScrollCue: ScrollCueMode = "hairline";
         if (rawScrollCue === "tick") savedScrollCue = "ledger";
         else if (rawScrollCue === "peek") savedScrollCue = "perforation";
         else if (rawScrollCue === "drift") savedScrollCue = "celestial";
         else if (
+            rawScrollCue === "hairline" ||
             rawScrollCue === "celestial" ||
             rawScrollCue === "catchword" ||
             rawScrollCue === "ledger" ||
@@ -1256,6 +1258,25 @@ export default function BackgroundSwitcher() {
                                 </p>
 
                                 <div className="space-y-1.5 text-[10.5px]">
+                                    {/* Option 3: 1px Silent Graphite Hairline */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollCueMode("hairline")}
+                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollCueMode === "hairline"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-semibold">★ Option 3: 1px Graphite Hairline</span>
+                                            <span className="text-[9px] font-mono opacity-80">[silent progress]</span>
+                                        </div>
+                                        <div className="text-[9px] opacity-80 mt-0.5">
+                                            Silent 1.5px ink track across top edge of viewport. Zero floating boxes, zero clutter, preserves horizon art.
+                                        </div>
+                                    </button>
+
                                     {/* 1. Celestial Astrolabe Star */}
                                     <button
                                         type="button"
