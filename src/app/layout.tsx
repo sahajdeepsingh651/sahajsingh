@@ -48,7 +48,7 @@ export default function RootLayout({
                     }}
                 />
             </head>
-            <body className="min-h-full flex flex-col font-serif">
+            <body suppressHydrationWarning className="min-h-full flex flex-col font-serif">
                 <GlassFrame>
                     {/* Hand-drawn switch button attached directly to the right border of GlassFrame */}
                     <div className="absolute right-2 md:-right-[12px] top-0 bottom-0 pointer-events-none z-30">
