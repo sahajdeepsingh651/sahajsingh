@@ -96,28 +96,31 @@ export default function Home() {
                     </Link>
                 </div>
 
-                <ul className="space-y-4 font-normal">
+                <ul className="space-y-6 font-normal">
                     {projects.map((project) => (
-                        <li key={project.title} className="space-y-1">
+                        <li key={project.title} className="space-y-1.5">
                             <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
                                 {project.link ? (
                                     <a
                                         href={project.link}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40 inline-flex items-center gap-1.5"
+                                        className="text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40 inline-flex items-center gap-1.5 font-medium"
                                     >
                                         <span>{project.title}</span>
                                         <span className="text-xs font-mono text-[var(--text-muted)]">↗</span>
                                     </a>
                                 ) : (
-                                    <span className="text-[var(--text-color)]">{project.title}</span>
+                                    <span className="text-[var(--text-color)] font-medium">{project.title}</span>
                                 )}
-                                <span className="text-sm font-mono text-[var(--text-color)] shrink-0">
+                                <span className="text-xs sm:text-sm font-mono text-[var(--text-color)] shrink-0">
                                     [{project.status}]
                                 </span>
                             </div>
-                            <div className="flex flex-wrap gap-x-3 text-xs font-mono text-[var(--text-muted)]">
+                            <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+                                {project.description}
+                            </p>
+                            <div className="flex flex-wrap gap-x-3 text-xs font-mono text-[var(--text-muted)] pt-0.5">
                                 {project.tech.map((t) => (
                                     <span key={t}>• {t}</span>
                                 ))}
