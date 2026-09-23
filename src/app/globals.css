@@ -18,6 +18,7 @@
         --entry-gap: 28px;
         --content-width: 860px;
         --page-left-offset: 48px;
+        --nav-distance: 64px;
     }
 
     html {
@@ -39,11 +40,38 @@
         margin-right: auto !important;
     }
 
-    /* Dynamic Content Section Box (Stretch Control) */
+    /* Header Navigation Distance & Alignment */
+    .site-header-nav-row {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        transition: gap 0.2s ease-out;
+    }
+
+    @media (min-width: 640px) {
+        .site-header-nav-row {
+            flex-direction: row;
+            align-items: baseline;
+            justify-content: flex-start;
+            gap: var(--nav-distance, 64px);
+        }
+
+        [data-nav-align="edge"] .site-header-nav-row {
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        [data-nav-align="custom"] .site-header-nav-row {
+            justify-content: flex-start;
+            gap: var(--nav-distance, 64px);
+        }
+    }
+
+    /* Dynamic Content Section Box (Unified Layout Control across All Pages) */
     .content-box,
     .content-container,
     .max-w-2xl {
-        max-width: var(--content-width, 860px);
+        max-width: var(--content-width, 860px) !important;
         width: 100%;
         transition: max-width 0.2s ease-out;
     }

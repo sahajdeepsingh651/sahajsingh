@@ -27,6 +27,8 @@ export default function BackgroundSwitcher() {
     const [alignMode, setAlignMode] = useState<EntryAlignMode>("justified");
     const [pageAlign, setPageAlign] = useState<"left" | "center">("left");
     const [pageLeftOffset, setPageLeftOffset] = useState<number>(48);
+    const [navDistance, setNavDistance] = useState<number>(64);
+    const [navAlign, setNavAlign] = useState<"custom" | "edge">("custom");
 
     // Art & Horizon state
     const [bgOption, setBgOption] = useState<BgOption>("candidate");
@@ -59,6 +61,8 @@ export default function BackgroundSwitcher() {
         const savedAlign = localStorage.getItem("experiment_entry_align") as EntryAlignMode;
         const savedPageAlign = localStorage.getItem("experiment_page_align") as "left" | "center";
         const savedPageLeftOffset = localStorage.getItem("experiment_page_left_offset");
+        const savedNavDistance = localStorage.getItem("experiment_nav_distance");
+        const savedNavAlign = localStorage.getItem("experiment_nav_align") as "custom" | "edge";
         const savedDockSide = (localStorage.getItem("experiment_dock_side") as "right" | "left") || "right";
         const savedDockPos = localStorage.getItem("experiment_dock_pos");
 
@@ -86,6 +90,8 @@ export default function BackgroundSwitcher() {
             setPageAlign("left");
         }
         if (savedPageLeftOffset) setPageLeftOffset(Number(savedPageLeftOffset));
+        if (savedNavDistance) setNavDistance(Number(savedNavDistance));
+        if (savedNavAlign) setNavAlign(savedNavAlign);
         setDockSide(savedDockSide);
 
         if (savedDockPos) {
@@ -113,8 +119,10 @@ export default function BackgroundSwitcher() {
         root.style.setProperty("--entry-gap", `${entryGap}px`);
         root.style.setProperty("--content-width", `${contentWidth}px`);
         root.style.setProperty("--page-left-offset", `${pageLeftOffset}px`);
+        root.style.setProperty("--nav-distance", `${navDistance}px`);
         root.setAttribute("data-entry-align", alignMode);
         root.setAttribute("data-page-align", pageAlign);
+        root.setAttribute("data-nav-align", navAlign);
 
         localStorage.setItem("experiment_font_size", String(fontSize));
         localStorage.setItem("experiment_entry_gap", String(entryGap));
@@ -122,7 +130,9 @@ export default function BackgroundSwitcher() {
         localStorage.setItem("experiment_entry_align", alignMode);
         localStorage.setItem("experiment_page_align", pageAlign);
         localStorage.setItem("experiment_page_left_offset", String(pageLeftOffset));
-    }, [fontSize, entryGap, contentWidth, alignMode, pageAlign, pageLeftOffset]);
+        localStorage.setItem("experiment_nav_distance", String(navDistance));
+        localStorage.setItem("experiment_nav_align", navAlign);
+    }, [fontSize, entryGap, contentWidth, alignMode, pageAlign, pageLeftOffset, navDistance, navAlign]);
 
     // Apply background styles to body and sync with foreground horizon
     useEffect(() => {
@@ -418,6 +428,77 @@ export default function BackgroundSwitcher() {
                                         </p>
                                     </div>
                                 )}
+                            </div>
+
+                            {/* 1B. Distance between "Sahaj Singh" and Navigation */}
+                            <div className="space-y-2 p-2.5 rounded-lg border border-sky-500/25 bg-sky-500/5">
+                                <div className="flex items-center justify-between text-[11px]">
+                                    <span className="font-semibold text-[var(--text-color)] flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
+                                        &ldquo;Sahaj Singh&rdquo; ↔ Navigation Distance:
+                                    </span>
+                                    <span className="text-[10px] text-sky-600 dark:text-sky-400 font-bold">
+                                        {navAlign === "edge" ? "Edge-to-Edge (Right)" : `${navDistance}px`}
+                                    </span>
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <input
+                                        type="range"
+                                        min={16}
+                                        max={480}
+                                        step={4}
+                                        value={navAlign === "edge" ? 480 : navDistance}
+                                        onChange={(e) => {
+                                            setNavAlign("custom");
+                                            setNavDistance(Number(e.target.value));
+                                        }}
+                                        className="w-full accent-sky-500 cursor-pointer"
+                                    />
+                                    <div className="flex flex-wrap items-center gap-1 text-[10px]">
+                                        <button
+                                            type="button"
+                                            onClick={() => setNavAlign("edge")}
+                                            className={`px-1.5 py-0.5 rounded cursor-pointer transition-colors ${
+                                                navAlign === "edge"
+                                                    ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
+                                                    : "border border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
+                                            }`}
+                                        >
+                                            ★ Edge-to-Edge
+                                        </button>
+                                        {[16, 24, 36, 48, 64, 96, 140, 200, 280, 360].map((d) => (
+                                            <button
+                                                key={d}
+                                                type="button"
+                                                onClick={() => {
+                                                    setNavAlign("custom");
+                                                    setNavDistance(d);
+                                                }}
+                                                className={`px-1.5 py-0.5 rounded cursor-pointer transition-colors ${
+                                                    navAlign === "custom" && navDistance === d
+                                                        ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
+                                                        : "border border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
+                                                }`}
+                                            >
+                                                {d}px
+                                            </button>
+                                        ))}
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setNavAlign("custom");
+                                                setNavDistance(64);
+                                            }}
+                                            className="text-[10px] text-[var(--text-muted)] hover:underline ml-auto cursor-pointer"
+                                        >
+                                            [reset 64px]
+                                        </button>
+                                    </div>
+                                    <p className="text-[9.5px] text-[var(--text-muted)] leading-tight pt-0.5">
+                                        Adjusts the exact gap separating <code>[ Sahaj Singh ]</code> from the navigation links (now, essays, projects, thoughts, about).
+                                    </p>
+                                </div>
                             </div>
 
                             {/* 2. Global Font Size Slider & Presets */}

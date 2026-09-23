@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function NowPage() {
     return (
-        <div className="space-y-10 content-box w-full" style={{ maxWidth: "var(--content-width, 860px)" }}>
+        <div className="space-y-10 w-full">
             {/* Header */}
             <header className="space-y-2 pb-4 border-b border-current/10">
                 <h1 className="text-xl sm:text-2xl font-normal tracking-tight">Now</h1>

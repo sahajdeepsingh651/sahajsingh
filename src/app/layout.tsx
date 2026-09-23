@@ -46,16 +46,18 @@ export default function RootLayout({
                         </div>
                     </div>
 
-                    <header className="pb-6 mb-8">
-                        <div className="flex flex-col sm:flex-row justify-between sm:items-baseline gap-4">
-                            <div className="flex flex-wrap items-baseline gap-3 sm:gap-4">
+                    <header className="pb-6 mb-8 content-box w-full" style={{ maxWidth: "var(--content-width, 860px)" }}>
+                        <div className="site-header-nav-row">
+                            <div className="flex flex-wrap items-baseline gap-3 sm:gap-4 shrink-0">
                                 <SiteTitle />
                             </div>
                             <Navigation />
                         </div>
                     </header>
 
-                    <main className="flex-1">{children}</main>
+                    <main className="flex-1 content-box w-full" style={{ maxWidth: "var(--content-width, 860px)" }}>
+                        {children}
+                    </main>
                     <BackgroundSwitcher />
                 </GlassFrame>
                 <HorizonForeground />

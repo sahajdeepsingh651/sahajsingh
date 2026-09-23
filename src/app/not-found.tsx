@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
     return (
-        <div className="space-y-6 max-w-2xl py-12">
+        <div className="space-y-6 w-full py-12">
             <div className="space-y-2 border-b border-current/10 pb-4">
                 <span className="font-mono text-xs uppercase tracking-widest text-[var(--text-muted)]">
                     404 — Coordinate Missing

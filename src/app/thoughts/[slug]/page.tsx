@@ -39,7 +39,7 @@ export default async function ThoughtPage({
         notFound();
     }
     return (
-        <div className="max-w-2xl space-y-8">
+        <div className="space-y-8 w-full">
             <div>
                 <Link
                     href="/thoughts"
