@@ -33,7 +33,7 @@ export default function EssaysPage() {
                             <div className="entry-row">
                                 <Link
                                     href={`/essays/${essay.slug}`}
-                                    className="entry-title text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40 inline-flex items-baseline"
+                                    className="entry-title text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
                                 >
                                     {isHighlighted && (
                                         <span
@@ -50,7 +50,7 @@ export default function EssaysPage() {
                                         </span>
                                     )}
                                 </Link>
-                                <span className="entry-date text-xs font-mono text-[var(--text-color)] shrink-0">
+                                <span className="entry-date text-xs font-mono text-[var(--text-color)]">
                                     {essay.date}
                                 </span>
                             </div>

@@ -27,7 +27,7 @@ export default function ThoughtsPage() {
                         >
                             {thought.title}
                         </Link>
-                        <span className="entry-date text-xs font-mono text-[var(--text-color)] shrink-0">
+                        <span className="entry-date text-xs font-mono text-[var(--text-color)]">
                             {thought.date}
                         </span>
                     </li>

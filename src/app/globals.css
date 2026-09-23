@@ -61,41 +61,69 @@
 
 /* Essay & Thought Entry Rows - Dynamic Alignment & Spacing */
 .entry-row {
-    display: flex;
-    align-items: baseline;
-    transition: column-gap 0.2s ease, gap 0.2s ease;
+    transition: all 0.15s ease;
 }
 
-/* 1. Left-aligned flow: Title + Status + (Custom Gap) + Date */
+.entry-title {
+    color: var(--text-color);
+}
+
+/* 1. Left-aligned inline flow: Title [status] followed immediately by Date with dynamic gap */
 [data-entry-align="left-flow"] .entry-row,
 html:not([data-entry-align]) .entry-row {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: baseline;
-    column-gap: var(--entry-gap, 28px);
-    row-gap: 2px;
+    display: block;
+    line-height: 1.6;
+}
+
+[data-entry-align="left-flow"] .entry-row .entry-title,
+html:not([data-entry-align]) .entry-row .entry-title {
+    display: inline;
+}
+
+[data-entry-align="left-flow"] .entry-row .entry-status,
+html:not([data-entry-align]) .entry-row .entry-status {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+[data-entry-align="left-flow"] .entry-row .entry-date,
+html:not([data-entry-align]) .entry-row .entry-date {
+    display: inline-block;
+    vertical-align: baseline;
+    margin-left: var(--entry-gap, 28px);
+    white-space: nowrap;
+    transition: margin-left 0.1s ease;
 }
 
 /* 2. Date first (Field Notebook / Gwern style): Date + (Custom Gap) + Title + Status */
 [data-entry-align="date-left"] .entry-row {
+    display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
     align-items: baseline;
-    column-gap: var(--entry-gap, 28px);
-    row-gap: 2px;
+    gap: var(--entry-gap, 28px);
+    transition: gap 0.1s ease;
 }
 [data-entry-align="date-left"] .entry-row .entry-date {
     order: -1;
+    flex-shrink: 0;
+    margin-left: 0;
+    white-space: nowrap;
+}
+[data-entry-align="date-left"] .entry-row .entry-title {
+    flex: 1;
+    display: inline;
 }
 
-/* 3. Justified (Original baseline): Title left, Date far right */
-[data-entry-align="justified"] .entry-row {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 8px;
+/* 3. Stacked: Title + Status on line 1, Date on line 2 with adjustable indent */
+[data-entry-align="stacked"] .entry-row {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+[data-entry-align="stacked"] .entry-row .entry-date {
+    margin-left: var(--entry-gap, 28px);
+    white-space: nowrap;
+    transition: margin-left 0.1s ease;
 }
 
 /* 4. Tabular column: Fixed date column, then Title + Status */
@@ -105,8 +133,32 @@ html:not([data-entry-align]) .entry-row {
     align-items: baseline;
     column-gap: var(--entry-gap, 28px);
     row-gap: 2px;
+    transition: column-gap 0.1s ease;
 }
 [data-entry-align="tabular"] .entry-row .entry-date {
-    order: -1;
+    grid-column: 1;
     min-width: 95px;
+    margin-left: 0;
+    white-space: nowrap;
+}
+[data-entry-align="tabular"] .entry-row .entry-title {
+    grid-column: 2;
+    display: inline;
+}
+
+/* 5. Justified (Original baseline): Title left, Date far right */
+[data-entry-align="justified"] .entry-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+}
+[data-entry-align="justified"] .entry-row .entry-title {
+    display: inline;
+}
+[data-entry-align="justified"] .entry-row .entry-date {
+    margin-left: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
 }

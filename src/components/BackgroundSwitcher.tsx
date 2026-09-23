@@ -6,7 +6,7 @@ type ActiveTab = "typography" | "art";
 type BgOption = "default" | "candidate" | "original" | "none";
 type SizeOption = "100% auto" | "cover" | "contain";
 type PositionOption = "bottom center" | "center center" | "top center";
-type EntryAlignMode = "left-flow" | "date-left" | "justified" | "tabular";
+type EntryAlignMode = "left-flow" | "date-left" | "stacked" | "tabular" | "justified";
 
 export default function BackgroundSwitcher() {
     // Tab state
@@ -366,7 +366,7 @@ export default function BackgroundSwitcher() {
                                                 : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
                                         }`}
                                     >
-                                        ★ Left-Aligned
+                                        ★ Inline Flow
                                         <span className="block text-[9px] opacity-75 mt-0.5">
                                             Title [status] ↔ Date
                                         </span>
@@ -387,16 +387,16 @@ export default function BackgroundSwitcher() {
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={() => setAlignMode("justified")}
+                                        onClick={() => setAlignMode("stacked")}
                                         className={`p-1.5 rounded text-left border cursor-pointer transition-colors ${
-                                            alignMode === "justified"
+                                            alignMode === "stacked"
                                                 ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
                                                 : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
                                         }`}
                                     >
-                                        Justified (Baseline)
+                                        Stacked (2-Line)
                                         <span className="block text-[9px] opacity-75 mt-0.5">
-                                            Title [left] Date [far right]
+                                            Line 1 Title, Line 2 Date
                                         </span>
                                     </button>
                                     <button
@@ -411,6 +411,20 @@ export default function BackgroundSwitcher() {
                                         Tabular Column
                                         <span className="block text-[9px] opacity-75 mt-0.5">
                                             Fixed width date column
+                                        </span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setAlignMode("justified")}
+                                        className={`col-span-2 p-1.5 rounded text-left border cursor-pointer transition-colors ${
+                                            alignMode === "justified"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        Justified (Edge-to-Edge)
+                                        <span className="block text-[9px] opacity-75 mt-0.5">
+                                            Title [left] ── Date [far right]
                                         </span>
                                     </button>
                                 </div>
@@ -428,15 +442,15 @@ export default function BackgroundSwitcher() {
                                 </div>
                                 <input
                                     type="range"
-                                    min={8}
-                                    max={84}
+                                    min={4}
+                                    max={120}
                                     step={2}
                                     value={entryGap}
                                     onChange={(e) => setEntryGap(Number(e.target.value))}
                                     className="w-full accent-emerald-500 cursor-pointer"
                                 />
                                 <div className="flex flex-wrap items-center gap-1 text-[10px]">
-                                    {[12, 20, 28, 40, 56, 72].map((g) => (
+                                    {[8, 16, 24, 28, 40, 60, 80, 100].map((g) => (
                                         <button
                                             key={g}
                                             type="button"
@@ -447,7 +461,7 @@ export default function BackgroundSwitcher() {
                                                     : "border border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
                                             }`}
                                         >
-                                            {g}px {g === 28 ? "(bal)" : g === 40 ? "(wide)" : ""}
+                                            {g}px {g === 28 ? "(bal)" : g === 60 ? "(wide)" : ""}
                                         </button>
                                     ))}
                                     <button
@@ -465,58 +479,121 @@ export default function BackgroundSwitcher() {
                                 <span className="block text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-semibold">
                                     Live Sandbox Preview (Simulated Item)
                                 </span>
-                                <div className="p-3 rounded-lg border border-current/15 bg-current/5 space-y-2">
-                                    <div
-                                        className="entry-row font-serif"
-                                        style={{
-                                            columnGap: `${entryGap}px`,
-                                            display: "flex",
-                                            flexWrap: "wrap",
-                                            alignItems: "baseline",
-                                            justifyContent:
-                                                alignMode === "justified"
-                                                    ? "space-between"
-                                                    : "flex-start",
-                                        }}
-                                    >
-                                        <div
-                                            className="inline-flex items-baseline gap-2 font-serif text-[var(--text-color)] font-medium"
-                                            style={{
-                                                order: alignMode === "date-left" || alignMode === "tabular" ? 1 : 0,
-                                            }}
-                                        >
-                                            <span>
+                                <div className="p-3 rounded-lg border border-current/15 bg-current/5 space-y-2.5">
+                                    {alignMode === "left-flow" && (
+                                        <div className="font-serif leading-relaxed text-[var(--text-color)] text-[12.5px]">
+                                            <span className="font-medium">
                                                 On Knowledge Engines, Distributed Consensus, and First Principles
                                             </span>
-                                            <span className="text-[11px] font-mono text-[var(--text-muted)] whitespace-nowrap">
+                                            <span className="text-[11px] font-mono text-[var(--text-muted)] ml-2 whitespace-nowrap inline-block">
                                                 [in progress]
                                             </span>
-                                        </div>
-
-                                        <span
-                                            className="text-[12px] font-mono text-[var(--text-color)] shrink-0"
-                                            style={{
-                                                order: alignMode === "date-left" || alignMode === "tabular" ? 0 : 1,
-                                                minWidth: alignMode === "tabular" ? "95px" : "auto",
-                                            }}
-                                        >
-                                            2026-09-21
-                                        </span>
-                                    </div>
-
-                                    {/* Visual distance ruler indicator */}
-                                    {alignMode !== "justified" && (
-                                        <div className="pt-1.5 flex items-center justify-between text-[9px] text-emerald-600 dark:text-emerald-400 font-mono border-t border-current/10">
-                                            <span>← Title [status]</span>
-                                            <span className="font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded">
-                                                ↔ {entryGap}px gap
+                                            <span
+                                                className="text-[11px] font-mono text-[var(--text-color)] whitespace-nowrap inline-block transition-[margin-left] duration-100"
+                                                style={{ marginLeft: `${entryGap}px` }}
+                                            >
+                                                2026-09-21
                                             </span>
-                                            <span>Date →</span>
                                         </div>
                                     )}
+
+                                    {alignMode === "date-left" && (
+                                        <div
+                                            className="flex items-baseline font-serif text-[12.5px] text-[var(--text-color)] transition-[gap] duration-100"
+                                            style={{ gap: `${entryGap}px` }}
+                                        >
+                                            <span className="text-[11px] font-mono text-[var(--text-color)] shrink-0 whitespace-nowrap">
+                                                2026-09-21
+                                            </span>
+                                            <div className="leading-relaxed flex-1">
+                                                <span className="font-medium">
+                                                    On Knowledge Engines, Distributed Consensus, and First Principles
+                                                </span>
+                                                <span className="text-[11px] font-mono text-[var(--text-muted)] ml-2 whitespace-nowrap inline-block">
+                                                    [in progress]
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {alignMode === "stacked" && (
+                                        <div className="flex flex-col gap-1 font-serif text-[12.5px] text-[var(--text-color)]">
+                                            <div className="leading-relaxed">
+                                                <span className="font-medium">
+                                                    On Knowledge Engines, Distributed Consensus, and First Principles
+                                                </span>
+                                                <span className="text-[11px] font-mono text-[var(--text-muted)] ml-2 whitespace-nowrap inline-block">
+                                                    [in progress]
+                                                </span>
+                                            </div>
+                                            <span
+                                                className="text-[11px] font-mono text-[var(--text-color)] whitespace-nowrap transition-[margin-left] duration-100"
+                                                style={{ marginLeft: `${entryGap}px` }}
+                                            >
+                                                2026-09-21
+                                            </span>
+                                        </div>
+                                    )}
+
+                                    {alignMode === "tabular" && (
+                                        <div
+                                            className="grid items-baseline font-serif text-[12.5px] text-[var(--text-color)] transition-[column-gap] duration-100"
+                                            style={{
+                                                gridTemplateColumns: "auto 1fr",
+                                                columnGap: `${entryGap}px`,
+                                            }}
+                                        >
+                                            <span className="text-[11px] font-mono text-[var(--text-color)] shrink-0 whitespace-nowrap min-w-[85px]">
+                                                2026-09-21
+                                            </span>
+                                            <div className="leading-relaxed">
+                                                <span className="font-medium">
+                                                    On Knowledge Engines, Distributed Consensus, and First Principles
+                                                </span>
+                                                <span className="text-[11px] font-mono text-[var(--text-muted)] ml-2 whitespace-nowrap inline-block">
+                                                    [in progress]
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {alignMode === "justified" && (
+                                        <div className="flex justify-between items-baseline gap-2 font-serif text-[12.5px] text-[var(--text-color)]">
+                                            <div className="leading-relaxed">
+                                                <span className="font-medium">
+                                                    On Knowledge Engines, Distributed Consensus, and First Principles
+                                                </span>
+                                                <span className="text-[11px] font-mono text-[var(--text-muted)] ml-2 whitespace-nowrap inline-block">
+                                                    [in progress]
+                                                </span>
+                                            </div>
+                                            <span className="text-[11px] font-mono text-[var(--text-color)] shrink-0 whitespace-nowrap">
+                                                2026-09-21
+                                            </span>
+                                        </div>
+                                    )}
+
+                                    {/* Visual distance ruler indicator */}
+                                    <div className="pt-1.5 flex items-center justify-between text-[9px] text-emerald-600 dark:text-emerald-400 font-mono border-t border-current/10">
+                                        <span>
+                                            {alignMode === "date-left" || alignMode === "tabular"
+                                                ? "Date"
+                                                : "← [in progress]"}
+                                        </span>
+                                        <span className="font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded">
+                                            {alignMode === "justified"
+                                                ? "docked to right"
+                                                : `↔ ${entryGap}px gap / indent`}
+                                        </span>
+                                        <span>
+                                            {alignMode === "date-left" || alignMode === "tabular"
+                                                ? "Title →"
+                                                : "Date →"}
+                                        </span>
+                                    </div>
                                 </div>
                                 <p className="text-[10px] text-[var(--text-muted)] leading-tight">
-                                    Tip: Grab the header bar above (⠿) to freely drag this window anywhere on your screen!
+                                    Tip: Drag the slider above to see the distance between [status] and the date scale live across this card and the full website!
                                 </p>
                             </div>
                         </div>

@@ -65,7 +65,7 @@ export default function Home() {
                         >
                             <Link
                                 href={`/essays/${essay.slug}`}
-                                className="entry-title text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40 inline-flex items-baseline"
+                                className="entry-title text-[var(--text-color)] hover:underline underline-offset-4 decoration-current/40"
                             >
                                 <span>{essay.title}</span>
                                 {essay.status && (
@@ -74,7 +74,7 @@ export default function Home() {
                                     </span>
                                 )}
                             </Link>
-                            <span className="entry-date text-sm font-mono text-[var(--text-color)] shrink-0">
+                            <span className="entry-date text-sm font-mono text-[var(--text-color)]">
                                 {essay.date}
                             </span>
                         </li>
@@ -153,7 +153,7 @@ export default function Home() {
                             >
                                 {thought.title}
                             </Link>
-                            <span className="entry-date text-sm font-mono text-[var(--text-color)] shrink-0">
+                            <span className="entry-date text-sm font-mono text-[var(--text-color)]">
                                 {thought.date}
                             </span>
                         </li>
