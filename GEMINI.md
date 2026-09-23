@@ -24,9 +24,8 @@
 
 ## Design Decisions & Palette Records
 - **Base Typography:** 20px desktop base size (`--base-font-size: 20px`, responsive 16px on mobile `< 640px`), 1.65 line leading, Newsreader serif (`--font-newsreader`), OpenType old-style numbers enabled (`oldstyle-nums`, `"onum" 1`).
-- **Canvas Layout & Margin:** Centered on mobile with natural gutters (`mx-auto`), left-anchored on desktop (`>= 768px`) with 120px left screen margin (`--page-left-offset: 120px`).
-- **Navigation Placement:** Begins after the content box border (matching `blo.png` mockup guide, `data-nav-placement="after-border"`), with a 36px separation gap (`--nav-distance: 36px`).
-- **Content Box Width:** 896px / `max-w-4xl` (`--content-width: 896px`), equalized across all pages via `RootLayout` inheritance, leaving ~200px of breathing room before essay dates.
+- **Canvas Layout & Margin:** Centered across all devices (`mx-auto`, `--content-width: 896px` / `max-w-4xl`) with responsive horizontal gutters (`px-6 sm:px-8`). Delivers balanced, symmetrical margins on mobile, laptop, desktop, and ultrawide screens.
+- **Header & Navigation Placement:** Unified within the 896px content box. `SiteTitle` anchors to the left, `Navigation` anchors to the right, aligning cleanly edge-to-edge above content and essay date columns.
 - **Essay Line Alignment:** Justified edge-to-edge (`data-entry-align="justified"`), minimum distance / safety gap: 28px (`--entry-gap: 28px`).
 - **Background Art:**
   - Light mode: Original Read (`/real_read_mode.original.png`).
