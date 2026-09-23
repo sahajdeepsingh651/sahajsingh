@@ -8,27 +8,27 @@ export interface Project {
 
 export const ALL_PROJECTS: Project[] = [
     {
-        title: "Knowledge Engine & Autonomous Crawler",
+        title: "Knowledge Engine",
         description:
-            "An answer to how to use AI for deep research and study rather than superficial summarization. Combines an autonomous web crawler written in Go with AST-based symbolic knowledge representations and local graph synthesis.",
-        tech: ["Go", "Distributed Systems", "Networking", "ASTs"],
-        status: "active build",
+            "Building a 3-tier AI knowledge engine that ingests raw documents, maps new resources directly to existing prerequisites and authoritative sources, and mathematically tracks user comprehension over time to turn passive reading into guaranteed technical expertise.",
+        tech: ["python", "sqlite"],
+        status: "seed",
         link: "https://github.com/sahajdeepsingh651/knowledge_engine",
     },
     {
-        title: "Personal Field Notebook & Digital Garden",
+        title: "Jscraper",
         description:
-            "This atmospheric personal publishing platform. Inspired by Gwern.net, featuring estimative probability scales (Kesselman words), intellectual revision changelogs, bidirectional citations, and tactile editorial typography.",
-        tech: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
-        status: "deployed",
-        link: "https://github.com/sahajdeepsingh651/sahajsingh",
+            "Developing a high-throughput, open-source web crawling and data aggregation tool in Go designed to ingest, filter, and process multi-domain job listings ",
+        tech: ["Go"],
+        status: "on hold",
+        link: "https://github.com/sahajdeepsingh651/Jscrapper",
     },
     {
-        title: "Endurance Conditioning & Event Protocol",
+        title: "Orgbrain",
         description:
-            "Empirical training telemetry, cadence protocols, and pacing frameworks designed for preparing for an upcoming Last Man Standing continuous ultra-endurance running event.",
-        tech: ["Systems Thinking", "Empirical Metrics", "Athletics"],
-        status: "training",
-        link: "https://github.com/sahajdeepsingh651",
+            "Developed an enterprise privacy and knowledge platform that stops confidential data and credentials from leaking into external AI models, while enabling engineering teams to safely share and discover solutions across sessions ",
+        tech: ["Python", "Tailwind CSS", "React", "TypeScript"],
+        status: "finished",
+        link: "https://github.com/sahajdeepsingh651/Orgbrain",
     },
 ];
