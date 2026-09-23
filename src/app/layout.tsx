@@ -7,7 +7,6 @@ import Navigation from "@/components/Navigation";
 import SiteTitle from "@/components/SiteTitle";
 import HorizonForeground from "@/components/HorizonForeground";
 import ScrollCue from "@/components/ScrollCue";
-import DarkBgTester from "@/components/DarkBgTester";
 
 const newsreader = Newsreader({
     subsets: ["latin"],
@@ -75,7 +74,6 @@ export default function RootLayout({
                 </GlassFrame>
                 <HorizonForeground />
                 <ScrollCue />
-                <DarkBgTester />
             </body>
         </html>
     );

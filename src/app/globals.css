@@ -111,9 +111,14 @@
 
     .dark {
         --bg-color: #0b0f17;
-        --text-color: #ede8dc;
-        --text-muted: #e2e8f0;
-        --heading-color: #e2e8f0;
+        --text-color: #f8fafc;
+        --text-muted: #cbd5e1;
+        --heading-color: #f8fafc;
+    }
+
+    .dark .page-canvas {
+        /* Soft atmospheric backing that gently lifts text contrast over background art */
+        background: radial-gradient(ellipse at 50% 25%, rgba(11, 15, 23, 0.55) 0%, rgba(11, 15, 23, 0.25) 75%, transparent 100%);
     }
 
     /* Section Headings (Recent Essays, Projects, Thoughts) */
@@ -162,9 +167,7 @@
     }
 
     .dark body {
-        background-image: var(--dark-bg-image, url("/real_write_mode.png"));
-        background-size: var(--dark-bg-size, 100% auto);
-        background-position: var(--dark-bg-pos, bottom center);
+        background-image: url("/real_write_mode.png");
     }
 
     a {

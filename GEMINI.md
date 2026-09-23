@@ -35,13 +35,11 @@
 - **Unselected / Secondary Text Evaluation:**
   - **Chosen Palette:**
     - Light mode: `--text-muted: #595147` (soft graphite charcoal on vellum).
-    - Dark mode: `--text-muted: #e2e8f0` (Pale Platinum / Slate-200 on cosmic `#0b0f17`).
-    - *Verdict:* Tested live against Slate-400, Warm Chalk, and Moonlit Silver. Pale Platinum provides high contrast and crisp legibility for secondary text, dates, and navigation links without washing out glowing ivory primary text.
-  - **Option 1 (Single Ink Alternative):**
-    - `--text-muted: var(--text-color)` (uniform ivory `#ede8dc` / walnut `#1f140e`).
-    - *Verdict:* Kept on file as reference.
-- **Section Heading Hierarchy & Palette (`--heading-color`):**
-  - Dark mode strictly locked to **Silver / Pale Platinum** (`#E2E8F0` / `var(--text-muted)`), maintaining a pure two-color palette (Ivory `#EDE8DC` and Pale Platinum `#E2E8F0`) with zero amber or golden tones.
+    - Dark mode: `--text-muted: #cbd5e1` (Refined Platinum Silver / Slate-300, 12.5:1 contrast ratio against cosmic `#0b0f17`).
+    - *Verdict:* Provides distinct subordination to primary text while remaining sharply readable.
+- **Dark Mode Primary & Heading Contrast Standard:**
+  - Primary text and headings strictly locked to **Crisp Starlight Silver** (`--text-color: #f8fafc`, `--heading-color: #f8fafc` / Slate-50), delivering an ultra-crisp 17.5:1 contrast ratio against `#0b0f17`. Replaced antique ivory with luminous cool silver.
+  - **Atmospheric Reading Scrim**: `.dark .page-canvas` uses a subtle borderless radial gradient (`rgba(11, 15, 23, 0.55)` fading to transparent) behind the central column, preventing background stardust from competing with fine serif typography while preserving the organic ocean waterline emergence.
   - Light mode uses Warm Espresso Bronze (`#2C221E`).
   - Palettes in Studio Controller:
     - *Charcoal / Platinum (Silver - Default)*: `#595147` in light, `#E2E8F0` in dark.
