@@ -7,6 +7,7 @@ import Navigation from "@/components/Navigation";
 import SiteTitle from "@/components/SiteTitle";
 import HorizonForeground from "@/components/HorizonForeground";
 import ScrollCue from "@/components/ScrollCue";
+import DarkBgTester from "@/components/DarkBgTester";
 
 const newsreader = Newsreader({
     subsets: ["latin"],
@@ -35,11 +36,19 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`dark ${newsreader.variable} ${geistMono.variable} h-full antialiased`}
+            suppressHydrationWarning
+            className={`${newsreader.variable} ${geistMono.variable} h-full antialiased`}
             data-page-align="left"
             data-entry-align="justified"
             data-nav-placement="after-border"
         >
+            <head>
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `(function(){try{var s=localStorage.getItem("theme");var h=new Date().getHours();var d=s?s==="dark":(h>=19||h<6);if(d){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}}catch(e){}})();`,
+                    }}
+                />
+            </head>
             <body className="min-h-full flex flex-col font-serif">
                 <GlassFrame>
                     {/* Hand-drawn switch button attached directly to the right border of GlassFrame */}
@@ -66,6 +75,7 @@ export default function RootLayout({
                 </GlassFrame>
                 <HorizonForeground />
                 <ScrollCue />
+                <DarkBgTester />
             </body>
         </html>
     );

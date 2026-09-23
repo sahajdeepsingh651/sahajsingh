@@ -6,14 +6,8 @@ export default function ThemeToggle() {
     const [isDark, setIsDark] = useState(false);
 
     useEffect(() => {
-        const saved = localStorage.getItem("theme");
-        const hour = new Date().getHours();
-        const isNightTime = hour >= 19 || hour < 6;
-        const shouldBeDark = saved ? saved === "dark" : isNightTime;
-
-        document.documentElement.classList.toggle("dark", shouldBeDark);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setIsDark(shouldBeDark);
+        // Read the class set synchronously by the blocking <head> script
+        setIsDark(document.documentElement.classList.contains("dark"));
     }, []);
 
     function toggleTheme() {
