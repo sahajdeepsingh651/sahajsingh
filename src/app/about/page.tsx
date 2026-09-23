@@ -5,7 +5,7 @@ import { STATUS_CONFIG, CONFIDENCE_CONFIG } from "@/lib/metadata";
 export const metadata: Metadata = {
     title: "About | Sahaj Singh",
     description:
-        "About Sahaj Singh and the design philosophy of this field notebook.",
+        "About Sahaj Singh and the design philosophy of this site.",
 };
 
 export default function AboutPage() {
@@ -17,7 +17,7 @@ export default function AboutPage() {
                     About
                 </h1>
                 <p className="text-xs font-mono text-[var(--text-muted)]">
-                    Two perspectives: the author and the notebook.
+                    Two perspectives: the author and the site.
                 </p>
             </header>
 
@@ -278,48 +278,17 @@ export default function AboutPage() {
                     </p>
                 </div>
 
-                {/* Document Status */}
-                <div
-                    id="status"
-                    className="space-y-4 scroll-mt-12 pt-6 border-t border-current/10"
-                >
-                    <div className="space-y-1">
-                        <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--heading-color)] font-semibold">
-                            Document Maturity (Status)
-                        </h3>
-                        <p className="text-xs font-mono text-[var(--text-muted)]">
-                            How finished or developed a document is.
-                        </p>
-                    </div>
-                    <p className="text-sm leading-relaxed">
-                        Inspired by Gwern.net, every essay carries a status tag indicating
-                        its stage of editorial development:
-                    </p>
-                    <dl className="space-y-3 font-normal text-sm">
-                        {Object.entries(STATUS_CONFIG).map(([key, config]) => (
-                            <div key={key} className="space-y-1">
-                                <dt className="font-mono text-xs font-medium text-[var(--text-color)]">
-                                    {config.label}
-                                </dt>
-                                <dd className="text-sm text-[var(--text-muted)] pl-3 border-l border-current/15 leading-relaxed font-serif">
-                                    {config.desc}
-                                </dd>
-                            </div>
-                        ))}
-                    </dl>
-                </div>
-
-                {/* Epistemic Confidence */}
+                {/* Epistemic Confidence & Status */}
                 <div
                     id="confidence"
-                    className="space-y-4 scroll-mt-12 pt-6 border-t border-current/10"
+                    className="space-y-6 scroll-mt-12 pt-6 border-t border-current/10"
                 >
                     <div className="space-y-1">
                         <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--heading-color)] font-semibold">
-                            Epistemic Confidence (Personal Belief)
+                            Epistemic Confidence &amp; Status
                         </h3>
                         <p className="text-xs font-mono text-[var(--text-muted)]">
-                            Subjective probability in the essay&apos;s central claims.
+                            Subjective probability and editorial maturity in essays.
                         </p>
                     </div>
 
@@ -342,26 +311,55 @@ export default function AboutPage() {
                         </p>
                     </div>
 
-                    <p className="text-sm leading-relaxed">
-                        Probabilities are mapped using the Kesselman list of estimative
-                        words adapted by Gwern:
-                    </p>
+                    {/* Document Status Taxonomy */}
+                    <div id="status" className="space-y-3 pt-2 scroll-mt-14">
+                        <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--heading-color)] font-medium">
+                            Document Maturity (Status)
+                        </h4>
+                        <p className="text-sm leading-relaxed">
+                            Inspired by Gwern.net, every essay carries a status tag indicating
+                            its stage of editorial development:
+                        </p>
+                        <dl className="space-y-3 font-normal text-sm">
+                            {Object.entries(STATUS_CONFIG).map(([key, config]) => (
+                                <div key={key} className="space-y-1">
+                                    <dt className="font-mono text-xs font-medium text-[var(--text-color)]">
+                                        {config.label}
+                                    </dt>
+                                    <dd className="text-sm text-[var(--text-muted)] pl-3 border-l border-current/15 leading-relaxed font-serif">
+                                        {config.desc}
+                                    </dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
 
-                    <dl className="space-y-3.5 font-normal text-sm">
-                        {Object.entries(CONFIDENCE_CONFIG).map(([key, config]) => (
-                            <div key={key} className="space-y-1">
-                                <dt className="font-mono text-xs font-medium text-[var(--text-color)] flex items-baseline justify-between">
-                                    <span>{config.label}</span>
-                                    <span className="text-[11px] font-mono text-[var(--text-color)]">
-                                        {config.range}
-                                    </span>
-                                </dt>
-                                <dd className="text-sm text-[var(--text-muted)] pl-3 border-l border-current/15 italic font-serif leading-relaxed">
-                                    &ldquo;{config.desc}&rdquo;
-                                </dd>
-                            </div>
-                        ))}
-                    </dl>
+                    {/* Estimative Probability Scale */}
+                    <div className="space-y-3 pt-2">
+                        <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--heading-color)] font-medium">
+                            Estimative Probability Scale
+                        </h4>
+                        <p className="text-sm leading-relaxed">
+                            Probabilities are mapped using the Kesselman list of estimative
+                            words adapted by Gwern:
+                        </p>
+
+                        <dl className="space-y-3.5 font-normal text-sm">
+                            {Object.entries(CONFIDENCE_CONFIG).map(([key, config]) => (
+                                <div key={key} className="space-y-1">
+                                    <dt className="font-mono text-xs font-medium text-[var(--text-color)] flex items-baseline justify-between">
+                                        <span>{config.label}</span>
+                                        <span className="text-[11px] font-mono text-[var(--text-color)]">
+                                            {config.range}
+                                        </span>
+                                    </dt>
+                                    <dd className="text-sm text-[var(--text-muted)] pl-3 border-l border-current/15 italic font-serif leading-relaxed">
+                                        &ldquo;{config.desc}&rdquo;
+                                    </dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
                 </div>
 
                 {/* Revision History Philosophy */}

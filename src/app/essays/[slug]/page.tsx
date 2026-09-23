@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllEssays, getEssayBySlug } from "@/lib/essays";
 import { STATUS_CONFIG, CONFIDENCE_CONFIG } from "@/lib/metadata";
-import EssayFooterExperiment from "@/components/EssayFooterExperiment";
+import EssayFooter from "@/components/EssayFooter";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -142,8 +142,8 @@ export default async function EssayPage({
                 dangerouslySetInnerHTML={{ __html: essay.contentHtml }}
             />
 
-            {/* Essay Footer Experiment Component */}
-            <EssayFooterExperiment
+            {/* Essay Footer (Ledger Standard) */}
+            <EssayFooter
                 modifications={essay.modifications}
                 references={essay.references}
                 originalUrl={essay.originalUrl}
