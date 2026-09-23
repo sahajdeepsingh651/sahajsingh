@@ -20,10 +20,11 @@ export default function BackgroundSwitcher() {
     const dragStartRef = useRef<{ startX: number; startY: number; initX: number; initY: number } | null>(null);
     const panelRef = useRef<HTMLDivElement>(null);
 
-    // Typography & Alignment state
+    // Typography, Spacing & Width state
     const [fontSize, setFontSize] = useState<number>(15);
     const [entryGap, setEntryGap] = useState<number>(28);
-    const [alignMode, setAlignMode] = useState<EntryAlignMode>("left-flow");
+    const [contentWidth, setContentWidth] = useState<number>(780);
+    const [alignMode, setAlignMode] = useState<EntryAlignMode>("justified");
 
     // Art & Horizon state
     const [bgOption, setBgOption] = useState<BgOption>("candidate");
@@ -52,6 +53,7 @@ export default function BackgroundSwitcher() {
     useEffect(() => {
         const savedFontSize = localStorage.getItem("experiment_font_size");
         const savedEntryGap = localStorage.getItem("experiment_entry_gap");
+        const savedContentWidth = localStorage.getItem("experiment_content_width");
         const savedAlign = localStorage.getItem("experiment_entry_align") as EntryAlignMode;
         const savedDockSide = (localStorage.getItem("experiment_dock_side") as "right" | "left") || "right";
         const savedDockPos = localStorage.getItem("experiment_dock_pos");
@@ -64,7 +66,12 @@ export default function BackgroundSwitcher() {
 
         if (savedFontSize) setFontSize(Number(savedFontSize));
         if (savedEntryGap) setEntryGap(Number(savedEntryGap));
-        if (savedAlign) setAlignMode(savedAlign);
+        if (savedContentWidth) setContentWidth(Number(savedContentWidth));
+        if (savedAlign) {
+            setAlignMode(savedAlign);
+        } else {
+            setAlignMode("justified");
+        }
         setDockSide(savedDockSide);
 
         if (savedDockPos) {
@@ -85,17 +92,19 @@ export default function BackgroundSwitcher() {
         if (savedBox !== null) setFrostedBoxEnabled(savedBox === "true");
     }, []);
 
-    // Apply typography & spacing variables to documentElement
+    // Apply typography, spacing & section width variables to documentElement
     useEffect(() => {
         const root = document.documentElement;
         root.style.setProperty("--base-font-size", `${fontSize}px`);
         root.style.setProperty("--entry-gap", `${entryGap}px`);
+        root.style.setProperty("--content-width", `${contentWidth}px`);
         root.setAttribute("data-entry-align", alignMode);
 
         localStorage.setItem("experiment_font_size", String(fontSize));
         localStorage.setItem("experiment_entry_gap", String(entryGap));
+        localStorage.setItem("experiment_content_width", String(contentWidth));
         localStorage.setItem("experiment_entry_align", alignMode);
-    }, [fontSize, entryGap, alignMode]);
+    }, [fontSize, entryGap, contentWidth, alignMode]);
 
     // Apply background styles to body and sync with foreground horizon
     useEffect(() => {
@@ -474,7 +483,54 @@ export default function BackgroundSwitcher() {
                                 </div>
                             </div>
 
-                            {/* 4. Live Sandbox Test Preview */}
+                            {/* 4. Section Width / Stretch Slider (Stretch reading column for room) */}
+                            <div className="space-y-2 pt-2 border-t border-current/10">
+                                <div className="flex items-center justify-between text-[11px]">
+                                    <span className="font-semibold text-[var(--text-color)]">
+                                        Section Width (Stretch Column):
+                                    </span>
+                                    <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                                        {contentWidth}px {contentWidth > 672 ? `(+${contentWidth - 672}px)` : "(std)"}
+                                    </span>
+                                </div>
+                                <input
+                                    type="range"
+                                    min={640}
+                                    max={980}
+                                    step={10}
+                                    value={contentWidth}
+                                    onChange={(e) => setContentWidth(Number(e.target.value))}
+                                    className="w-full accent-emerald-500 cursor-pointer"
+                                />
+                                <div className="flex flex-wrap items-center gap-1 text-[10px]">
+                                    {[672, 720, 760, 780, 820, 880, 940].map((w) => (
+                                        <button
+                                            key={w}
+                                            type="button"
+                                            onClick={() => setContentWidth(w)}
+                                            className={`px-2 py-0.5 rounded cursor-pointer transition-colors ${
+                                                contentWidth === w
+                                                    ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium"
+                                                    : "border border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)]"
+                                            }`}
+                                        >
+                                            {w}px {w === 672 ? "(std)" : w === 780 ? "(bal)" : ""}
+                                        </button>
+                                    ))}
+                                    <button
+                                        type="button"
+                                        onClick={() => setContentWidth(780)}
+                                        className="text-[10px] text-[var(--text-muted)] hover:underline ml-auto cursor-pointer"
+                                    >
+                                        [reset 780px]
+                                    </button>
+                                </div>
+                                <p className="text-[9.5px] text-[var(--text-muted)] leading-tight">
+                                    Stretches the reading column width so long titles and justified dates have ample breathing room!
+                                </p>
+                            </div>
+
+                            {/* 5. Live Sandbox Test Preview */}
                             <div className="pt-2 border-t border-current/10 space-y-1.5">
                                 <span className="block text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-semibold">
                                     Live Sandbox Preview (Simulated Item)
@@ -558,7 +614,7 @@ export default function BackgroundSwitcher() {
                                     )}
 
                                     {alignMode === "justified" && (
-                                        <div className="flex justify-between items-baseline gap-2 font-serif text-[12.5px] text-[var(--text-color)]">
+                                        <div className="flex justify-between items-baseline gap-3 font-serif text-[12.5px] text-[var(--text-color)]">
                                             <div className="leading-relaxed">
                                                 <span className="font-medium">
                                                     On Knowledge Engines, Distributed Consensus, and First Principles
@@ -578,11 +634,11 @@ export default function BackgroundSwitcher() {
                                         <span>
                                             {alignMode === "date-left" || alignMode === "tabular"
                                                 ? "Date"
-                                                : "← [in progress]"}
+                                                : "← Title [status]"}
                                         </span>
                                         <span className="font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded">
                                             {alignMode === "justified"
-                                                ? "docked to right"
+                                                ? `Justified edge-to-edge (${contentWidth}px stretched)`
                                                 : `↔ ${entryGap}px gap / indent`}
                                         </span>
                                         <span>
@@ -593,7 +649,7 @@ export default function BackgroundSwitcher() {
                                     </div>
                                 </div>
                                 <p className="text-[10px] text-[var(--text-muted)] leading-tight">
-                                    Tip: Drag the slider above to see the distance between [status] and the date scale live across this card and the full website!
+                                    Tip: Drag the sliders above to scale text size, spacing distance, and section stretch in real time!
                                 </p>
                             </div>
                         </div>

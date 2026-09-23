@@ -16,10 +16,18 @@
         --text-muted: #595147;
         --base-font-size: 15px;
         --entry-gap: 28px;
+        --content-width: 780px;
     }
 
     html {
         font-size: var(--base-font-size, 15px);
+    }
+
+    /* Dynamic Content Section Width (Stretch Control) */
+    .max-w-2xl,
+    .content-container {
+        max-width: var(--content-width, 780px) !important;
+        transition: max-width 0.25s ease;
     }
 
     .dark {
@@ -152,7 +160,8 @@ html:not([data-entry-align]) .entry-row .entry-date {
     flex-direction: row;
     justify-content: space-between;
     align-items: baseline;
-    gap: 16px;
+    gap: var(--entry-gap, 24px);
+    transition: gap 0.15s ease;
 }
 [data-entry-align="justified"] .entry-row .entry-title {
     display: inline;
