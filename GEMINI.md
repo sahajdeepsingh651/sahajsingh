@@ -52,14 +52,17 @@
   - Foreground Horizon occupies ~250-300px at bottom. Container clearance updated to `pb-[45vh]` so content (e.g. "Recent Thoughts") can easily scroll into clear view without elastic obstruction.
   - Added unobtrusive `ScrollCue` affordance (`↓ scroll for projects & thoughts`) that self-fades after 50px of scroll travel.
 - **Scroll Dynamics & Multi-Pattern Affordances (Studio Controller Tab 2):**
-  - Added dedicated `📜 Scroll Cue` tab with live interactive controls for:
-    - *Pattern 1: Dynamic Floating Pill*: Auto-fading bottom-center pill (`↓ scroll for projects & thoughts`).
-    - *Pattern 2: Marginal Progress Tick*: Digital garden tracker in bottom margin (`[ 24% • ↓ scroll ]` / `[ 95% • ↑ top ]`), clickable.
-    - *Pattern 3: Layout Fold Boundary*: Editorial dashed divider (`[ ┈┈┈ more entries below fold ↓ ┈┈┈ ]`).
-    - *Pattern 4: Continuous Pulse Drift*: Breathing motion indicator with amber signal ping.
-    - *Pattern 5: Pure Minimalist (None)*: Raw canvas relying purely on native scroll.
-    - *Atmospheric Bottom Scrim*: Off / Subtle vellum mist / Deep atmospheric veil.
-    - *Scroll Clearance Slider*: 15vh to 65vh with instant test jump triggers (`Down 55vh`, `To Thoughts`, `To Top`).
+  - Added dedicated `📜 Scroll Cue` tab with live interactive controls for authentic field notebook patterns:
+    - *Pattern 1: Celestial Astrolabe Star (blo.png mockup)*: 8-facet diamond compass star in the lower margin. Rhythmic breathing rotation, toggles `[ ✦ descend ]` and `[ ↑ zenith ]`. Matches the faceted star sitting above the horizon in `blo.png` & `dark_mode_blog.png`.
+    - *Pattern 2: Historical Renaissance Catchword*: Centuries-old bookbinding technique printing next section title at the lower fold: `[ next: recent thoughts → ]`. Clicking jumps straight to next chapter.
+    - *Pattern 3: Marginal Field Ledger*: Monospace coordinates pinned in the bottom corner margin: `[ 20°N • fol. 01/03 • 25% ↓ ]`. Changes to `[ ↑ top ]` once scrolled.
+    - *Pattern 4: Editorial Dashed Perforation*: Field notebook tear-line boundary: `[ ┈┈┈ § inquiries continue below fold ↓ ┈┈┈ ]`.
+    - *Pattern 5: Visual Cliff Layout (Zero UI)*: No overlay widgets. Content naturally slips under horizon waves with deliberate vertical rhythm.
+    - *Pattern 6: Dynamic Floating Pill*: Auto-fading bottom-center capsule (`↓ scroll for projects & thoughts`).
+    - *Pattern 7: Pure Minimalist (None)*: Raw canvas relying purely on native browser scroll.
+  - *Atmospheric Bottom Scrim*: Off / Subtle vellum mist / Deep atmospheric veil.
+  - *Scroll Clearance Slider*: 15vh to 65vh with instant test jump triggers (`Down 55vh`, `To Thoughts`, `To Top`) and cross-browser 60ms direct fallback.
+
 
 
 
