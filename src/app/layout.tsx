@@ -5,7 +5,6 @@ import GlassFrame from "@/components/Glassframe";
 import ThemeToggle from "@/components/Themetoggle";
 import Navigation from "@/components/Navigation";
 import SiteTitle from "@/components/SiteTitle";
-import BackgroundSwitcher from "@/components/BackgroundSwitcher";
 import HorizonForeground from "@/components/HorizonForeground";
 import ScrollCue from "@/components/ScrollCue";
 
@@ -64,7 +63,6 @@ export default function RootLayout({
                     <main className="flex-1 content-box w-full" style={{ maxWidth: "var(--content-width, 896px)" }}>
                         {children}
                     </main>
-                    <BackgroundSwitcher />
                 </GlassFrame>
                 <HorizonForeground />
                 <ScrollCue />
