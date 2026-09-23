@@ -41,11 +41,13 @@
     - `--text-muted: var(--text-color)` (uniform ivory `#ede8dc` / walnut `#1f140e`).
     - *Verdict:* Kept on file as reference.
 - **Section Heading Hierarchy & Palette (`--heading-color`):**
-  - Decoupled from `--text-muted` to solve washed-out headings on parchment and flat hierarchy in dark mode.
-  - Palettes added to Studio Controller:
-    - *Espresso / Amber (Default)*: `#2C221E` (Warm Espresso Bronze) in light, `#F3D8A2` (Celestial Amber) in dark.
-    - *Terracotta / Copper*: `#8B3A22` (Field Rust) in light, `#F6AD7B` (Warm Copper) in dark.
-    - *Maritime Slate / Blue*: `#1E293B` (Deep Navy) in light, `#93C5FD` (Moonlit Silver) in dark.
+  - Dark mode strictly locked to **Silver / Pale Platinum** (`#E2E8F0` / `var(--text-muted)`), maintaining a pure two-color palette (Ivory `#EDE8DC` and Pale Platinum `#E2E8F0`) with zero amber or golden tones.
+  - Light mode uses Warm Espresso Bronze (`#2C221E`).
+  - Palettes in Studio Controller:
+    - *Charcoal / Platinum (Silver - Default)*: `#595147` in light, `#E2E8F0` in dark.
+    - *Espresso / Silver*: `#2C221E` in light, `#E2E8F0` in dark.
+    - *Terracotta / Copper*: `#8B3A22` in light, `#F6AD7B` in dark.
+    - *Maritime Slate / Blue*: `#1E293B` in light, `#93C5FD` in dark.
     - *Sumi Ink / Ivory*: `#111111` in light, `#EDE8DC` in dark.
   - Typography modes: Serif (`blo.png` mockup style, 1.35rem) vs. Mono uppercase small-caps (`[data-heading-style="mono"]`).
 - **Ocean Waterline Emergence & Scroll Boundary:**

@@ -277,7 +277,7 @@ export default function ScrollCue() {
                     }`}
                 >
                     <div className="px-3 py-1.5 rounded border border-current/15 bg-[var(--bg-color)]/90 backdrop-blur-md text-[11px] font-mono text-[var(--text-muted)] hover:text-[var(--text-color)] hover:border-current/35 transition-all flex items-center gap-2 shadow-md">
-                        <span className="text-amber-600 dark:text-amber-400 font-semibold">
+                        <span className="text-[var(--text-color)] font-semibold">
                             [ 20°N • fol. {scrolled ? "03/03" : "01/03"} ]
                         </span>
                         <span>{scrolled ? "↑ top" : `${scrollPercent}% ↓`}</span>

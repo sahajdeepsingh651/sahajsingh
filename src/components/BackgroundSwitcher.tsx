@@ -23,11 +23,11 @@ export const HEADING_THEMES: Record<
     HeadingColorTheme,
     { label: string; light: string; dark: string; desc: string }
 > = {
-    espresso: { label: "Espresso / Amber", light: "#2C221E", dark: "#F3D8A2", desc: "Warm bookish bronze" },
+    muted: { label: "Charcoal / Platinum (Silver)", light: "#595147", dark: "#E2E8F0", desc: "Classic two-color silver" },
+    espresso: { label: "Espresso / Silver", light: "#2C221E", dark: "#E2E8F0", desc: "Bronze in light, silver in dark" },
     terracotta: { label: "Terracotta / Copper", light: "#8B3A22", dark: "#F6AD7B", desc: "Field notebook rust" },
     slate: { label: "Maritime Slate / Blue", light: "#1E293B", dark: "#93C5FD", desc: "Deep sea indigo" },
     ink: { label: "Sumi Ink / Ivory", light: "#111111", dark: "#EDE8DC", desc: "High contrast primary ink" },
-    muted: { label: "Charcoal / Platinum", light: "#595147", dark: "#E2E8F0", desc: "Classic muted secondary" },
 };
 
 export default function BackgroundSwitcher() {
@@ -51,7 +51,7 @@ export default function BackgroundSwitcher() {
     const [pageLeftOffset, setPageLeftOffset] = useState<number>(120);
     const [navDistance, setNavDistance] = useState<number>(36);
     const [navPlacement, setNavPlacement] = useState<"after-border" | "inside-box" | "edge">("after-border");
-    const [headingTheme, setHeadingTheme] = useState<HeadingColorTheme>("espresso");
+    const [headingTheme, setHeadingTheme] = useState<HeadingColorTheme>("muted");
     const [headingStyle, setHeadingStyle] = useState<"serif" | "mono">("serif");
     const [scrollCueMode, setScrollCueMode] = useState<ScrollCueMode>("hairline");
     const [scrollFogMode, setScrollFogMode] = useState<ScrollFogMode>("none");
@@ -148,7 +148,11 @@ export default function BackgroundSwitcher() {
         if (savedPageLeftOffset) setPageLeftOffset(Number(savedPageLeftOffset));
         if (savedNavDistance) setNavDistance(Number(savedNavDistance));
         if (savedNavPlacement) setNavPlacement(savedNavPlacement);
-        if (savedHeadingTheme && HEADING_THEMES[savedHeadingTheme]) setHeadingTheme(savedHeadingTheme);
+        if (savedHeadingTheme && savedHeadingTheme !== "espresso" && HEADING_THEMES[savedHeadingTheme]) {
+            setHeadingTheme(savedHeadingTheme);
+        } else {
+            setHeadingTheme("muted");
+        }
         if (savedHeadingStyle) setHeadingStyle(savedHeadingStyle);
 
         const rawScrollCue = localStorage.getItem("experiment_scroll_cue");
