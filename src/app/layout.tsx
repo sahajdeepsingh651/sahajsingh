@@ -47,8 +47,11 @@ export default function RootLayout({
                         __html: `(function(){try{var s=localStorage.getItem("theme");var h=new Date().getHours();var d=s?s==="dark":(h>=19||h<6);if(d){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}}catch(e){}})();`,
                     }}
                 />
+                <link rel="preload" href="/horizon_foreground_light.png" as="image" fetchPriority="high" />
+                <link rel="preload" href="/horizon_foreground_dark.png" as="image" fetchPriority="high" />
             </head>
             <body suppressHydrationWarning className="min-h-full flex flex-col font-serif">
+                <HorizonForeground />
                 <GlassFrame>
                     {/* Hand-drawn switch button attached directly to the right border of GlassFrame */}
                     <div className="absolute right-2 md:-right-[12px] top-0 bottom-0 pointer-events-none z-30">
@@ -72,7 +75,6 @@ export default function RootLayout({
                         {children}
                     </main>
                 </GlassFrame>
-                <HorizonForeground />
                 <ScrollCue />
             </body>
         </html>
