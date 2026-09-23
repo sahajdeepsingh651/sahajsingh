@@ -3,7 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 
 type ActiveTab = "typography" | "scroll" | "art";
-export type ScrollCueMode = "pill" | "tick" | "peek" | "drift" | "none";
+export type ScrollCueMode =
+    | "celestial"
+    | "catchword"
+    | "ledger"
+    | "perforation"
+    | "cliff"
+    | "pill"
+    | "none";
 export type ScrollFogMode = "none" | "subtle" | "pronounced";
 type BgOption = "default" | "candidate" | "original" | "none";
 type SizeOption = "100% auto" | "cover" | "contain";
@@ -45,7 +52,7 @@ export default function BackgroundSwitcher() {
     const [navPlacement, setNavPlacement] = useState<"after-border" | "inside-box" | "edge">("after-border");
     const [headingTheme, setHeadingTheme] = useState<HeadingColorTheme>("espresso");
     const [headingStyle, setHeadingStyle] = useState<"serif" | "mono">("serif");
-    const [scrollCueMode, setScrollCueMode] = useState<ScrollCueMode>("pill");
+    const [scrollCueMode, setScrollCueMode] = useState<ScrollCueMode>("celestial");
     const [scrollFogMode, setScrollFogMode] = useState<ScrollFogMode>("none");
     const [scrollClearance, setScrollClearance] = useState<number>(45);
 
@@ -143,11 +150,27 @@ export default function BackgroundSwitcher() {
         if (savedHeadingTheme && HEADING_THEMES[savedHeadingTheme]) setHeadingTheme(savedHeadingTheme);
         if (savedHeadingStyle) setHeadingStyle(savedHeadingStyle);
 
-        const savedScrollCue = localStorage.getItem("experiment_scroll_cue") as ScrollCueMode;
+        const rawScrollCue = localStorage.getItem("experiment_scroll_cue");
+        let savedScrollCue: ScrollCueMode = "celestial";
+        if (rawScrollCue === "tick") savedScrollCue = "ledger";
+        else if (rawScrollCue === "peek") savedScrollCue = "perforation";
+        else if (rawScrollCue === "drift") savedScrollCue = "celestial";
+        else if (
+            rawScrollCue === "celestial" ||
+            rawScrollCue === "catchword" ||
+            rawScrollCue === "ledger" ||
+            rawScrollCue === "perforation" ||
+            rawScrollCue === "cliff" ||
+            rawScrollCue === "pill" ||
+            rawScrollCue === "none"
+        ) {
+            savedScrollCue = rawScrollCue as ScrollCueMode;
+        }
+
         const savedScrollFog = localStorage.getItem("experiment_scroll_fog") as ScrollFogMode;
         const savedClearance = localStorage.getItem("experiment_scroll_clearance");
 
-        if (savedScrollCue) setScrollCueMode(savedScrollCue);
+        if (rawScrollCue) setScrollCueMode(savedScrollCue);
         if (savedScrollFog) setScrollFogMode(savedScrollFog);
         if (savedClearance) setScrollClearance(Number(savedClearance));
 
@@ -1233,7 +1256,102 @@ export default function BackgroundSwitcher() {
                                 </p>
 
                                 <div className="space-y-1.5 text-[10.5px]">
-                                    {/* 1. Floating Pill */}
+                                    {/* 1. Celestial Astrolabe Star */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollCueMode("celestial")}
+                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollCueMode === "celestial"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-semibold">★ Pattern 1: Celestial Astrolabe Star</span>
+                                            <span className="text-[9px] font-mono opacity-80">[blo.png mockup]</span>
+                                        </div>
+                                        <div className="text-[9px] opacity-80 mt-0.5">
+                                            8-facet diamond compass star in lower margin. Rhythmic breathing rotation, toggles &ldquo;[ ✦ descend ]&rdquo; and &ldquo;[ ↑ zenith ]&rdquo;.
+                                        </div>
+                                    </button>
+
+                                    {/* 2. Renaissance Catchword */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollCueMode("catchword")}
+                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollCueMode === "catchword"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-semibold">Pattern 2: Renaissance Catchword</span>
+                                            <span className="text-[9px] font-mono opacity-80">[literary]</span>
+                                        </div>
+                                        <div className="text-[9px] opacity-80 mt-0.5">
+                                            Centuries-old bookbinding technique: &ldquo;[ next: recent thoughts → ]&rdquo; at fold boundary. Jumps straight to next chapter.
+                                        </div>
+                                    </button>
+
+                                    {/* 3. Marginal Field Ledger */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollCueMode("ledger")}
+                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollCueMode === "ledger"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-semibold">Pattern 3: Marginal Field Ledger</span>
+                                            <span className="text-[9px] font-mono opacity-80">[digital garden]</span>
+                                        </div>
+                                        <div className="text-[9px] opacity-80 mt-0.5">
+                                            Field coordinates pinned in margin: &ldquo;[ 20°N • fol. 01/03 • 25% ↓ ]&rdquo;. Changes to &ldquo;↑ top&rdquo; when scrolled.
+                                        </div>
+                                    </button>
+
+                                    {/* 4. Editorial Dashed Perforation */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollCueMode("perforation")}
+                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollCueMode === "perforation"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-semibold">Pattern 4: Editorial Dashed Perforation</span>
+                                            <span className="text-[9px] font-mono opacity-80">[editorial]</span>
+                                        </div>
+                                        <div className="text-[9px] opacity-80 mt-0.5">
+                                            Field notebook tear-line boundary: &ldquo;[ ┈┈┈ § inquiries continue below fold ↓ ┈┈┈ ]&rdquo;.
+                                        </div>
+                                    </button>
+
+                                    {/* 5. Visual Cliff Layout */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setScrollCueMode("cliff")}
+                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
+                                            scrollCueMode === "cliff"
+                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
+                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-semibold">Pattern 5: Visual Cliff Layout</span>
+                                            <span className="text-[9px] font-mono opacity-80">[zero UI]</span>
+                                        </div>
+                                        <div className="text-[9px] opacity-80 mt-0.5">
+                                            No overlay widgets. Clean layout fold where content slips naturally beneath the horizon waves.
+                                        </div>
+                                    </button>
+
+                                    {/* 6. Dynamic Floating Pill */}
                                     <button
                                         type="button"
                                         onClick={() => setScrollCueMode("pill")}
@@ -1244,72 +1362,15 @@ export default function BackgroundSwitcher() {
                                         }`}
                                     >
                                         <div className="flex items-center justify-between">
-                                            <span className="font-semibold">★ Pattern 1: Dynamic Floating Pill</span>
-                                            <span className="text-[9px] font-mono opacity-80">[default]</span>
+                                            <span className="font-semibold">Pattern 6: Dynamic Floating Pill</span>
+                                            <span className="text-[9px] font-mono opacity-80">[minimal]</span>
                                         </div>
                                         <div className="text-[9px] opacity-80 mt-0.5">
-                                            Minimal pill &ldquo;↓ scroll for projects &amp; thoughts&rdquo;. Auto-fades after 50px of scroll travel.
+                                            Minimal pill &ldquo;↓ scroll for projects &amp; thoughts&rdquo;. Auto-fades after 40px of scroll travel.
                                         </div>
                                     </button>
 
-                                    {/* 2. Marginal Monospace Tick */}
-                                    <button
-                                        type="button"
-                                        onClick={() => setScrollCueMode("tick")}
-                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
-                                            scrollCueMode === "tick"
-                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
-                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
-                                        }`}
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <span className="font-semibold">Pattern 2: Marginal Progress Tick</span>
-                                            <span className="text-[9px] font-mono opacity-80">[digital garden]</span>
-                                        </div>
-                                        <div className="text-[9px] opacity-80 mt-0.5">
-                                            Pinned in corner: &ldquo;[ 24% • ↓ scroll ]&rdquo;. When scrolled, changes to &ldquo;[ 85% • ↑ top ]&rdquo;.
-                                        </div>
-                                    </button>
-
-                                    {/* 3. Layout Peek Rule */}
-                                    <button
-                                        type="button"
-                                        onClick={() => setScrollCueMode("peek")}
-                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
-                                            scrollCueMode === "peek"
-                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
-                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
-                                        }`}
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <span className="font-semibold">Pattern 3: Layout Fold Boundary</span>
-                                            <span className="text-[9px] font-mono opacity-80">[editorial]</span>
-                                        </div>
-                                        <div className="text-[9px] opacity-80 mt-0.5">
-                                            Dashed notebook divider &ldquo;[ ┈┈┈ more entries below fold ↓ ┈┈┈ ]&rdquo;.
-                                        </div>
-                                    </button>
-
-                                    {/* 4. Continuous Drift */}
-                                    <button
-                                        type="button"
-                                        onClick={() => setScrollCueMode("drift")}
-                                        className={`w-full p-2 rounded text-left border cursor-pointer transition-colors ${
-                                            scrollCueMode === "drift"
-                                                ? "bg-[var(--text-color)] text-[var(--bg-color)] font-medium border-transparent shadow-sm"
-                                                : "border-current/15 text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-current/5"
-                                        }`}
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <span className="font-semibold">Pattern 4: Continuous Pulse Drift</span>
-                                            <span className="text-[9px] font-mono opacity-80">[motion]</span>
-                                        </div>
-                                        <div className="text-[9px] opacity-80 mt-0.5">
-                                            Rhythmic breathing badge with amber signal ping: &ldquo;● continue reading ↓&rdquo;.
-                                        </div>
-                                    </button>
-
-                                    {/* 5. Pure Canvas (None) */}
+                                    {/* 7. Pure Canvas (None) */}
                                     <button
                                         type="button"
                                         onClick={() => setScrollCueMode("none")}
@@ -1320,7 +1381,7 @@ export default function BackgroundSwitcher() {
                                         }`}
                                     >
                                         <div className="flex items-center justify-between">
-                                            <span className="font-semibold">Pattern 5: Pure Minimalist (None)</span>
+                                            <span className="font-semibold">Pattern 7: Pure Minimalist (None)</span>
                                             <span className="text-[9px] font-mono opacity-80">[raw canvas]</span>
                                         </div>
                                         <div className="text-[9px] opacity-80 mt-0.5">
