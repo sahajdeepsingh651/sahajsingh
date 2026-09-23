@@ -308,11 +308,61 @@ export default function BackgroundSwitcher() {
         }
     };
 
+    const [liveScrollY, setLiveScrollY] = useState<number>(0);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setLiveScrollY(Math.round(window.scrollY || document.documentElement.scrollTop || 0));
+        };
+        handleScroll();
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
     const dockTo = (side: "right" | "left") => {
         setDockSide(side);
         setPos(null);
         localStorage.removeItem("experiment_dock_pos");
         localStorage.setItem("experiment_dock_side", side);
+        window.dispatchEvent(new CustomEvent("dock-side-change", { detail: { side } }));
+    };
+
+    const robustScrollBy = (amount: number) => {
+        const startY = window.scrollY || document.documentElement.scrollTop || 0;
+        const targetY = startY + amount;
+        try {
+            window.scrollTo({ top: targetY, behavior: "smooth" });
+        } catch {}
+        try {
+            if (document.documentElement) {
+                document.documentElement.scrollTo({ top: targetY, behavior: "smooth" });
+            }
+        } catch {}
+        setTimeout(() => {
+            const currentY = window.scrollY || document.documentElement.scrollTop || 0;
+            if (Math.abs(currentY - startY) < 5 && amount !== 0) {
+                window.scrollBy(0, amount);
+                if (document.documentElement) document.documentElement.scrollTop += amount;
+            }
+        }, 60);
+    };
+
+    const robustScrollTo = (top: number) => {
+        try {
+            window.scrollTo({ top, behavior: "smooth" });
+        } catch {}
+        try {
+            if (document.documentElement) {
+                document.documentElement.scrollTo({ top, behavior: "smooth" });
+            }
+        } catch {}
+        setTimeout(() => {
+            const currentY = window.scrollY || document.documentElement.scrollTop || 0;
+            if (Math.abs(currentY - top) > 10) {
+                window.scrollTo(0, top);
+                if (document.documentElement) document.documentElement.scrollTop = top;
+            }
+        }, 60);
     };
 
     const selectBg = (option: BgOption) => {
@@ -332,24 +382,35 @@ export default function BackgroundSwitcher() {
     };
 
     const handleSimulateScrollDown = () => {
-        window.scrollBy({ top: window.innerHeight * 0.55, behavior: "smooth" });
+        const amount = Math.round(window.innerHeight * 0.55);
+        robustScrollBy(amount);
     };
 
     const handleScrollToThoughts = () => {
         const headings = document.querySelectorAll(".section-heading");
         let target: Element | null = null;
         headings.forEach((h) => {
-            if (h.textContent?.includes("Thoughts")) target = h;
+            if (h.textContent?.toLowerCase().includes("thoughts")) target = h;
         });
+        if (!target && headings.length > 0) {
+            target = headings[headings.length - 1];
+        }
         if (target) {
             (target as HTMLElement).scrollIntoView({ behavior: "smooth", block: "center" });
+            setTimeout(() => {
+                const rect = (target as HTMLElement).getBoundingClientRect();
+                if (rect.top > window.innerHeight || rect.bottom < 0) {
+                    (target as HTMLElement).scrollIntoView();
+                }
+            }, 80);
         } else {
-            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+            const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+            robustScrollTo(maxScroll);
         }
     };
 
     const handleSimulateScrollTop = () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        robustScrollTo(0);
     };
 
     const containerClasses =
@@ -1398,6 +1459,12 @@ export default function BackgroundSwitcher() {
                                     >
                                         ↑ To Top
                                     </button>
+                                </div>
+                                <div className="flex items-center justify-between text-[9.5px] text-[var(--text-muted)] font-mono pt-1">
+                                    <span>Live Scroll Position:</span>
+                                    <span className="font-semibold text-amber-600 dark:text-amber-400">
+                                        {liveScrollY}px {liveScrollY === 0 ? "(at top)" : ""}
+                                    </span>
                                 </div>
                             </div>
                         </div>
