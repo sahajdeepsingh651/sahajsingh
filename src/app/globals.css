@@ -11,6 +11,7 @@
 
 @layer base {
     :root {
+        color-scheme: light;
         --bg-color: #faf7ed;
         --text-color: #1a1a1a;
         --text-muted: #595147;
@@ -92,6 +93,7 @@
     }
 
     .dark {
+        color-scheme: dark;
         --bg-color: #0b0f17;
         --text-color: #f8fafc;
         --text-muted: #cbd5e1;
