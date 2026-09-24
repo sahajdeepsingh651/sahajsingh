@@ -52,10 +52,14 @@ export default function HorizonForeground() {
             </div>
 
             {/* Layer 1.5: Solid mobile ocean base (fixed, z-[15]) */}
-            {/* Dynamically matches safe-area + bar height, staying submerged under waves on all devices */}
+            {/* Dual elements (dark:hidden & hidden dark:block) force WebKit to immediately swap GPU textures on theme toggle */}
             <div
                 aria-hidden="true"
-                className="fixed bottom-0 left-0 right-0 h-[calc(env(safe-area-inset-bottom,0px)+46px)] bg-[#faf7ed] dark:bg-[#0b0f17] transition-colors duration-300 pointer-events-none z-[15] select-none md:hidden"
+                className="fixed bottom-0 left-0 right-0 h-[calc(env(safe-area-inset-bottom,0px)+46px)] bg-[#faf7ed] pointer-events-none z-[15] select-none md:hidden dark:hidden"
+            />
+            <div
+                aria-hidden="true"
+                className="fixed bottom-0 left-0 right-0 h-[calc(env(safe-area-inset-bottom,0px)+46px)] bg-[#0b0f17] pointer-events-none z-[15] select-none md:hidden hidden dark:block"
             />
         </>
     );
