@@ -46,6 +46,8 @@ export default function RootLayout({
                         __html: `(function(){try{var s=localStorage.getItem("theme");var h=new Date().getHours();var d=s?s==="dark":(h>=19||h<6);if(d){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}}catch(e){}})();`,
                     }}
                 />
+                <link rel="preload" href="/real_read_mode.original.png" as="image" fetchPriority="high" />
+                <link rel="preload" href="/real_write_mode.png" as="image" fetchPriority="high" />
                 <link rel="preload" href="/horizon_foreground_light.png" as="image" fetchPriority="high" />
                 <link rel="preload" href="/horizon_foreground_dark.png" as="image" fetchPriority="high" />
             </head>
