@@ -59,7 +59,7 @@ export default function HorizonForeground() {
             />
             <div
                 aria-hidden="true"
-                className="fixed bottom-0 left-0 right-0 h-[calc(env(safe-area-inset-bottom,0px)+46px)] bg-[#0b0f17] pointer-events-none z-[15] select-none md:hidden hidden dark:block"
+                className="fixed bottom-0 left-0 right-0 h-[calc(env(safe-area-inset-bottom,0px)+46px)] bg-[#ff0000] pointer-events-none z-[15] select-none md:hidden hidden dark:block"
             />
         </>
     );
