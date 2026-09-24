@@ -51,11 +51,11 @@ export default function HorizonForeground() {
                 />
             </div>
 
-            {/* Layer 2b: Bottom seal below the waves on mobile (fixed, z-20) */}
-            {/* Seals the gap around and below Safari's floating tab bar so text never leaks through */}
+            {/* Layer 1.5: Solid mobile ocean base (fixed, z-[15]) */}
+            {/* Sits in front of text (z-10) but behind waves (z-20) to cover the floating Safari bar zone */}
             <div
                 aria-hidden="true"
-                className="fixed -bottom-36 left-0 right-0 h-36 bg-[var(--bg-color)] pointer-events-none z-20 select-none md:hidden"
+                className="fixed bottom-0 left-0 right-0 h-28 bg-[var(--bg-color)] pointer-events-none z-[15] select-none md:hidden"
             />
         </>
     );
