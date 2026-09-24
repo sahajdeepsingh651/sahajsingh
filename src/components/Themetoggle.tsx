@@ -13,6 +13,7 @@ export default function ThemeToggle() {
         }
         // Force iOS Safari to immediately repaint the floating URL bar
         const newColor = nextDark ? "#0b0f17" : "#faf7ed";
+        document.documentElement.style.backgroundColor = newColor;
         document.querySelectorAll('meta[name="theme-color"]').forEach((el) => el.remove());
         const meta = document.createElement("meta");
         meta.setAttribute("name", "theme-color");
