@@ -11,10 +11,13 @@ export default function ThemeToggle() {
             document.documentElement.classList.add("dark");
             localStorage.setItem("theme", "dark");
         }
-        const meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) {
-            meta.setAttribute("content", nextDark ? "#0b0f17" : "#faf7ed");
-        }
+        // Force iOS Safari to immediately repaint the floating URL bar
+        const newColor = nextDark ? "#0b0f17" : "#faf7ed";
+        document.querySelectorAll('meta[name="theme-color"]').forEach((el) => el.remove());
+        const meta = document.createElement("meta");
+        meta.setAttribute("name", "theme-color");
+        meta.setAttribute("content", newColor);
+        document.head.appendChild(meta);
     }
 
     return (

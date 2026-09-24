@@ -55,7 +55,7 @@ export default function HorizonForeground() {
             {/* Dynamically matches safe-area + bar height, staying submerged under waves on all devices */}
             <div
                 aria-hidden="true"
-                className="fixed bottom-0 left-0 right-0 h-[calc(env(safe-area-inset-bottom,0px)+46px)] bg-[var(--bg-color)] pointer-events-none z-[15] select-none md:hidden"
+                className="fixed bottom-0 left-0 right-0 h-[calc(env(safe-area-inset-bottom,0px)+46px)] bg-[var(--bg-color)] transition-colors duration-300 pointer-events-none z-[15] select-none md:hidden"
             />
         </>
     );

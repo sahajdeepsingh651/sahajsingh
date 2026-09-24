@@ -53,7 +53,7 @@ export default function RootLayout({
             <head>
                 <script
                     dangerouslySetInnerHTML={{
-                        __html: `(function(){try{var s=localStorage.getItem("theme");var h=new Date().getHours();var d=s?s==="dark":(h>=19||h<6);if(d){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}var m=document.querySelector('meta[name="theme-color"]');if(m){m.setAttribute("content",d?"#0b0f17":"#faf7ed");}}catch(e){}})();`,
+                        __html: `(function(){try{var s=localStorage.getItem("theme");var h=new Date().getHours();var d=s?s==="dark":(h>=19||h<6);if(d){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}var c=d?"#0b0f17":"#faf7ed";document.querySelectorAll('meta[name="theme-color"]').forEach(function(el){el.remove();});var m=document.createElement("meta");m.setAttribute("name","theme-color");m.setAttribute("content",c);document.head.appendChild(m);}catch(e){}})();`,
                     }}
                 />
                 <link rel="preload" href="/real_read_mode.original.png" as="image" fetchPriority="high" />
