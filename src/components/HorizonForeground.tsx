@@ -50,6 +50,13 @@ export default function HorizonForeground() {
                     className={`hidden dark:block ${sharedImgClasses}`}
                 />
             </div>
+
+            {/* Layer 2b: Bottom seal below the waves on mobile (fixed, z-20) */}
+            {/* Seals the gap around and below Safari's floating tab bar so text never leaks through */}
+            <div
+                aria-hidden="true"
+                className="fixed -bottom-36 left-0 right-0 h-36 bg-[var(--bg-color)] pointer-events-none z-20 select-none md:hidden"
+            />
         </>
     );
 }
