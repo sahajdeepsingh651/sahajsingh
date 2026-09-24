@@ -23,7 +23,8 @@
         --nav-distance: 36px;
     }
 
-    html {
+    html,
+    body {
         font-size: 16px;
         overflow-x: clip;
         background-color: var(--bg-color);

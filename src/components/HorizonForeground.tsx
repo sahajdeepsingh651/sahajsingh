@@ -11,7 +11,7 @@ export default function HorizonForeground() {
             {/* Layer 0: Sky, stars, and landscape background (fixed, z-0) */}
             <div
                 aria-hidden="true"
-                className="fixed inset-0 w-full h-full pointer-events-none z-0 select-none overflow-hidden"
+                className="fixed inset-0 w-full h-full pointer-events-none z-0 select-none overflow-hidden bg-[var(--bg-color)]"
             >
                 <img
                     src="/real_read_mode.original.png"
