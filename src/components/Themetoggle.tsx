@@ -13,20 +13,13 @@ export default function ThemeToggle() {
         }
         // Force iOS Safari to immediately repaint the floating URL bar and expanded navigation chrome
         const newColor = nextDark ? "#0b0f17" : "#faf7ed";
-        const scheme = nextDark ? "dark" : "light";
         document.documentElement.style.backgroundColor = newColor;
-        document.documentElement.style.colorScheme = scheme;
-        if (document.body) {
-            document.body.style.backgroundColor = newColor;
-            document.body.style.colorScheme = scheme;
-        }
-        let meta = document.querySelector('meta[name="theme-color"]');
-        if (!meta) {
-            meta = document.createElement("meta");
-            meta.setAttribute("name", "theme-color");
-            document.head.appendChild(meta);
-        }
+        document.documentElement.style.colorScheme = nextDark ? "dark" : "light";
+        document.querySelectorAll('meta[name="theme-color"]').forEach((el) => el.remove());
+        const meta = document.createElement("meta");
+        meta.setAttribute("name", "theme-color");
         meta.setAttribute("content", newColor);
+        document.head.appendChild(meta);
     }
 
     return (

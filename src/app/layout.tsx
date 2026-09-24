@@ -31,7 +31,6 @@ export const viewport: Viewport = {
     width: "device-width",
     initialScale: 1,
     viewportFit: "cover",
-    colorScheme: "light dark",
 };
 
 export default function RootLayout({
@@ -50,7 +49,7 @@ export default function RootLayout({
             <head>
                 <script
                     dangerouslySetInnerHTML={{
-                        __html: `(function(){try{var s=localStorage.getItem("theme");var h=new Date().getHours();var d=s?s==="dark":(h>=19||h<6);if(d){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}var c=d?"#0b0f17":"#faf7ed";document.documentElement.style.colorScheme=d?"dark":"light";document.documentElement.style.backgroundColor=c;var m=document.querySelector('meta[name="theme-color"]');if(!m){m=document.createElement("meta");m.setAttribute("name","theme-color");document.head.appendChild(m);}m.setAttribute("content",c);}catch(e){}})();`,
+                        __html: `(function(){try{var s=localStorage.getItem("theme");var h=new Date().getHours();var d=s?s==="dark":(h>=19||h<6);if(d){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}var c=d?"#0b0f17":"#faf7ed";document.documentElement.style.colorScheme=d?"dark":"light";document.documentElement.style.backgroundColor=c;document.querySelectorAll('meta[name="theme-color"]').forEach(function(el){el.remove();});var m=document.createElement("meta");m.setAttribute("name","theme-color");m.setAttribute("content",c);document.head.appendChild(m);}catch(e){}})();`,
                     }}
                 />
                 <link rel="preload" href="/real_read_mode.original.png" as="image" fetchPriority="high" />
@@ -58,7 +57,7 @@ export default function RootLayout({
                 <link rel="preload" href="/horizon_foreground_light.png" as="image" fetchPriority="high" />
                 <link rel="preload" href="/horizon_foreground_dark.png" as="image" fetchPriority="high" />
             </head>
-            <body suppressHydrationWarning className="min-h-screen font-serif bg-[var(--bg-color)]">
+            <body suppressHydrationWarning className="min-h-screen font-serif">
                 <HorizonForeground />
                 <GlassFrame>
                     {/* Hand-drawn switch button attached directly to the right border of GlassFrame */}
