@@ -1,19 +1,18 @@
+/* eslint-disable @next/next/no-img-element */
 export default function HorizonForeground() {
-    // Shared classes for both sky and foreground layers.
-    // Both must use IDENTICAL object-fit and object-position so the
-    // browser's GPU compositor scales and crops them identically.
-    // This eliminates drift between the two layers on every device.
+    // Both background illustration and foreground wave cutout are anchored
+    // strictly to the bottom of the viewport with natural aspect ratio.
+    // They share identical layout (bottom-0 left-0 w-full h-auto), eliminating drift permanently.
     const sharedImgClasses =
-        "fixed inset-0 w-full h-full object-cover object-[70%_bottom] pointer-events-none select-none";
+        "w-full h-auto pointer-events-none select-none block";
 
     return (
         <>
-            {/* Layer 0: Sky background (fixed, covers viewport, z-0) */}
+            {/* Layer 0: Sky, lighthouse & horizon background (fixed at bottom, z-0) */}
             <div
                 aria-hidden="true"
-                className="fixed inset-0 pointer-events-none z-0 select-none overflow-hidden"
+                className="fixed bottom-0 left-0 right-0 w-full pointer-events-none z-0 select-none overflow-hidden"
             >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                     src="/real_read_mode.original.png"
                     alt=""
@@ -21,7 +20,6 @@ export default function HorizonForeground() {
                     decoding="sync"
                     className={`dark:hidden ${sharedImgClasses}`}
                 />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                     src="/real_write_mode.png"
                     alt=""
@@ -31,12 +29,12 @@ export default function HorizonForeground() {
                 />
             </div>
 
-            {/* Layer 2: Foreground waves & lighthouse (fixed, covers viewport, z-20) */}
+            {/* Layer 2: Foreground coastal waves (fixed at bottom, z-20) */}
+            {/* Content at z-10 emerges from behind these waves as the user scrolls */}
             <div
                 aria-hidden="true"
-                className="fixed inset-0 pointer-events-none z-20 select-none overflow-hidden"
+                className="fixed bottom-0 left-0 right-0 w-full pointer-events-none z-20 select-none overflow-hidden"
             >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                     src="/horizon_foreground_light.png"
                     alt=""
@@ -44,7 +42,6 @@ export default function HorizonForeground() {
                     decoding="sync"
                     className={`dark:hidden ${sharedImgClasses}`}
                 />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                     src="/horizon_foreground_dark.png"
                     alt=""
