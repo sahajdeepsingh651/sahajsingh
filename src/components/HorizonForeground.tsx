@@ -4,7 +4,7 @@ export default function HorizonForeground() {
     // strictly to the bottom of the viewport with natural aspect ratio.
     // They share identical layout (bottom-0 left-0 w-full h-auto), eliminating drift permanently.
     const sharedImgClasses =
-        "w-full h-full object-cover object-[70%_bottom] md:object-bottom pointer-events-none select-none";
+        "w-full h-full object-cover object-[70%_bottom] md:object-bottom pointer-events-none select-none translate-y-12 md:translate-y-0";
 
     return (
         <>
