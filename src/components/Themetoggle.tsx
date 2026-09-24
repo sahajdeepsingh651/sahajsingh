@@ -12,7 +12,7 @@ export default function ThemeToggle() {
             localStorage.setItem("theme", "dark");
         }
         // Force iOS Safari to immediately repaint the floating URL bar and expanded navigation chrome
-        const newColor = nextDark ? "#ff0000" : "#faf7ed";
+        const newColor = nextDark ? "#0b0f17" : "#faf7ed";
         const scheme = nextDark ? "dark" : "light";
         document.documentElement.style.backgroundColor = newColor;
         document.documentElement.style.colorScheme = scheme;
