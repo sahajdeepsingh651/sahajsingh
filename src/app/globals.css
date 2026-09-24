@@ -43,14 +43,18 @@
         [data-page-align="left"] .page-canvas {
             margin-left: var(--page-left-offset, 120px) !important;
             margin-right: auto !important;
-            max-width: min(94vw, 1440px) !important;
+            max-width: min(calc(100vw - var(--page-left-offset, 120px) - 2rem), 1440px) !important;
         }
 
         [data-page-align="center"] .page-canvas {
             margin-left: auto !important;
             margin-right: auto !important;
-            max-width: min(94vw, 1440px) !important;
+            max-width: min(calc(100vw - 4rem), 1440px) !important;
         }
+    }
+
+    html {
+        overflow-x: hidden;
     }
 
     /* Header Navigation Layout: Balanced Title on Left, Navigation on Right */
