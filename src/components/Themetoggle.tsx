@@ -15,11 +15,10 @@ export default function ThemeToggle() {
         const newColor = nextDark ? "#0b0f17" : "#faf7ed";
         document.documentElement.style.backgroundColor = newColor;
         document.documentElement.style.colorScheme = nextDark ? "dark" : "light";
-        document.querySelectorAll('meta[name="theme-color"]').forEach((el) => el.remove());
-        const meta = document.createElement("meta");
-        meta.setAttribute("name", "theme-color");
-        meta.setAttribute("content", newColor);
-        document.head.appendChild(meta);
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) {
+            meta.setAttribute("content", newColor);
+        }
     }
 
     return (
