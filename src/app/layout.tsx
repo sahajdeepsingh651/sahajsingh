@@ -51,7 +51,7 @@ export default function RootLayout({
                 <link rel="preload" href="/horizon_foreground_light.png" as="image" fetchPriority="high" />
                 <link rel="preload" href="/horizon_foreground_dark.png" as="image" fetchPriority="high" />
             </head>
-            <body suppressHydrationWarning className="min-h-full flex flex-col font-serif">
+            <body suppressHydrationWarning className="min-h-screen font-serif">
                 <HorizonForeground />
                 <GlassFrame>
                     {/* Hand-drawn switch button attached directly to the right border of GlassFrame */}
