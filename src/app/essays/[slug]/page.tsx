@@ -78,7 +78,7 @@ export default async function EssayPage({
                                 </Link>
 
                                 {/* Small hover popup */}
-                                <span className="pointer-events-none absolute left-0 top-full mt-2 z-20 w-64 p-2.5 rounded bg-[var(--bg-color)] border border-current/20 shadow-md text-left opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
+                                <span className="hidden sm:block pointer-events-none absolute left-0 top-full mt-2 z-20 w-64 p-2.5 rounded bg-[var(--bg-color)] border border-current/20 shadow-md text-left opacity-0 invisible sm:group-hover:opacity-100 sm:group-hover:visible transition-all duration-150">
                                     <span className="block font-mono text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1">
                                         Document Maturity
                                     </span>
@@ -110,7 +110,7 @@ export default async function EssayPage({
                                 </Link>
 
                                 {/* Small hover popup */}
-                                <span className="pointer-events-none absolute left-0 top-full mt-2 z-20 w-72 p-2.5 rounded bg-[var(--bg-color)] border border-current/20 shadow-md text-left opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
+                                <span className="hidden sm:block pointer-events-none absolute left-0 top-full mt-2 z-20 w-72 p-2.5 rounded bg-[var(--bg-color)] border border-current/20 shadow-md text-left opacity-0 invisible sm:group-hover:opacity-100 sm:group-hover:visible transition-all duration-150">
                                     <span className="block font-mono text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1">
                                         Personal Belief ({CONFIDENCE_CONFIG[essay.confidence]?.range})
                                     </span>
@@ -129,13 +129,13 @@ export default async function EssayPage({
 
             {/* Essay Content */}
             <article
-                className="space-y-4 leading-relaxed font-normal
+                className="space-y-4 leading-relaxed font-normal min-w-0 max-w-full overflow-hidden
                     [&_p]:mb-4 [&_p]:leading-relaxed
                     [&_h2]:text-lg [&_h2]:font-medium [&_h2]:tracking-tight [&_h2]:mt-8 [&_h2]:mb-3
                     [&_h3]:text-base [&_h3]:font-medium [&_h3]:tracking-tight [&_h3]:mt-6 [&_h3]:mb-2
                     [&_blockquote]:border-l-2 [&_blockquote]:border-stone-300 [&_blockquote]:dark:border-stone-700 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-[var(--text-muted)] [&_blockquote]:my-4
                     [&_ul]:list-disc [&_ul]:list-inside [&_ul]:space-y-1 [&_ul]:pl-2 [&_ul]:text-[var(--text-muted)] [&_ul]:my-4
-                    [&_pre]:p-3.5 [&_pre]:rounded [&_pre]:bg-stone-100 [&_pre]:dark:bg-stone-900/80 [&_pre]:border [&_pre]:border-stone-200 [&_pre]:dark:border-stone-800 [&_pre]:text-xs [&_pre]:font-mono [&_pre]:overflow-x-auto [&_pre]:my-4
+                    [&_pre]:p-3.5 [&_pre]:rounded [&_pre]:bg-stone-100 [&_pre]:dark:bg-stone-900/80 [&_pre]:border [&_pre]:border-stone-200 [&_pre]:dark:border-stone-800 [&_pre]:text-xs [&_pre]:font-mono [&_pre]:overflow-x-auto [&_pre]:max-w-full [&_pre]:my-4
                     [&_code]:font-mono [&_code]:text-xs [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:bg-stone-200/60 [&_code]:dark:bg-stone-800
                     [&_pre_code]:bg-transparent [&_pre_code]:dark:bg-transparent [&_pre_code]:p-0 [&_pre_code]:border-0
                     [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:opacity-80"
