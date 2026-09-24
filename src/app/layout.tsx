@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import GlassFrame from "@/components/Glassframe";
@@ -25,6 +25,12 @@ export const metadata: Metadata = {
         template: "%s | Sahaj Singh",
     },
     description: "Personal digital garden and field notebook",
+};
+
+export const viewport: Viewport = {
+    width: "device-width",
+    initialScale: 1,
+    viewportFit: "cover",
 };
 
 export default function RootLayout({

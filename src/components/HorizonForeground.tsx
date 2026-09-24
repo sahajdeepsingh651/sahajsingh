@@ -11,7 +11,7 @@ export default function HorizonForeground() {
             {/* Layer 0: Sky, stars, and landscape background (fixed, z-0) */}
             <div
                 aria-hidden="true"
-                className="horizon-frame pointer-events-none z-0 select-none overflow-hidden"
+                className="fixed inset-0 w-full h-full pointer-events-none z-0 select-none overflow-hidden"
             >
                 <img
                     src="/real_read_mode.original.png"
@@ -33,7 +33,7 @@ export default function HorizonForeground() {
             {/* Content at z-10 emerges from behind these waves as the user scrolls */}
             <div
                 aria-hidden="true"
-                className="horizon-frame pointer-events-none z-20 select-none overflow-hidden"
+                className="fixed inset-0 w-full h-full pointer-events-none z-20 select-none overflow-hidden"
             >
                 <img
                     src="/horizon_foreground_light.png"

@@ -248,31 +248,3 @@ html:not([data-entry-align]) .entry-row .entry-date {
     flex-shrink: 0;
     white-space: nowrap;
 }
-
-/* Horizon artwork fixed container:
-   - Default (Chrome / Android / Desktop): anchored to bottom at 100svh
-   - iOS Safari: WebKit bar-avoidance lifts bottom: 0. We force inset: 0 so WebKit treats it as a full-bleed backdrop */
-.horizon-frame {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100vw;
-    height: 100svh;
-}
-
-@media (min-width: 768px) {
-    .horizon-frame {
-        height: 100vh;
-    }
-}
-
-@supports (-webkit-touch-callout: none) {
-    .horizon-frame {
-        top: 0 !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        height: 100% !important;
-    }
-}
