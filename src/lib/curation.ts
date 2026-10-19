@@ -14,13 +14,8 @@ export interface CurationConfig {
 }
 
 export const CURATION: CurationConfig = {
-    showcase: [
-        "knowledge-engines-and-first-principles",
-        "beating-the-averages",
-    ],
-    recommended: [
-        "knowledge-engines-and-first-principles",
-    ],
+    showcase: ["Knowledge_engine", "beating-the-averages"],
+    recommended: ["knowledge-engines-and-first-principles"],
 };
 
 /**
@@ -35,7 +30,10 @@ export function getHighlightedSlugs(): Set<string> {
  * Returns the exact showcase essays for the homepage,
  * gracefully falling back to newest published essays if fewer than target count.
  */
-export function getHomepageEssays(allEssays: EssayMeta[], count = 3): EssayMeta[] {
+export function getHomepageEssays(
+    allEssays: EssayMeta[],
+    count = 3,
+): EssayMeta[] {
     const showcaseSet = new Set(CURATION.showcase);
 
     // 1. Pick explicitly curated showcase essays in specified order
