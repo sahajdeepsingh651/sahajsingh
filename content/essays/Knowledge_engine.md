@@ -52,7 +52,7 @@ How to learn well or how to create knowledge well ?
 is something which I have thought about for a long time since this is one of the meta process that if done well
 can help in a compound manner.
 
-This connects to dual-process cognition—moving from intuitive, fast pattern-matching (System 1) to deliberate, structured reasoning (System 2)[^4].
+Thhis connects to dual-process cognition—moving from intuitive, fast pattern-matching (System 1) to deliberate, structured reasoning (System 2)[^4].
 
 how is knowledge created ?
 well taking from david deutch it is process of constant conjecture and critism that creates this mental model or theory that we can
