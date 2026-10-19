@@ -14,4 +14,4 @@ such as UI of the website
 and way u design a software and way u use it ,can be different
 so this helps in doing this faster
 so basically i have a branch in which i vibe code the software and use the software
-and other branch in which hard code ,to understand the code:wa
+and other branch in which hard code ,to understand the code
